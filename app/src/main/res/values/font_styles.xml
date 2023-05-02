@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    <style name="heading1">-->
+<!--        <item name="fontFamily">@font/lato_bold</item>-->
+<!--        <item name="android:textSize">31dp</item>-->
+<!--    </style>-->
+
+<!--    <style name="heading2">-->
+<!--        <item name="fontFamily">@font/lato_bold</item>-->
+<!--        <item name="android:textSize">24dp</item>-->
+<!--    </style>-->
+
+<!--    <style name="heading3">-->
+<!--        <item name="fontFamily">@font/lato_bold</item>-->
+<!--        <item name="android:textSize">20dp</item>-->
+<!--    </style>-->
+
+<!--    <style name="body">-->
+<!--        <item name="fontFamily">@font/lato_regular</item>-->
+<!--        <item name="android:textSize">16dp</item>-->
+<!--    </style>-->
+
+<!--    <style name="title">-->
+<!--        <item name="fontFamily">@font/lato_bold</item>-->
+<!--        <item name="android:textSize">15dp</item>-->
+<!--    </style>-->
+
+<!--    <style name="tab_title" parent="@android:style/TextAppearance.Widget.TabWidget">-->
+<!--        <item name="android:maxLines">1</item>-->
+<!--        <item name="android:textSize">15sp</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--        <item name="android:fontFamily">@font/lato_bold</item>-->
+<!--        <item name="android:ellipsize">end</item>-->
+<!--    </style>-->
+
+<!--    <style name="button">-->
+<!--        <item name="fontFamily">@font/lato_bold</item>-->
+<!--        <item name="android:textSize">14dp</item>-->
+<!--    </style>-->
+
+<!--    <style name="caption" >-->
+<!--        <item name="fontFamily">@font/lato_regular</item>-->
+<!--        <item name="android:textSize">12dp</item>-->
+<!--    </style>-->
+
+<!--    <style name="small_caption" >-->
+<!--        <item name="fontFamily">@font/lato_light</item>-->
+<!--        <item name="android:textSize">10dp</item>-->
+<!--    </style>-->
+</resources>
