@@ -2,27 +2,27 @@
 <resources>
     <style name="heading1">
         <item name="fontFamily">@font/lato_bold</item>
-        <item name="android:textSize">31dp</item>
+        <item name="android:textSize">31sp</item>
     </style>
 
     <style name="heading2">
         <item name="fontFamily">@font/lato_bold</item>
-        <item name="android:textSize">24dp</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="heading3">
         <item name="fontFamily">@font/lato_bold</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="body">
         <item name="fontFamily">@font/lato_regular</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="title">
         <item name="fontFamily">@font/lato_bold</item>
-        <item name="android:textSize">15dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="tab_title" parent="@android:style/TextAppearance.Widget.TabWidget">
@@ -35,16 +35,16 @@
 
     <style name="button">
         <item name="fontFamily">@font/lato_bold</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="caption" >
         <item name="fontFamily">@font/lato_regular</item>
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="small_caption" >
         <item name="fontFamily">@font/lato_light</item>
-        <item name="android:textSize">10dp</item>
+        <item name="android:textSize">10sp</item>
     </style>
 </resources>

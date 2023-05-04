@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".MainShopActivity"
     android:background="@color/primary_gray">
 
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -15,18 +15,26 @@
         app:fabCradleMargin="14dp"
         app:fabCradleRoundedCornerRadius="50dp"
         app:fabCradleVerticalOffset="2dp"
-        android:background="@color/white"
-        >
+        android:backgroundTint="@color/white">
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/bottomNavigationView"
-
-            android:layout_marginRight="16dp"
-            app:menu="@menu/bottom_nav_user_menu"
-            android:background="@drawable/bottom_nav_transparent_bg"/>
+            android:layout_marginEnd="16dp"
+            app:menu="@menu/bottom_nav_shop_menu"
+            android:background="@drawable/bg_bottom_nav_transparent"/>
     </com.google.android.material.bottomappbar.BottomAppBar>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab"
+        android:src="@drawable/ic_add"
+        app:layout_anchor="@id/bottomAppBar"
+        android:backgroundTint="@color/primary_red"
+        android:tint="@color/white"
+        app:maxImageSize="40dp"
+        android:contentDescription="Add product"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
