@@ -117,7 +117,6 @@
             <RatingBar
                 style = "?android:attr/ratingBarStyleSmall"
                 android:rating="3"
-                android:theme="@style/Theme.colorSecondary"
                 android:layout_marginLeft="90dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,7 +135,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:backgroundTint="@color/white"
-            android:src="@drawable/icon_Close_favorite_product"
+            android:src="@drawable/icon_close_favorite_product"
             android:tooltipText="close"/>
 
 
