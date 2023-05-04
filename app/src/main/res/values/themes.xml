@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.EcommerceShop" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.EcommerceShop" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary_red</item>
-        <item name="colorPrimaryVariant">@color/primary_red</item>
+        <item name="colorPrimaryVariant">@color/secondary_red</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/primary_red</item>
