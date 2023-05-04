@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EcommerceShop</string>
+    <string name="checkbox_address">Use as the shipping address</string>
 </resources>

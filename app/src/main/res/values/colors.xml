@@ -5,4 +5,5 @@
     <color name="primary_red">#FFDB3022</color>
     <color name="secondary_red">#FFEA1C00</color>
     <color name="primary_gray">#FFE9EAEC</color>
+    <color name="primary_gray_text">#676767</color>
 </resources>
