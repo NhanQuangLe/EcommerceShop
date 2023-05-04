@@ -11,6 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
+        <activity android:name=".MainActivity"
+            android:exported="false">
+
+        </activity>
         <activity
             android:name=".MainUserActivity"
             android:exported="false" />
