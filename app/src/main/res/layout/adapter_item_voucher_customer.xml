@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_margin="10dp"
+    android:orientation="horizontal"
+    android:background="@drawable/background_voucher"
+    android:weightSum="10">
+
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="7">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Voucher: "
+                android:textSize="14sp"
+                android:textColor="@color/primary_gray_text"
+                android:fontFamily="@font/lato_bold"/>
+            <TextView
+                android:id="@+id/codeVoucherCustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NO3004203 "
+                android:textSize="14sp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/primary_gray_text"
+                android:fontFamily="@font/lato_bold"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giảm 10% đơn tối thiểu 200k "
+            android:textSize="10sp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/lato_light"/>
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HSD: "
+                android:textSize="10sp"
+                android:textColor="@color/primary_red"
+                android:fontFamily="@font/lato_bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30/04/2023"
+                android:textSize="10sp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/primary_red"
+                android:fontFamily="@font/lato_bold"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <CheckBox
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:button="@drawable/checkbox_off_voucher"/>
+</LinearLayout>
