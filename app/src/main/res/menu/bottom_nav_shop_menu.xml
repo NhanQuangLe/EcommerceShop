@@ -18,7 +18,7 @@
     <item
         android:id="@+id/vouchers"
         android:title="Vouchers"
-        android:icon="@drawable/ic_voucher" />
+        android:icon="@drawable/ic_voucher_setting" />
     <item
         android:id="@+id/profile_shop"
         android:title="Profile"
