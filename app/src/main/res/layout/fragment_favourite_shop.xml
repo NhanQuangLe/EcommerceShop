@@ -24,13 +24,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Sản phẩm yêu thích"
+            android:text="Cửa hàng yêu thích"
             android:gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:textSize="16dp"
             android:fontFamily="@font/lato_regular"
             android:textColor="@color/black"
-        />
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <ListView
-                    android:id="@+id/listFavouriteProduct"
+                    android:id="@+id/listFavouriteShop"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                 </ListView>

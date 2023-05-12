@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:text="Apple"
+        android:textSize="14dp"
+        android:shadowColor="@color/third_gray"
+        android:background="@drawable/border_button_setting_25"
+        android:textColor="@color/white"
+        android:textAppearance="@style/caption">
+    </androidx.appcompat.widget.AppCompatButton>
+</LinearLayout>
