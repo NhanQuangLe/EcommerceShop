@@ -9,6 +9,6 @@ public class MainShopActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_user_orders);
+        setContentView(R.layout.fragment_favourite_product);
     }
 }

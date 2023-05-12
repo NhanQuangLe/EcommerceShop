@@ -15,22 +15,22 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:background="@color/white"
-    >
+        >
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_back"
-        ></ImageView>
+            ></ImageView>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Thiết lập tài khoản"
+            android:text="Sửa địa chỉ"
             android:gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:textSize="16dp"
             android:fontFamily="@font/lato_regular"
             android:textColor="@color/black"
-        />
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="Tài khoản của tôi"
+                android:text="Liên hệ"
                 android:textSize="12dp"
                 android:gravity="center"
                 android:layout_marginBottom="6dp"
@@ -66,32 +66,21 @@
                     >
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="50dp"
                         android:orientation="horizontal"
                         >
-                        <TextView
+                        <EditText
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tài khoản/ Bảo mật"
+                            android:layout_height="match_parent"
+                            android:hint="Họ và tên"
+                            android:textColorHint="@color/secondary_gray"
+                            android:background="#00000000"
                             android:textSize="14dp"
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
                             android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/black">
-                        </TextView>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            >
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="9dp"
-                                android:layout_gravity="end"
-                                android:src="@drawable/ic_arrow_right"
-                                android:layout_marginRight="10dp"/>
-                        </LinearLayout>
+                            android:textColor="@color/secondary_gray">
+                        </EditText>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -108,32 +97,21 @@
                     >
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="50dp"
                         android:orientation="horizontal"
                         >
-                        <TextView
+                        <EditText
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Địa chỉ"
+                            android:layout_height="match_parent"
+                            android:hint="Số điện thoại"
+                            android:background="#00000000"
                             android:textSize="14dp"
+                            android:textColorHint="@color/secondary_gray"
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
                             android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/black">
-                        </TextView>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            >
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="9dp"
-                                android:layout_gravity="end"
-                                android:src="@drawable/ic_arrow_right"
-                                android:layout_marginRight="10dp"/>
-                        </LinearLayout>
+                            android:textColor="@color/secondary_gray">
+                        </EditText>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -153,7 +131,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="Tài khoản của tôi"
+                android:text="Địa chỉ"
                 android:textSize="12dp"
                 android:gravity="center"
                 android:layout_marginBottom="6dp"
@@ -180,12 +158,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Cài đặt riêng tư"
+                            android:text="Tỉnh/Thành phố, Quận/Huyện, Phường/Xã"
                             android:textSize="14dp"
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
                             android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/black">
+                            android:textColor="@color/secondary_gray">
                         </TextView>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -216,74 +194,21 @@
                     >
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="50dp"
                         android:orientation="horizontal"
                         >
-                        <TextView
+                        <EditText
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Địa chỉ"
+                            android:layout_height="match_parent"
+                            android:hint="Tên đường, Tòa nhà, Số nhà"
+                            android:background="#00000000"
                             android:textSize="14dp"
+                            android:textColorHint="@color/secondary_gray"
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
                             android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/black">
-                        </TextView>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            >
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="9dp"
-                                android:layout_gravity="end"
-                                android:src="@drawable/ic_arrow_right"
-                                android:layout_marginRight="10dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/secondary_gray"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ngôn ngữ"
-                            android:textSize="14dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/black">
-                        </TextView>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            >
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="9dp"
-                                android:layout_gravity="end"
-                                android:src="@drawable/ic_arrow_right"
-                                android:layout_marginRight="10dp"/>
-                        </LinearLayout>
+                            android:textColor="@color/secondary_gray">
+                        </EditText>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -303,7 +228,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="Tài khoản của tôi"
+                android:text="Cài đặt"
                 android:textSize="12dp"
                 android:gravity="center"
                 android:layout_marginBottom="6dp"
@@ -330,7 +255,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Trung tâm hỗ trợ"
+                            android:text="Đặt làm địa chỉ mặc định"
                             android:textSize="14dp"
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
@@ -343,108 +268,31 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             >
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="9dp"
-                                android:layout_gravity="end"
-                                android:src="@drawable/ic_arrow_right"
-                                android:layout_marginRight="10dp"/>
+                            <androidx.appcompat.widget.SwitchCompat
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:textSize="24dp"
+                                android:thumb="@drawable/custom_toggle_button_switch_thumb"
+                                app:track="@drawable/custom_toggle_button_swtich_strack"
+                                android:layout_marginRight="14dp"
+                                />
                         </LinearLayout>
                     </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/secondary_gray"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tiêu chuẩn cộng đồng"
-                            android:textSize="14dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/black">
-                        </TextView>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            >
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="9dp"
-                                android:layout_gravity="end"
-                                android:src="@drawable/ic_arrow_right"
-                                android:layout_marginRight="10dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/secondary_gray"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Điều khoản shop"
-                            android:textSize="14dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/black">
-                        </TextView>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            >
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="9dp"
-                                android:layout_gravity="end"
-                                android:src="@drawable/ic_arrow_right"
-                                android:layout_marginRight="10dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/secondary_gray"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        />
+
                 </LinearLayout>
             </LinearLayout>
-
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="Xóa địa chỉ"
+                android:textSize="12dp"
+                android:textColor="@color/primary_red"
+                android:gravity="center"
+                android:backgroundTint="@color/white"
+                android:layout_marginTop="28dp"
+                android:layout_gravity="center_horizontal"
+                />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -457,7 +305,7 @@
         <Button
             android:layout_width="343dp"
             android:layout_height="48dp"
-            android:text="Đăng xuất"
+            android:text="Thêm địa chỉ"
             android:gravity="center"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/border_button_setting_25"
