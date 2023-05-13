@@ -3,4 +3,6 @@
 
     <string name="app_name">EcommerceShop</string>
     <string name="button_shop_favourite">Hủy theo dõi</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

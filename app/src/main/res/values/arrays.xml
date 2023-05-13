@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <string-array name="genderSpinnerSelect">-->
-<!--        <item>Nam</item>-->
-<!--        <item>Nữ</item>-->
-<!--        <item>Khác</item>-->
-<!--    </string-array>-->
+    <string-array name="genderSpinnerSelect">
+        <item>Nam</item>
+        <item>Nữ</item>
+        <item>Khác</item>
+    </string-array>
+    <string-array name="orderStatus">
+        <item>All</item>
+        <item>UnProcessed</item>
+        <item>Processing</item>
+        <item>Completed</item>
+        <item>Cancelled</item>
+    </string-array>
 </resources>

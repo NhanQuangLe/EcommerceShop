@@ -7,6 +7,7 @@
     <color name="primary_gray">#FFE9EAEC</color>
     <color name="secondary_gray">#FF9B9B9B</color>
     <color name="third_gray">#FF747474</color>
-    <color name="fourth_gray">#FFF3F3F3</color>
+    <color name="fourth_gray">#FFF9F9F9</color>
     <color name="primary_yellow">#FFB48A4D</color>
+    <color name="light_red">#FF8892</color>
 </resources>
