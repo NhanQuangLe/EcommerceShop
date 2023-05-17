@@ -11,10 +11,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
-        <activity android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
+        <activity
+            android:name=".activity_forgot_pass_new_pass"
+            android:exported="false" />
+        <activity
+            android:name=".activity_forgot_pass_code"
+            android:exported="false" />
+        <activity
+            android:name=".activity_forgot_pass_phone"
+            android:exported="false" />
+        <activity
+            android:name=".activity_splash_screen"
+            android:exported="false" />
+        <activity
+            android:name=".activity_sign_up"
+            android:exported="false" />
+        <activity
+            android:name=".activity_login"
+            android:exported="false" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="false"
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
         <activity
             android:name=".MainUserActivity"
             android:exported="false" />

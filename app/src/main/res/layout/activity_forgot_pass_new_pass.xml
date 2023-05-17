@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/background_login_signup"
+    tools:context=".activity_forgot_pass_new_pass">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/buttonBack"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_back"
+        android:tint="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:id="@+id/textLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot password"
+        app:layout_constraintTop_toBottomOf="@id/buttonBack"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="36sp"/>
+    <TextView
+        android:id="@+id/textDes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please enter a new password with a minimum length of 8 characters"
+        app:layout_constraintTop_toBottomOf="@id/textLogin"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginHorizontal="20dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <EditText
+        android:id="@+id/editTextNewPass"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="30dp"
+        android:hint="New password"
+        android:inputType="textPassword"
+        android:maxLength="6"
+        android:textColorHint="@color/primary_gray"
+        android:background="@drawable/background_input"
+        app:layout_constraintTop_toBottomOf="@id/textDes"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/editTextNewPass"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="?android:attr/progressBarStyleSmallInverse"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+    <Button
+        android:id="@+id/buttonCreateNewPassword"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        android:layout_marginHorizontal="36dp"
+        android:text="CREATE NEW PASSWORD"
+        android:background="@drawable/background_button"
+        android:layout_marginTop="20dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
