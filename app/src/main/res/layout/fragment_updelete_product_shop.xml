@@ -50,12 +50,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="55dp"
+        android:layout_height="match_parent"
+        android:background="@color/primary_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/actionbar" >
+        app:layout_constraintTop_toBottomOf="@id/actionbar">
+
         <RelativeLayout
+
             android:id="@+id/relativeLayout2"
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -64,213 +67,277 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:elevation="10dp"
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/imgview"
-                android:layout_width="130dp"
-                android:layout_height="150dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/bg_edit_text" />
 
             <LinearLayout
-                android:layout_marginTop="5dp"
+                android:id="@+id/addImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imgview"
-                android:layout_centerHorizontal="true">
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_add_a_photo"/>
+                    android:src="@drawable/ic_add_a_photo" />
 
                 <TextView
-                    android:textSize="12sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/lato_bold"
                     android:text="Add image"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
             </LinearLayout>
+
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/circleindicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imgview"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/deletebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imgview"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="delete"
+                android:textColor="@color/primary_red"
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <ScrollView
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" >
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="20dp"
                 android:orientation="vertical">
+
                 <TextView
-                    android:layout_marginVertical="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thông tin sản phẩm: "
+                    android:layout_marginVertical="10dp"
                     android:fontFamily="@font/lato_bold"
+                    android:text="Thông tin sản phẩm: "
                     android:textColor="@color/primary_red"
                     android:textSize="20sp" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:hint="Tên sản phẩm"
-                    app:placeholderText="Iphone 13 Promax Offical"
                     app:endIconMode="clear_text"
-                    android:layout_marginBottom="10dp"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    app:placeholderText="Iphone 13 Promax">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/productName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
+                        android:background="@drawable/bg_edit_text"
+                        android:inputType="textPersonName|textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:hint="Mô tả sản phẩm"
-                    app:placeholderText="Iphone 13 Promax Offical "
                     app:endIconMode="clear_text"
-                    android:layout_marginBottom="10dp"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    app:placeholderText="Iphone 13 Promax Offical ">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/productDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
+                        android:background="@drawable/bg_edit_text"
+                        android:inputType="textCapSentences|textMultiLine" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/CategoryProduct"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_edit_text"
+                    android:drawableEnd="@drawable/ic_arrow_down"
+                    android:drawablePadding="30dp"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:paddingStart="16dp"
+                    android:paddingTop="15dp"
+                    android:paddingEnd="10dp"
+                    android:text="Loại sản phẩm"
+                    android:textSize="16sp" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Loại sản phẩm"
                     android:layout_marginBottom="10dp"
-                    app:placeholderText="Iphone 13 Promax Offical"
-                    app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:hint="Số lượng"
-                    android:layout_marginBottom="10dp"
-                    app:placeholderText="Iphone 13 Promax Offical"
                     app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    app:placeholderText="20">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/productQuantity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
+                        android:background="@drawable/bg_edit_text"
+                        android:inputType="textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:hint="Giá"
-                    android:layout_marginBottom="10dp"
-                    app:placeholderText="Iphone 13 Promax Offical"
                     app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    app:placeholderText="22.000.000d">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/productOriginalPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
+                        android:background="@drawable/bg_edit_text"
+                        android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+
                     android:hint="Quốc gia"
-                    android:layout_marginBottom="10dp"
-                    app:placeholderText="Iphone 13 Promax Offical"
                     app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    app:placeholderText="America">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/productCountry"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
+                        android:background="@drawable/bg_edit_text"
+                        android:inputType="textPersonName|textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Thương hiệu"
                     android:layout_marginBottom="10dp"
-                    app:placeholderText="Iphone 13 Promax Offical"
+                    android:hint="Thương hiệu"
                     app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    app:placeholderText="Apple">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/productBrand"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
+                        android:background="@drawable/bg_edit_text"
+                        android:inputType="textPersonName|textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/lato_bold"
                         android:text="Có áp dụng khuyến mãi"
-                        android:textSize="18sp"
                         android:textColor="@color/primary_red"
-                        android:fontFamily="@font/lato_bold"/>
-                    <Switch
+                        android:textSize="18sp" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/discountSwitch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dispriceLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:hint="Giá khuyến mãi"
-                    app:placeholderText="Iphone 13 Promax Offical"
+                    android:visibility="gone"
                     app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    app:placeholderText="20.000.000d">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/productDiscountPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
+                        android:background="@drawable/bg_edit_text"
+                        android:inputType="numberDecimal"
+                        android:visibility="gone" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/disnotelayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Ghi chú khuyến mãi"
-                    app:placeholderText="Iphone 13 Promax Offical"
+                    android:visibility="gone"
                     app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    app:placeholderText="Sale 10%">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/productNoteDiscount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
+                        android:background="@drawable/bg_edit_text"
+                        android:visibility="gone" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
                 <Button
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="20dp"
+                    android:id="@+id/btnAddProduct"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Cập nhật sản phẩm"
                     android:layout_marginHorizontal="30dp"
-                    android:background="@drawable/bg_filter_list_item"/>
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_filter_list_item"
+                    android:text="Cập nhật sản phẩm" />
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
