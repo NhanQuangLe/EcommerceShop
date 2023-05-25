@@ -37,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         login=findViewById(R.id.login);
         signup=findViewById(R.id.signup);
         progressDialog=new ProgressDialog(this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth=FirebaseAuth.getInstance();
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth.signInWithEmailAndPassword(Email, Password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
+                progressDialog.dismiss();
                 startActivity(new Intent(LoginActivity.this, MainShopActivity.class));
                 finish();
             }

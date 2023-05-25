@@ -7,27 +7,37 @@
     android:background="@color/primary_gray"
     tools:context=".Fragment.HomePageShopFragment">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="326dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_search_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/searchViewLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_filter"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/searchView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <HorizontalScrollView
+        <EditText
+            android:id="@+id/searchView"
+            android:layout_width="345dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_search_view"
+            android:hint="Search"
+            android:drawableStart="@drawable/ic_search"
+            android:padding="10dp"/>
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_filter"
+            android:layout_marginTop="5dp"
+            />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
         android:layout_marginStart="20dp"
         android:id="@+id/statusList"
         android:layout_width="match_parent"
@@ -36,78 +46,28 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All"
-                android:textAllCaps="false"
-                android:paddingHorizontal="20dp"
-                android:layout_marginEnd="20dp"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/primary_red"
-                android:background="@drawable/bg_filter_list_item"/>
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Smart phone"
-                android:textAllCaps="false"
-                android:layout_marginEnd="20dp"
-                android:paddingHorizontal="20dp"
-                android:textColor="@color/white"
-                android:background="@drawable/bg_filter_list_item"/>
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Headphone"
-                android:textAllCaps="false"
-                android:layout_marginEnd="20dp"
-                android:paddingHorizontal="20dp"
-                android:textColor="@color/white"
-                android:background="@drawable/bg_filter_list_item"/>
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Charger"
-                android:textAllCaps="false"
-                android:layout_marginEnd="20dp"
-                android:paddingHorizontal="20dp"
-                android:textColor="@color/white"
-                android:background="@drawable/bg_filter_list_item"/>
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Laptop"
-                android:textAllCaps="false"
-                android:layout_marginEnd="20dp"
-                android:paddingHorizontal="20dp"
-                android:textColor="@color/white"
-                android:background="@drawable/bg_filter_list_item"/>
-        </LinearLayout>
-    </HorizontalScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/searchViewLayout" />
+
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="30dp"
+        android:layout_marginHorizontal="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/statusList">
 
         <TextView
+            android:id="@+id/filtertv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:fontFamily="@font/lato_bold"
             android:text="All Items"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -117,10 +77,17 @@
             android:src="@drawable/ic_view_module" />
     </RelativeLayout>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="400dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listproduct"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/adapter_item_all_product_shop"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

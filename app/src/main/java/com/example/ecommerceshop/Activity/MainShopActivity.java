@@ -51,6 +51,7 @@ public class MainShopActivity extends AppCompatActivity {
             public void onClick(View view) {
                 ReplaceFragment(new AddProductShopFragment());
                 textView.setText("ADD PRODUCT");
+
             }
         });
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -72,6 +73,10 @@ public class MainShopActivity extends AppCompatActivity {
                     case R.id.profile_shop:
                         ReplaceFragment(new ProfileShopFragment());
                         textView.setText("MY PROFILE");
+                        break;
+                    case R.id.addProductshop:
+                        ReplaceFragment(new AddProductShopFragment());
+                        textView.setText("ADD PRODUCT");
                         break;
                 }
                 return true;

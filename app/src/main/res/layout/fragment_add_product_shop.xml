@@ -106,19 +106,22 @@
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/DesInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mô tả sản phẩm"
                 app:placeholderText="Iphone 13 Promax Offical "
                 app:endIconMode="clear_text"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="15dp"
                 app:helperTextTextColor="@color/primary_red">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/productDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edit_text"
-                    android:inputType="textCapSentences|textMultiLine"/>
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:minLines="10"
+                    android:scrollbars="vertical"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -148,9 +151,10 @@
                 app:helperTextTextColor="@color/primary_red">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/productQuantity"
-                    android:inputType="textCapWords"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:background="@drawable/bg_edit_text" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -173,8 +177,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Quốc gia"
-
+                android:hint="Nơi sản xuất"
                 android:layout_marginBottom="10dp"
                 app:placeholderText="America"
                 app:endIconMode="clear_text"
