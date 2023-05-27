@@ -149,7 +149,6 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/productName"
                         android:layout_width="match_parent"
-
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName|textCapWords"
                         android:background="@drawable/bg_edit_text" />
@@ -198,6 +197,7 @@
                     android:layout_marginBottom="10dp"
                     app:placeholderText="20"
                     app:endIconMode="clear_text"
+                    android:enabled="false"
                     app:helperTextTextColor="@color/primary_red">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/productQuantity"
@@ -230,7 +230,8 @@
                     android:layout_marginBottom="10dp"
                     app:placeholderText="America"
                     app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
+                    app:helperTextTextColor="@color/primary_red"
+                    >
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/productCountry"
                         android:layout_width="match_parent"
@@ -238,22 +239,21 @@
                         android:inputType="textPersonName|textCapWords"
                         android:background="@drawable/bg_edit_text" />
                 </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                <TextView
+                    android:id="@+id/productBrand"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Thương hiệu"
+                    android:layout_height="55dp"
                     android:layout_marginBottom="10dp"
-                    app:placeholderText="Apple"
-                    app:endIconMode="clear_text"
-                    app:helperTextTextColor="@color/primary_red">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/productBrand"
-                        android:inputType="textPersonName|textCapWords"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:background="@drawable/bg_edit_text"
+                    android:paddingTop="15dp"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:drawableEnd="@drawable/ic_arrow_down"
+                    android:drawablePadding="30dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="10dp"
+                    android:text="Thương hiệu"
+                    android:textSize="16sp" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

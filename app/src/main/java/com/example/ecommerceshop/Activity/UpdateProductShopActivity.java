@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ecommerceshop.Adapter.PhotoAdapter;
-import com.example.ecommerceshop.Utils.Constants;
 import com.example.ecommerceshop.Model.Photo;
 import com.example.ecommerceshop.Model.Product;
 import com.example.ecommerceshop.R;
@@ -51,10 +50,10 @@ public class UpdateProductShopActivity extends AppCompatActivity {
 
     private ViewPager productPhoto;
     private CircleIndicator circleIndicator;
-    private TextView CategoryProduct, deletebtn;
+    private TextView CategoryProduct, deletebtn,productBrand;
     private LinearLayout addProductbtn;
     private TextInputEditText productName, productDescription, productQuantity,productOriginalPrice,
-            productCountry,productBrand,productDiscountPrice,productNoteDiscount;
+            productCountry,productDiscountPrice,productNoteDiscount;
     private SwitchCompat discountSwitch;
     private Button btnUpdateProduct;
     private ImageView backbtn, deleteBtn;
@@ -63,10 +62,11 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     private PhotoAdapter photoAdapter;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
-    private List<String> uriList ;
+    private List<String> uriList , producttypeList, trademarkList ;
     String ProductName, ProductDescription, productCategory, ProductBrand, ProductSite, ProductDiscountNote, Productid;
     int ProductQuantity, productPrice, ProductDiscountPrice;
     boolean isDiscount;
+    String[] categorys, trademarks;
     boolean isdeleted=false;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMultipleMedia = registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), uris -> {
                 if (!uris.isEmpty()) {
@@ -82,8 +82,9 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_updelete_product_shop);
+        setContentView(R.layout.activity_updelete_product_shop);
         initUi();
+        LoadData();
         progressDialog=new ProgressDialog(UpdateProductShopActivity.this);
         progressDialog.setTitle("Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -103,11 +104,25 @@ public class UpdateProductShopActivity extends AppCompatActivity {
             public void onClick(View view) {categoryDialog();}
             private void categoryDialog() {
                 AlertDialog.Builder builder= new AlertDialog.Builder(UpdateProductShopActivity.this);
-                builder.setTitle("Product Category").setItems(Constants.categorys, new DialogInterface.OnClickListener() {
+                builder.setTitle("Product Category").setItems(categorys, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String category = Constants.categorys[i];
+                        String category = categorys[i];
                         CategoryProduct.setText(category);
+                    }
+                }).show();
+            }
+        });
+        productBrand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {categoryDialog();}
+            private void categoryDialog() {
+                AlertDialog.Builder builder= new AlertDialog.Builder(UpdateProductShopActivity.this);
+                builder.setTitle("Product brand").setItems(trademarks, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String trademark = trademarks[i];
+                        productBrand.setText(trademark);
                     }
                 }).show();
             }
@@ -178,14 +193,49 @@ public class UpdateProductShopActivity extends AppCompatActivity {
             }
         });
     }
+    private void LoadData() {
+        producttypeList = new ArrayList<>();
+        trademarkList = new ArrayList<>();
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("ProductType").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                producttypeList.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    String str = ds.getValue(String.class);
+                    producttypeList.add(str);
+                }
+                categorys = producttypeList.toArray(new String[producttypeList.size()]);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UpdateProductShopActivity.this, ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        databaseReference.child("Trademark").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                trademarkList.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    String str = ds.getValue(String.class);
+                    trademarkList.add(str);
+                }
+                trademarks= trademarkList.toArray(new String[trademarkList.size()]);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UpdateProductShopActivity.this, ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void deleteproduct(String productid) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid()).child("Products").child(productid).removeValue()
+        reference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(productid).removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         onBackPressed();
-                        Toast.makeText(UpdateProductShopActivity.this, "Delete product successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Delete product successfully!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -197,43 +247,45 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     }
     private void loadProductDetail() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid()).child("Products").child(Productid).addValueEventListener(new ValueEventListener() {
+        reference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(Productid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Product product = new Product();
                 product = snapshot.getValue(Product.class);
-                productName.setText(product.getProductName());
-                productDescription.setText(product.getProductDescription());
-                CategoryProduct.setText(product.getProductCategory());
-                productQuantity.setText(String.valueOf(product.getProductQuantity()));
-                productOriginalPrice.setText(String.valueOf(product.getProductPrice()));
-                productBrand.setText(product.getProductBrand());
-                productCountry.setText(product.getProductSite());
-                if(product.getProductDiscountPrice()==0){
-                    discountSwitch.setChecked(false);
-                    dispriceLayout.setVisibility(View.GONE);
-                    disnotelayout.setVisibility(View.GONE);
-                    productDiscountPrice.setVisibility(View.GONE);
-                    productNoteDiscount.setVisibility(View.GONE);
+                if(product!=null){
+                    productName.setText(product.getProductName());
+                    productDescription.setText(product.getProductDescription());
+                    CategoryProduct.setText(product.getProductCategory());
+                    productQuantity.setText(String.valueOf(product.getProductQuantity()));
+                    productOriginalPrice.setText(String.valueOf(product.getProductPrice()));
+                    productBrand.setText(product.getProductBrand());
+                    productCountry.setText(product.getProductSite());
+                    if(product.getProductDiscountPrice()==0){
+                        discountSwitch.setChecked(false);
+                        dispriceLayout.setVisibility(View.GONE);
+                        disnotelayout.setVisibility(View.GONE);
+                        productDiscountPrice.setVisibility(View.GONE);
+                        productNoteDiscount.setVisibility(View.GONE);
+                    }
+                    else {
+                        discountSwitch.setChecked(true);
+                        dispriceLayout.setVisibility(View.VISIBLE);
+                        disnotelayout.setVisibility(View.VISIBLE);
+                        productDiscountPrice.setVisibility(View.VISIBLE);
+                        productNoteDiscount.setVisibility(View.VISIBLE);
+                        productDiscountPrice.setText(String.valueOf(product.getProductDiscountPrice()));
+                        productNoteDiscount.setText(product.getProductDiscountNote());
+                    }
+                    photoList = new ArrayList<>();
+                    uriList=product.getUriList();
+                    for(String str:uriList){
+                        photoList.add(new Photo(Uri.parse(str), 0));
+                    }
+                    photoAdapter=new PhotoAdapter(UpdateProductShopActivity.this, photoList);
+                    productPhoto.setAdapter(photoAdapter);
+                    circleIndicator.setViewPager(productPhoto);
+                    photoAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
                 }
-                else {
-                    discountSwitch.setChecked(true);
-                    dispriceLayout.setVisibility(View.VISIBLE);
-                    disnotelayout.setVisibility(View.VISIBLE);
-                    productDiscountPrice.setVisibility(View.VISIBLE);
-                    productNoteDiscount.setVisibility(View.VISIBLE);
-                    productDiscountPrice.setText(String.valueOf(product.getProductDiscountPrice()));
-                    productNoteDiscount.setText(product.getProductDiscountNote());
-                }
-                photoList = new ArrayList<>();
-                uriList=product.getUriList();
-                for(String str:uriList){
-                    photoList.add(new Photo(Uri.parse(str), 0));
-                }
-                photoAdapter=new PhotoAdapter(UpdateProductShopActivity.this, photoList);
-                productPhoto.setAdapter(photoAdapter);
-                circleIndicator.setViewPager(productPhoto);
-                photoAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

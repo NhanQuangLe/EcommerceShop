@@ -19,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -33,8 +34,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -49,23 +53,24 @@ public class AddProductShopFragment extends Fragment {
     private View mview;
     private ViewPager productPhoto;
     private CircleIndicator circleIndicator;
-    private TextView CategoryProduct, deletebtn;
+    private TextView CategoryProduct, deletebtn,productBrand;
     private LinearLayout addProductbtn;
     private TextInputEditText productName, productDescription, productQuantity,productOriginalPrice,
-            productCountry,productBrand,productDiscountPrice,productNoteDiscount;
+            productCountry,productDiscountPrice,productNoteDiscount;
     private SwitchCompat discountSwitch;
     private Button btnAddProduct;
     private TextInputLayout dispriceLayout,disnotelayout;
-    private List<Photo> photoList = new ArrayList<>();;
+    private List<Photo> photoList = new ArrayList<>();
     private PhotoAdapter photoAdapter;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
-    private List<String> uriList ;
+    private List<String> uriList, producttypeList, trademarkList ;
     String ProductName, ProductDescription, productCategory, ProductBrand, ProductSite, ProductDiscountNote;
     int ProductQuantity, productPrice, ProductDiscountPrice;
     boolean isDiscount;
+    String[] categorys, trademarks;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMultipleMedia =
-            registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(8), uris -> {
+            registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(10), uris -> {
                 if (!uris.isEmpty()) {
                     for (Uri uri:uris) {
                         photoList.add(new Photo(uri, 1));
@@ -88,6 +93,8 @@ public class AddProductShopFragment extends Fragment {
         progressDialog.setTitle("Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth=FirebaseAuth.getInstance();
+        LoadData();
+
         //function
         addProductbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,11 +109,25 @@ public class AddProductShopFragment extends Fragment {
             public void onClick(View view) {categoryDialog();}
             private void categoryDialog() {
                 AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
-                builder.setTitle("Product Category").setItems(Constants.categorys, new DialogInterface.OnClickListener() {
+                builder.setTitle("Product Category").setItems(categorys, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String category = Constants.categorys[i];
+                        String category = categorys[i];
                         CategoryProduct.setText(category);
+                    }
+                }).show();
+            }
+        });
+        productBrand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {categoryDialog();}
+            private void categoryDialog() {
+                AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
+                builder.setTitle("Product brand").setItems(trademarks, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String trademark = trademarks[i];
+                        productBrand.setText(trademark);
                     }
                 }).show();
             }
@@ -151,12 +172,47 @@ public class AddProductShopFragment extends Fragment {
         });
         return mview;
     }
+    private void LoadData() {
+        producttypeList = new ArrayList<>();
+        trademarkList = new ArrayList<>();
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("ProductType").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                producttypeList.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    String str = ds.getValue(String.class);
+                    producttypeList.add(str);
+                }
+                categorys = producttypeList.toArray(new String[producttypeList.size()]);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        databaseReference.child("Trademark").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                trademarkList.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    String str = ds.getValue(String.class);
+                    trademarkList.add(str);
+                }
+                trademarks= trademarkList.toArray(new String[trademarkList.size()]);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void uploadData( String timestamp) {
 
         Product product = new Product(timestamp,ProductName, ProductDescription,productCategory,ProductBrand,ProductSite,ProductDiscountNote
         ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid() );
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(firebaseAuth.getUid()).child("Products").child(timestamp).setValue(product).addOnSuccessListener(new OnSuccessListener<Void>() {
+        databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(timestamp).setValue(product).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 progressDialog.dismiss();
@@ -169,7 +225,7 @@ public class AddProductShopFragment extends Fragment {
         productName.setText("");
         productDescription.setText("");
         CategoryProduct.setText("Loại sản phẩm");
-        productBrand.setText("");
+        productBrand.setText("Thương hiệu");
         productCountry.setText("");
         productNoteDiscount.setText("");
         productDiscountPrice.setText("");
@@ -190,16 +246,13 @@ public class AddProductShopFragment extends Fragment {
         ProductSite = productCountry.getText().toString().trim();
         isDiscount=discountSwitch.isChecked();
         if(isDiscount){
-            ProductDiscountNote = productNoteDiscount.getText().toString().trim();
-
-            if(TextUtils.isEmpty(ProductDiscountNote)){
-                Toast.makeText(getContext(), "Product Discount Note is required...", Toast.LENGTH_SHORT).show();
-                return;
-            }
             if(TextUtils.isEmpty(productDiscountPrice.getText().toString().trim())){
                 Toast.makeText(getContext(), "Product Discount Price is required...", Toast.LENGTH_SHORT).show();
                 return;
             } else ProductDiscountPrice= Integer.parseInt(productDiscountPrice.getText().toString().trim());
+            int x = ((Integer.parseInt(productOriginalPrice.getText().toString().trim())- Integer.parseInt(productDiscountPrice.getText().toString().trim()))/
+                    Integer.parseInt(productOriginalPrice.getText().toString().trim()))*100;
+            ProductDiscountNote = productNoteDiscount.getText().toString().trim();
         }
         else{
             ProductDiscountNote="";
@@ -217,7 +270,7 @@ public class AddProductShopFragment extends Fragment {
             Toast.makeText(getContext(), "Product Category is required...", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(ProductBrand)){
+        if(TextUtils.isEmpty("Thương hiệu")){
             Toast.makeText(getContext(), "Product Brand is required...", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -240,7 +293,7 @@ public class AddProductShopFragment extends Fragment {
         UploadImageFireStore();
     }
     private void UploadImageFireStore() {
-        progressDialog.setMessage("UPLOADING....");
+        progressDialog.setMessage("Uploading....");
         progressDialog.show();
         uriList=new ArrayList<>();
         String timestamp = ""+System.currentTimeMillis();

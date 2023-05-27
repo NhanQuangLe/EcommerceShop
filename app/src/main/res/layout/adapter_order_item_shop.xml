@@ -84,11 +84,12 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/body"
-                        android:text="Số lượng:   "/>
+                        android:text="Quantity:   "
+                        android:textAppearance="@style/body" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -99,16 +100,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/body"
-                        android:text="Tổng đơn:   "/>
+                        android:text="Total Price:   "
+                        android:textAppearance="@style/body" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/body"
-                        android:text="2000$"/>
+                        android:text="20000000"
+                        android:textAppearance="@style/body" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -119,22 +122,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp">
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_detail"
                     android:layout_width="85dp"
                     android:layout_height="34dp"
-                    android:text="Chi tiết"
                     android:background="@drawable/bg_btn_order_item"
+                    android:text="Detail"
 
-                    android:textColor="@color/black"
-                    android:textAppearance="@style/caption"/>
+                    android:textAppearance="@style/caption"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
-                    android:text="Chưa xử lý"
+                    android:text="UnProcessed"
                     android:textAppearance="@style/body"
                     android:textColor="@color/secondary_red" />
             </RelativeLayout>

@@ -42,11 +42,11 @@ public class HomePageShopFragment extends Fragment {
     private RecyclerView listproduct , statusList;
     private AdapterProductShop adapterProductShop;
     private AdapterListCategoryShop shop;
-    private List<String> listCategory;
+    private List<String> listCategory, producttypeList;
     private ArrayList<Product> products;
     private FirebaseAuth firebaseAuth;
     private EditText searchView;
-
+    String[] categorys;
     public HomePageShopFragment() {}
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,22 +57,19 @@ public class HomePageShopFragment extends Fragment {
                              Bundle savedInstanceState) {
         mview=inflater.inflate(R.layout.fragment_home_page_shop, container, false);
         firebaseAuth=FirebaseAuth.getInstance();
-        listproduct=mview.findViewById(R.id.listproduct);
-        filterbtn=mview.findViewById(R.id.imageView4);
-        statusList=mview.findViewById(R.id.statusList);
-        filtertv=mview.findViewById(R.id.filtertv);
-        searchView=mview.findViewById(R.id.searchView);
+        initUI();
+        LoadData();
         loadListcategory();
         loadAllProduct();
         filterbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Choose Category")
-                        .setItems(Constants.categoryslist, new DialogInterface.OnClickListener() {
+                        .setItems(categorys, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                String selected = Constants.categoryslist[i];
+                                String selected = categorys[i];
                                 filtertv.setText(selected);
                                 if(selected.equals("All items")) loadAllProduct();
                                 else{
@@ -85,9 +82,7 @@ public class HomePageShopFragment extends Fragment {
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 try{
@@ -97,21 +92,36 @@ public class HomePageShopFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
-
-
         return mview;
     }
-
+    private void LoadData() {
+        producttypeList = new ArrayList<>();
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("ProductType").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                producttypeList.clear();
+                producttypeList.add("All items");
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    String str = ds.getValue(String.class);
+                    producttypeList.add(str);
+                }
+                categorys = producttypeList.toArray(new String[producttypeList.size()]);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void LoadFilterProduct(String selected) {
         products = new ArrayList<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(firebaseAuth.getUid()).child("Products").addValueEventListener(new ValueEventListener() {
+        databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 products.clear();
@@ -122,31 +132,27 @@ public class HomePageShopFragment extends Fragment {
                         products.add(product);
                     }
                 }
-
                 adapterProductShop = new AdapterProductShop(getContext(), products);
                 listproduct.setAdapter(adapterProductShop);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
     private void loadListcategory() {
         listCategory=new ArrayList<>();
-        listCategory= Arrays.asList(Constants.categoryslist);
+        listCategory= Arrays.asList(categorys);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
         shop = new AdapterListCategoryShop(getContext(), listCategory);
         statusList.setLayoutManager(linearLayoutManager);
         statusList.setAdapter(shop);
     }
-
     private void loadAllProduct() {
         products = new ArrayList<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(firebaseAuth.getUid()).child("Products").addValueEventListener(new ValueEventListener() {
+        databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 products.clear();
@@ -154,15 +160,20 @@ public class HomePageShopFragment extends Fragment {
                     Product product = ds.getValue(Product.class);
                     products.add(product);
                 }
-
                 adapterProductShop = new AdapterProductShop(getContext(), products);
                 listproduct.setAdapter(adapterProductShop);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void initUI(){
+        listproduct=mview.findViewById(R.id.listproduct);
+        filterbtn=mview.findViewById(R.id.imageView4);
+        statusList=mview.findViewById(R.id.statusList);
+        filtertv=mview.findViewById(R.id.filtertv);
+        searchView=mview.findViewById(R.id.searchView);
     }
 }

@@ -8,28 +8,32 @@
     android:background="@color/primary_gray"
     tools:context=".Fragment.OrderListShopFragment">
 
-    <androidx.appcompat.widget.SearchView
+    <EditText
         android:id="@+id/searchView"
-        android:layout_width="326dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="340dp"
+        android:layout_height="42dp"
         android:background="@drawable/bg_search_view"
+        android:drawableStart="@drawable/ic_search"
+        android:hint="Search"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/ic_filter"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/searchView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/searchView" />
 
     <HorizontalScrollView
         android:id="@+id/statusList"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="34dp"
         android:layout_marginStart="20dp"
@@ -45,17 +49,18 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="All"
+                android:text="All orders"
+                android:id="@+id/allorders"
                 android:textAllCaps="false"
                 android:paddingHorizontal="20dp"
                 android:layout_marginEnd="20dp"
                 android:textColor="@color/white"
-                android:backgroundTint="@color/primary_red"
-                android:background="@drawable/bg_filter_list_item"/>
+                android:background="@drawable/bg_filter_list_item_checked"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="UnProcessed"
+                android:id="@+id/unprocessed"
                 android:textAllCaps="false"
                 android:layout_marginEnd="20dp"
                 android:paddingHorizontal="20dp"
@@ -65,6 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Processing"
+                android:id="@+id/processing"
                 android:textAllCaps="false"
                 android:layout_marginEnd="20dp"
                 android:paddingHorizontal="20dp"
@@ -74,6 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Completed"
+                android:id="@+id/completed"
                 android:textAllCaps="false"
                 android:layout_marginEnd="20dp"
                 android:paddingHorizontal="20dp"
@@ -83,6 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancelled"
+                android:id="@+id/cancelled"
                 android:textAllCaps="false"
                 android:layout_marginEnd="20dp"
                 android:paddingHorizontal="20dp"
@@ -90,25 +98,24 @@
                 android:background="@drawable/bg_filter_list_item"/>
         </LinearLayout>
     </HorizontalScrollView>
-
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="30dp"
+        android:layout_marginHorizontal="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/statusList">
-
         <TextView
+            android:id="@+id/orderstatustv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:fontFamily="@font/lato_bold"
-            android:text="All Orders"
+            android:text="All orders"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -118,10 +125,15 @@
             android:src="@drawable/ic_view_module" />
     </RelativeLayout>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="400dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orderList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/adapter_order_item_shop"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

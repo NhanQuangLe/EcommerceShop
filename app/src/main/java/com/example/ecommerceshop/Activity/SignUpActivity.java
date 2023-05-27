@@ -58,29 +58,15 @@ public class SignUpActivity extends AppCompatActivity {
                         saveFirebaseData();
                     }
                 });
-
             }
         });
-
     }
-
     private void saveFirebaseData() {
         progressDialog.setMessage("Saving info...");
-        String timestamp=""+System.currentTimeMillis();
         HashMap<String, Object> info = new HashMap<>();
-        info.put("uid", ""+firebaseAuth.getUid());
-        info.put("name", ""+txtname);
-        info.put("phone", ""+txtphone);
-        info.put("address", ""+txtaddress);
-        info.put("email", ""+txtemail);
-        info.put("shopname", ""+txtshopname);
-        info.put("deliveryfee", ""+txtdeliveryfee);
-        info.put("timestamp", ""+timestamp);
-        info.put("userType", "Seller");
-
-
+        info.put("Shop Name", ""+txtname);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(firebaseAuth.getUid()).setValue(info)
+        databaseReference.child(firebaseAuth.getUid()).child("Shop").setValue(info)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
