@@ -2,6 +2,7 @@ package com.example.ecommerceshop.homeuser;
 
 import static com.example.ecommerceshop.homeuser.HomeUserActivity.FRAGMENT_ALL_PRODUCT;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityHomeUserBinding;
 import com.example.ecommerceshop.databinding.FragmentHomeUserBinding;
+import com.example.ecommerceshop.product_detail.ProductDetailActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,9 +64,26 @@ public class HomeFragmentUser extends Fragment {
         mListLaptop= new ArrayList<>();
         mListPhone = new ArrayList<>();
         mListAccessories = new ArrayList<>();
-        productAdapterLaptop = new ProductAdapter(mListLaptop);
-        productAdapterPhone = new ProductAdapter(mListPhone);
-        productAdapterAccessories = new ProductAdapter(mListAccessories);
+        productAdapterLaptop = new ProductAdapter(mListLaptop, new IClickProductItemListener() {
+            @Override
+            public void sentDataProduct(Product product) {
+                onClickGoToProductDetail(product);
+            }
+
+
+        });
+        productAdapterPhone = new ProductAdapter(mListPhone, new IClickProductItemListener() {
+            @Override
+            public void sentDataProduct(Product product) {
+                onClickGoToProductDetail(product);
+            }
+        });
+        productAdapterAccessories = new ProductAdapter(mListAccessories, new IClickProductItemListener() {
+            @Override
+            public void sentDataProduct(Product product) {
+                onClickGoToProductDetail(product);
+            }
+        });
         mFragmentHomeUserBinding.rcvProductLaptop.setAdapter(productAdapterLaptop);
         mFragmentHomeUserBinding.rcvProductPhone.setAdapter(productAdapterPhone);
         mFragmentHomeUserBinding.rcvProductAccessories.setAdapter(productAdapterAccessories);
@@ -145,8 +164,6 @@ public class HomeFragmentUser extends Fragment {
         });
 
     }
-
-
     private void setImageSlide() {
         List<SlideModel> list = new ArrayList<>();
         List<String> uriList = new ArrayList<>();
@@ -202,5 +219,12 @@ public class HomeFragmentUser extends Fragment {
             }
         });
 
+    }
+    private void onClickGoToProductDetail(Product product) {
+        Intent intent = new Intent(getContext(), ProductDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("product",product);
+        intent.putExtras(bundle);
+        getContext().startActivity(intent);
     }
 }

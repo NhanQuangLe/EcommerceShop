@@ -2,11 +2,12 @@ package com.example.ecommerceshop.homeuser;
 
 
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class Product {
+public class Product implements Serializable {
     private String productId;
     private String productName;
     private String productBrand;

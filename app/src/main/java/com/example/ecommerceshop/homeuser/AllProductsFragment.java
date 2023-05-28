@@ -1,5 +1,6 @@
 package com.example.ecommerceshop.homeuser;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentAllProductsBinding;
+import com.example.ecommerceshop.product_detail.ProductDetailActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,7 +41,12 @@ public class AllProductsFragment extends Fragment {
         mHomeUserActivity = (HomeUserActivity) getActivity();
 
         mListProduct = new ArrayList<>();
-        productAdapter = new ProductAdapter(mListProduct);
+        productAdapter = new ProductAdapter(mListProduct, new IClickProductItemListener() {
+            @Override
+            public void sentDataProduct(Product product) {
+                onClickGoToProductDetail(product);
+            }
+        });
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
         mFragmentAllProductsBinding.rcvProduct.setLayoutManager(gridLayoutManager);
@@ -140,6 +147,12 @@ public class AllProductsFragment extends Fragment {
             }
         });
     }
-
+    private void onClickGoToProductDetail(Product product) {
+        Intent intent = new Intent(getContext(), ProductDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("product",product);
+        intent.putExtras(bundle);
+        getContext().startActivity(intent);
+    }
 
 }

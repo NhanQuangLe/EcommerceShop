@@ -15,9 +15,11 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private List<Product> mList;
+    private IClickProductItemListener iClickProductItemListener;
 
-    public ProductAdapter(List<Product> mList) {
+    public ProductAdapter(List<Product> mList,IClickProductItemListener listener ) {
         this.mList = mList;
+        this.iClickProductItemListener = listener;
     }
 
     @NonNull
@@ -44,6 +46,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 holder.mBinding.productDiscountPrice.setText(product.getDiscountPrice());
                 holder.mBinding.productDiscountPercent.setText(product.getPercentDiscount());
             }
+            holder.mBinding.layoutProduct.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    iClickProductItemListener.sentDataProduct(product);
+                }
+            });
 
         }
     }
