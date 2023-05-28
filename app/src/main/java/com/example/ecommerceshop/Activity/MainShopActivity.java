@@ -1,14 +1,16 @@
-package com.example.ecommerceshop;
+package com.example.ecommerceshop.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class activity_sign_up extends AppCompatActivity {
+import com.example.ecommerceshop.R;
+
+public class MainShopActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_main_shop);
     }
 }

@@ -1,14 +1,16 @@
-package com.example.ecommerceshop;
+package com.example.ecommerceshop.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class activity_forgot_pass_new_pass extends AppCompatActivity {
+import com.example.ecommerceshop.R;
+
+public class MainUserActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_pass_new_pass);
+        setContentView(R.layout.activity_main_user);
     }
 }

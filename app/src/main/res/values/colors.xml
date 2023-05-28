@@ -4,12 +4,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary_red">#FFDB3022</color>
     <color name="secondary_red">#FFEA1C00</color>
-    <color name="primary_gray">#FFE9EAEC</color>
+    <color name="primary_gray">#E4E4E4</color>
     <color name="primary_gray_text">#676767</color>
     <color name="secondary_gray">#FF9B9B9B</color>
     <color name="third_gray">#FF747474</color>
     <color name="fourth_gray">#FFF3F3F3</color>
     <color name="primary_yellow">#FFB48A4D</color>
-    <color name="background_login_signup">#F9F9F9</color>
-
+    <color name="background_login_signup">#E8E8E8</color>
+    <color name="background_avatar">#FFFFFF</color>
+    <color name="error_red_color">#FF0000</color>
+    <color name="text_valid_green_color">#013000</color>
 </resources>
