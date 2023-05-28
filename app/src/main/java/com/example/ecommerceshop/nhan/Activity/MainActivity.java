@@ -1,14 +1,17 @@
-package com.example.ecommerceshop;
+package com.example.ecommerceshop.nhan.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class MainUserActivity extends AppCompatActivity {
+import com.example.ecommerceshop.R;
+
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_user);
+        setContentView(R.layout.activity_main);
+
     }
 }

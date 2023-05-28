@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainShopActivity"
+    tools:context=".nhan.Activity.MainShopActivity"
     android:background="@color/primary_gray">
 
     <com.google.android.material.bottomappbar.BottomAppBar

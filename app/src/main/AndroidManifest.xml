@@ -11,21 +11,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
-        <activity android:name=".MainActivity"
+        <activity android:name=".nhan.Activity.MainActivity"
             android:exported="false">
 
         </activity>
         <activity
-            android:name=".MainUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainShopActivity"
-            android:exported="true">
+            android:name=".nhan.Activity.MainUserActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".nhan.Activity.MainShopActivity"
+            android:exported="false">
+
         </activity>
     </application>
 

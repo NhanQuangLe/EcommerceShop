@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "955619568471",
+    "firebase_url": "https://ecommerceshop-1c3ec-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "ecommerceshop-1c3ec",
+    "storage_bucket": "ecommerceshop-1c3ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955619568471:android:c7a61ece56c499b1c76c12",
+        "android_client_info": {
+          "package_name": "com.example.ecommerceshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "955619568471-f6d9jvjr2sa47op3q83ev4utop24qq30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnfF4VrI9WBsiJPDrPqbwsYAdX5WedDQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "955619568471-f6d9jvjr2sa47op3q83ev4utop24qq30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
