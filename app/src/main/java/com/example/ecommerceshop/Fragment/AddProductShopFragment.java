@@ -43,12 +43,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
 
-public class AddProductShopFragment extends Fragment {
+public class AddProductShopFragment extends Fragment  {
     //UI VIEW
     private View mview;
     private ViewPager productPhoto;

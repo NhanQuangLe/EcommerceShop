@@ -59,7 +59,7 @@ public class HomePageShopFragment extends Fragment {
         firebaseAuth=FirebaseAuth.getInstance();
         initUI();
         LoadData();
-        loadListcategory();
+
         loadAllProduct();
         filterbtn.setOnClickListener(new View.OnClickListener() {
             @Override

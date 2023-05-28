@@ -16,6 +16,9 @@
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.ImageAdsShopActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.UpdateVoucherShopActivity"
             android:exported="false" />
         <activity

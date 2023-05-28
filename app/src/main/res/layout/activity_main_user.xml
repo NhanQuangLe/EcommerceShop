@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,21 +8,39 @@
     tools:context=".Activity.MainUserActivity"
     android:background="@color/primary_gray">
 
-    <com.google.android.material.bottomappbar.BottomAppBar
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/xxx"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:id="@+id/bottomAppBar"
-        app:fabCradleMargin="14dp"
-        app:fabCradleRoundedCornerRadius="50dp"
-        app:fabCradleVerticalOffset="2dp"
-        android:backgroundTint="@color/white">
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:background="@color/primary_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.bottomappbar.BottomAppBar
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/bottomNavigationView"
-            android:layout_marginEnd="16dp"
-            app:menu="@menu/bottom_nav_user_menu"
-            android:background="@drawable/bg_bottom_nav_transparent"/>
-    </com.google.android.material.bottomappbar.BottomAppBar>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:id="@+id/bottomAppBar"
+            app:fabCradleMargin="14dp"
+            app:fabCradleRoundedCornerRadius="50dp"
+            app:fabCradleVerticalOffset="2dp"
+            android:backgroundTint="@color/white">
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/bottomNavigationView"
+                android:layout_marginEnd="16dp"
+                app:menu="@menu/bottom_nav_user_menu"
+                android:background="@drawable/bg_bottom_nav_transparent"/>
+        </com.google.android.material.bottomappbar.BottomAppBar>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/frameLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/xxx"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
