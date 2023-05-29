@@ -40,6 +40,7 @@ public class AllProductsFragment extends Fragment {
 
         mHomeUserActivity = (HomeUserActivity) getActivity();
 
+        mFragmentAllProductsBinding.editTextSearch.setText(mHomeUserActivity.getTextSearch());
         mListProduct = new ArrayList<>();
         productAdapter = new ProductAdapter(mListProduct, new IClickProductItemListener() {
             @Override
@@ -65,7 +66,21 @@ public class AllProductsFragment extends Fragment {
             else {
                 setListProductCategory("Accessory");
             }
+            mFragmentAllProductsBinding.editTextSearch.setText("");
         }
+        mFragmentAllProductsBinding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setListSearchProductFromFireBase();
+            }
+        });
+        mFragmentAllProductsBinding.btnBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mHomeUserActivity.mCurrentFragment = mHomeUserActivity.FRAGMENT_HOME;
+                mHomeUserActivity.replaceFragment(new HomeFragmentUser());
+            }
+        });
         return viewFragment;
     }
 
@@ -108,7 +123,7 @@ public class AllProductsFragment extends Fragment {
     private void setListSearchProductFromFireBase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Users");
-        String res = mHomeUserActivity.getTextSearch().toLowerCase(Locale.ROOT);
+        String res = mFragmentAllProductsBinding.editTextSearch.getText().toString().toLowerCase(Locale.ROOT);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -38,49 +38,24 @@ public class HomeUserActivity extends AppCompatActivity {
     public static final int FRAGMENT_HOME  = 0;
     public static final int FRAGMENT_ALL_PRODUCT  = 1;
     public int mCurrentFragment = FRAGMENT_HOME;
+    private HomeFragmentUser homeFragmentUser;
+    public  String textSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityHomeUserBinding = ActivityHomeUserBinding.inflate(getLayoutInflater());
         setContentView(mActivityHomeUserBinding.getRoot());
+        homeFragmentUser = new HomeFragmentUser();
+        replaceFragment(homeFragmentUser);
 
-        replaceFragment(new HomeFragmentUser());
-
-        setSupportActionBar(mActivityHomeUserBinding.toolbarHomeUser);
-        mActivityHomeUserBinding.navView.setItemIconTintList(null);
-        mActivityHomeUserBinding.buttonToggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mActivityHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
-                    mActivityHomeUserBinding.drawer.openDrawer(GravityCompat.START);
-                }
-
-            }
-        });
-        Button btnBackward = mActivityHomeUserBinding.navView.inflateHeaderView(R.layout.header_view).findViewById(R.id.btnBackward);
-        btnBackward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mActivityHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
-                    mActivityHomeUserBinding.drawer.closeDrawer(GravityCompat.START);
-                }
-            }
-        });
-        mActivityHomeUserBinding.btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ACTION = ACTION_SEARCH;
-                mCurrentFragment = FRAGMENT_ALL_PRODUCT;
-                replaceFragment(new AllProductsFragment());
-            }
-        });
     }
 
     @Override
     public void onBackPressed() {
-        if (mActivityHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
-            mActivityHomeUserBinding.drawer.closeDrawer(GravityCompat.START);
+
+        if (homeFragmentUser.getmFragmentHomeUserBinding().drawer.isDrawerOpen(GravityCompat.START)){
+            homeFragmentUser.getmFragmentHomeUserBinding().drawer.closeDrawer(GravityCompat.START);
         }
         else {
             if (mCurrentFragment!=FRAGMENT_HOME){
@@ -102,10 +77,7 @@ public class HomeUserActivity extends AppCompatActivity {
     }
 
     public String getTextSearch(){
-        return mActivityHomeUserBinding.editTextSearch.getText().toString().trim();
+        return this.textSearch;
     }
-
-
-
 
 }

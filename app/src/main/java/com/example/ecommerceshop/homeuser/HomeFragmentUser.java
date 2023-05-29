@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -38,6 +41,8 @@ public class HomeFragmentUser extends Fragment {
 
     private HomeUserActivity mHomeUserActivity;
     private FragmentHomeUserBinding mFragmentHomeUserBinding;
+
+
     private View viewFragment;
     private ProductAdapter productAdapterLaptop;
     private ProductAdapter productAdapterPhone;
@@ -51,8 +56,52 @@ public class HomeFragmentUser extends Fragment {
                              Bundle savedInstanceState) {
         mFragmentHomeUserBinding = FragmentHomeUserBinding.inflate(inflater,container,false);
         viewFragment = mFragmentHomeUserBinding.getRoot();
-
         mHomeUserActivity = (HomeUserActivity) getActivity();
+
+        mHomeUserActivity.setSupportActionBar(mFragmentHomeUserBinding.toolbarHomeUser);
+        mFragmentHomeUserBinding.navView.setItemIconTintList(null);
+
+        mFragmentHomeUserBinding.buttonToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
+                    mFragmentHomeUserBinding.drawer.openDrawer(GravityCompat.START);
+                }
+
+            }
+        });
+
+        View headerView = mFragmentHomeUserBinding.navView.inflateHeaderView(R.layout.header_view);
+
+        Button btnBackward = headerView.findViewById(R.id.btnBackward);
+        btnBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
+                    mFragmentHomeUserBinding.drawer.closeDrawer(GravityCompat.START);
+                }
+            }
+        });
+        TextView textViewHome = headerView.findViewById(R.id.text_view_home);
+        textViewHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
+                    mFragmentHomeUserBinding.drawer.closeDrawer(GravityCompat.START);
+                }
+            }
+        });
+        mFragmentHomeUserBinding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mHomeUserActivity.ACTION = mHomeUserActivity.ACTION_SEARCH;
+                mHomeUserActivity.mCurrentFragment = mHomeUserActivity.FRAGMENT_ALL_PRODUCT;
+                mHomeUserActivity.textSearch = mFragmentHomeUserBinding.editTextSearch.getText().toString();
+                mHomeUserActivity.replaceFragment(new AllProductsFragment());
+            }
+        });
+
+
 
         setImageSlide();
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
@@ -227,4 +276,8 @@ public class HomeFragmentUser extends Fragment {
         intent.putExtras(bundle);
         getContext().startActivity(intent);
     }
+    public FragmentHomeUserBinding getmFragmentHomeUserBinding() {
+        return mFragmentHomeUserBinding;
+    }
+
 }
