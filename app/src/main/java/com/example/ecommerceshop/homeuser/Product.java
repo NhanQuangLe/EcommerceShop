@@ -18,12 +18,12 @@ public class Product implements Serializable {
     private int productPrice;
     private int getProductQuantity;
     private String productSite;
-    private String udi;
+    private String uid;
 
 
     private List<String> uriList;
 
-    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int getProductQuantity, String productSite, String udi, List<String> urlList) {
+    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int getProductQuantity, String productSite, String uid, List<String> urlList) {
         this.productId = productId;
         this.productName = productName;
         this.productBrand = productBrand;
@@ -34,7 +34,7 @@ public class Product implements Serializable {
         this.productPrice = productPrice;
         this.getProductQuantity = getProductQuantity;
         this.productSite = productSite;
-        this.udi = udi;
+        this.uid = uid;
         this.uriList = urlList;
     }
     public Product() {
@@ -122,12 +122,12 @@ public class Product implements Serializable {
         this.productSite = productSite;
     }
 
-    public String getUdi() {
-        return udi;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUdi(String udi) {
-        this.udi = udi;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public List<String> getUriList() {
@@ -143,6 +143,7 @@ public class Product implements Serializable {
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         String str1 = currencyVN.format(res);
+
         return str1;
     }
     public String getPrice(){

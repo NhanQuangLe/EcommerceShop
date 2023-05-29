@@ -1,5 +1,6 @@
 package com.example.ecommerceshop.homeuser;
 
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             }
             else {
                 holder.mBinding.productDiscountPrice.setText(product.getDiscountPrice());
+                holder.mBinding.productDiscountPrice.setPaintFlags(holder.mBinding.productDiscountPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 holder.mBinding.productDiscountPercent.setText(product.getPercentDiscount());
             }
             holder.mBinding.layoutProduct.setOnClickListener(new View.OnClickListener() {

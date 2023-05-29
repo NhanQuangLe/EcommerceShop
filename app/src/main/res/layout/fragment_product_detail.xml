@@ -93,6 +93,7 @@
                 android:orientation="vertical">
                 
                 <ImageView
+                    android:id="@+id/productImage"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:src="@drawable/img_product"
@@ -107,6 +108,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
+                            android:id="@+id/productName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Laptop MSI Bravo 15"
@@ -122,6 +124,7 @@
                             android:layout_marginStart="10dp"
                             android:textSize="20sp" />
                         <TextView
+                            android:id="@+id/productBrand"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="MSI"
@@ -280,6 +283,7 @@
                             />
 
                         <TextView
+
                             android:id="@+id/productPrice"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -524,6 +528,7 @@
                             android:textStyle="bold"
                             />
                         <TextView
+                            android:id="@+id/product_desc"
                             android:layout_marginTop="15dp"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
@@ -542,6 +547,7 @@ Bộ trưởng Bộ Xây dựng cũng giao nhiệm vụ biên soạn sửa đổ
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Xem thêm"
+                            android:id="@+id/btnDetailDesc"
                             android:layout_gravity="center_horizontal"
                             android:textSize="16sp"
                             android:textColor="#EA1C00"
