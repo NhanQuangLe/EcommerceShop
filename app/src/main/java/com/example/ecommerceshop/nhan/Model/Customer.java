@@ -1,15 +1,50 @@
 package com.example.ecommerceshop.nhan.Model;
 
-public class Customer {
-    String Name, PhoneNumber, Email, DateOfBirth, Gender;
-    public Customer(){}
+import java.util.ArrayList;
+import java.util.List;
 
-    public Customer(String name, String phoneNumber, String email, String dateOfBirth, String gender) {
+public class Customer extends User{
+    String Avatar, Name, PhoneNumber, Email, DateOfBirth, Gender;
+    ArrayList<Shop> Followers;
+
+    public Customer() {
+    }
+
+    public Customer(String userID, String userType, String avatar, String name, String phoneNumber, String email, String dateOfBirth, String gender, ArrayList<Shop> followers) {
+        super(userID, userType);
+        Avatar = avatar;
         Name = name;
         PhoneNumber = phoneNumber;
         Email = email;
         DateOfBirth = dateOfBirth;
         Gender = gender;
+        Followers = followers;
+    }
+
+    public Customer(String avatar, String name, String phoneNumber, String email, String dateOfBirth, String gender, ArrayList<Shop> followers) {
+        Avatar = avatar;
+        Name = name;
+        PhoneNumber = phoneNumber;
+        Email = email;
+        DateOfBirth = dateOfBirth;
+        Gender = gender;
+        Followers = followers;
+    }
+
+    public ArrayList<Shop> getFollowers() {
+        return Followers;
+    }
+
+    public void setFollowers(ArrayList<Shop> followers) {
+        Followers = followers;
+    }
+
+    public String getAvatar() {
+        return Avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        Avatar = avatar;
     }
 
     public String getName() {

@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.nhan.Activity;
+package com.example.ecommerceshop;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,21 +28,6 @@ public class MainUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_user);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        Toast.makeText(MainUserActivity.this,  "Đang lấy data", Toast.LENGTH_SHORT).show();
-        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("ProductType").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()) {
-                    String str = ds.getValue(String.class);
-                    Toast.makeText(MainUserActivity.this, str, Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MainUserActivity.this, ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

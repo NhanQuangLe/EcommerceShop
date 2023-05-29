@@ -11,12 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
-        <activity android:name=".nhan.Activity.MainActivity"
+        <activity android:name=".MainActivity"
             android:exported="false">
 
         </activity>
         <activity
-            android:name=".nhan.Activity.MainUserActivity"
+            android:name=".MainUserActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,8 +25,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".nhan.Activity.MainShopActivity"
+            android:name=".MainShopActivity"
             android:exported="false">
+
+        </activity>
+        <activity
+            android:name=".nhan.Activity.UserOrdersActivity"
+            android:exported="false"
+            android:parentActivityName=".MainUserActivity">
 
         </activity>
     </application>

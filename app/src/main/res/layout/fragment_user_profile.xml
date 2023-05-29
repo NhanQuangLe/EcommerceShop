@@ -60,11 +60,12 @@
                 app:cardCornerRadius="64dp">
 
                 <ImageView
+                    android:id="@+id/iv_customerAvatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:src="@drawable/iphone"
-                    />
+                />
             </androidx.cardview.widget.CardView>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -74,7 +75,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/customerName"
+                    android:id="@+id/tv_customerName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Lê Quang Nhân"
@@ -82,7 +83,7 @@
                     android:fontFamily="@font/lato_bold"
                     android:textColor="@color/white"/>
                 <TextView
-                    android:id="@+id/customerEmail"
+                    android:id="@+id/tv_customerEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="lequangnhan@gmail.com"
@@ -106,7 +107,7 @@
                         android:textColor="@color/white"
                         />
                     <TextView
-                        android:id="@+id/customerNumberFollowers"
+                        android:id="@+id/tv_customerNumberFollowers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="4"
@@ -136,7 +137,7 @@
             android:layout_marginRight="3dp"
             />
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/item_order_shop"
+            android:id="@+id/cl_History_Order"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             app:layout_constraintTop_toTopOf="parent"
@@ -182,7 +183,7 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/lato_regular"
                     android:textColor="@color/drak_gray"
-                    >
+                >
                 </TextView>
                 <ImageView
                     android:layout_width="20dp"
@@ -190,8 +191,6 @@
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_arrow_right"/>
             </LinearLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -200,7 +199,6 @@
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
             />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="85dp"
@@ -254,7 +252,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Đang giao"
+                        android:text="Chờ lấy hàng"
                         android:textSize="12dp"
                         android:layout_marginTop="8dp"
                         android:layout_gravity="center"
@@ -280,7 +278,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Đã giao"
+                        android:text="Đang giao"
                         android:textSize="12dp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center"
@@ -322,7 +320,6 @@
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
             />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -606,7 +603,6 @@
                 />
 
         </LinearLayout>
-
     </LinearLayout>
 </LinearLayout>
 
