@@ -55,5 +55,8 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.5.3'
     implementation 'me.relex:circleindicator:2.1.6'
     implementation 'com.github.dhaval2404:imagepicker:2.1'
-
+    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
+    implementation platform('com.google.firebase:firebase-bom:32.1.0')
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 }

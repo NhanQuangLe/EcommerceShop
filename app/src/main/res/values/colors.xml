@@ -16,4 +16,8 @@
     <color name="green1">#FF24B02A</color>
     <color name="red3">#FFCB5C5C</color>
     <color name="gray5">#FF9B9B9B</color>
+    <color name="background_login_signup">#E8E8E8</color>
+    <color name="background_avatar">#FFFFFF</color>
+    <color name="error_red_color">#FF0000</color>
+    <color name="text_valid_green_color">#013000</color>
 </resources>

@@ -22,6 +22,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
+import com.example.ecommerceshop.R;
+
 public class MainShopActivity extends AppCompatActivity {
 
     ListView listView ;

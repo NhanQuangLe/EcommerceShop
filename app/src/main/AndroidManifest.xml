@@ -12,14 +12,23 @@
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
         <activity
-            android:name=".Phat.Activity.LoginActivity"
-            android:exported="true">
+            android:name=".tinh.Activity.activity_splash_screen"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".tinh.Activity.activity_forgot_password"
+            android:exported="false" />
+        <activity
+            android:name=".tinh.Activity.activity_sign_up"
+            android:exported="false" />
+        <activity
+            android:name=".tinh.Activity.activity_login"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false"
