@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityProductDetailBinding;
 import com.example.ecommerceshop.databinding.FragmentAllProductsBinding;
@@ -100,7 +102,7 @@ public class ProductDetailFragment extends Fragment {
 
     private void unit() {
         Product product = (Product) getArguments().get("product");
-        Glide.with(getContext()).load(product.getUriList().get(0)).into(mFragmentProductDetailBinding.productImage);
+        setSlideProductImage(product.getUriList());
         mFragmentProductDetailBinding.productName.setText(product.getProductName());
         mFragmentProductDetailBinding.productBrand.setText(product.getProductBrand());
         mFragmentProductDetailBinding.productPrice.setText(product.getPrice());
@@ -128,6 +130,14 @@ public class ProductDetailFragment extends Fragment {
         mFragmentProductDetailBinding.rcvProduct.setAdapter(productAdapter);
         setListShopProductFromFireBase(product.getUid());
 
+    }
+
+    private void setSlideProductImage(List<String> listUri) {
+        List<SlideModel> list = new ArrayList<>();
+        for (String uri : listUri){
+            list.add(new SlideModel(uri, ScaleTypes.FIT));
+        }
+        mFragmentProductDetailBinding.slideProductImage.setImageList(list,ScaleTypes.FIT);
     }
 
     private void setListShopProductFromFireBase(String shopId) {
