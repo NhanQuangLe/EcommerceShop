@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF222222</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="main_background_color">#FFF5F5F5</color>
     <color name="primary_red">#FFDB3022</color>
     <color name="secondary_red">#FFEA1C00</color>
     <color name="primary_gray">#FFE9EAEC</color>
@@ -9,5 +10,7 @@
     <color name="secondary_gray">#FF9B9B9B</color>
     <color name="third_gray">#FF747474</color>
     <color name="fourth_gray">#FFF3F3F3</color>
+    <color name="drak_gray">#FF555555</color>
+    <color name="drak_x2_gray">#FF333333</color>
     <color name="primary_yellow">#FFB48A4D</color>
 </resources>
