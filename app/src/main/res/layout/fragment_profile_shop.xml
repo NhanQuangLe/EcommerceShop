@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/primary_gray"
-    tools:context=".Fragment.ProfileShopFragment">
+    tools:context=".Phat.Fragment.ProfileShopFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout3"

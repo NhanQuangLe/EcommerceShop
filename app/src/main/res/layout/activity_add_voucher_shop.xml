@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/primary_gray"
-    tools:context=".Activity.AddVoucherActivity">
+    tools:context=".Phat.Activity.AddVoucherActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/actionbar"
         android:layout_width="match_parent"

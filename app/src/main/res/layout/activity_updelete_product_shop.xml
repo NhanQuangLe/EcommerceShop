@@ -53,7 +53,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".Fragment.AddProductShopFragment"
+        tools:context=".Phat.Fragment.AddProductShopFragment"
         android:layout_height="match_parent"
         android:layout_marginTop="55dp"
         android:background="@color/primary_gray">

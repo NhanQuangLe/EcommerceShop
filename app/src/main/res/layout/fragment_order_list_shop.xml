@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/primary_gray"
-    tools:context=".Fragment.OrderListShopFragment">
+    tools:context=".Phat.Fragment.OrderListShopFragment">
 
     <EditText
         android:id="@+id/searchView"

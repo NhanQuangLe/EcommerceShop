@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/primary_gray"
-    tools:context=".Activity.UpdateProductShopActivity">
+    tools:context=".Phat.Activity.UpdateProductShopActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/actionbar"
