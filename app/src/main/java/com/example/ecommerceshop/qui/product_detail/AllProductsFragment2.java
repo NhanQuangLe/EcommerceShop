@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.product_detail;
+package com.example.ecommerceshop.qui.product_detail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentAllProducts2Binding;
-import com.example.ecommerceshop.homeuser.IClickProductItemListener;
-import com.example.ecommerceshop.homeuser.Product;
-import com.example.ecommerceshop.homeuser.ProductAdapter;
+import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
+import com.example.ecommerceshop.qui.homeuser.Product;
+import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

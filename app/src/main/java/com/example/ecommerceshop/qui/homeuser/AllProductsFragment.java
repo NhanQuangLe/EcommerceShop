@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.homeuser;
+package com.example.ecommerceshop.qui.homeuser;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,12 +13,11 @@ import android.view.ViewGroup;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentAllProductsBinding;
-import com.example.ecommerceshop.product_detail.ProductDetailActivity;
+import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;

@@ -1,16 +1,14 @@
-package com.example.ecommerceshop.product_detail;
+package com.example.ecommerceshop.qui.product_detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityProductDetailBinding;
-import com.example.ecommerceshop.homeuser.HomeFragmentUser;
-import com.example.ecommerceshop.homeuser.Product;
+import com.example.ecommerceshop.qui.homeuser.Product;
 
 public class ProductDetailActivity extends AppCompatActivity implements ProductDetailFragment.ISenDataListener {
     private ActivityProductDetailBinding mActivityProductDetailBinding;

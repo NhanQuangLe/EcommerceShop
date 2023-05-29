@@ -14,10 +14,10 @@
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
         <activity
-            android:name=".product_detail.ProductDetailActivity"
+            android:name=".qui.product_detail.ProductDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".homeuser.HomeUserActivity"
+            android:name=".qui.homeuser.HomeUserActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.product_detail;
+package com.example.ecommerceshop.qui.product_detail;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,19 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.databinding.ActivityProductDetailBinding;
-import com.example.ecommerceshop.databinding.FragmentAllProductsBinding;
 import com.example.ecommerceshop.databinding.FragmentProductDetailBinding;
-import com.example.ecommerceshop.homeuser.AllProductsFragment;
-import com.example.ecommerceshop.homeuser.IClickProductItemListener;
-import com.example.ecommerceshop.homeuser.Product;
-import com.example.ecommerceshop.homeuser.ProductAdapter;
+import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
+import com.example.ecommerceshop.qui.homeuser.Product;
+import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

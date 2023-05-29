@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.homeuser;
+package com.example.ecommerceshop.qui.homeuser;
 
 import android.graphics.Paint;
 import android.view.LayoutInflater;

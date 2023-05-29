@@ -1,6 +1,4 @@
-package com.example.ecommerceshop.homeuser;
-
-import static com.example.ecommerceshop.homeuser.HomeUserActivity.FRAGMENT_ALL_PRODUCT;
+package com.example.ecommerceshop.qui.homeuser;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +18,8 @@ import android.widget.Toast;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.databinding.ActivityHomeUserBinding;
 import com.example.ecommerceshop.databinding.FragmentHomeUserBinding;
-import com.example.ecommerceshop.product_detail.ProductDetailActivity;
+import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,9 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 
@@ -143,7 +137,7 @@ public class HomeFragmentUser extends Fragment {
             public void onClick(View view) {
             mHomeUserActivity.ACTION = mHomeUserActivity.ACTION_CATEGORY;
             mHomeUserActivity.CATEGORY = R.id.category_laptop;
-            mHomeUserActivity.mCurrentFragment = FRAGMENT_ALL_PRODUCT;
+            mHomeUserActivity.mCurrentFragment = HomeUserActivity.FRAGMENT_ALL_PRODUCT;
             mHomeUserActivity.replaceFragment(new AllProductsFragment());
             }
         });
@@ -152,7 +146,7 @@ public class HomeFragmentUser extends Fragment {
             public void onClick(View view) {
                 mHomeUserActivity.ACTION = mHomeUserActivity.ACTION_CATEGORY;
                 mHomeUserActivity.CATEGORY = R.id.category_phone;
-                mHomeUserActivity.mCurrentFragment = FRAGMENT_ALL_PRODUCT;
+                mHomeUserActivity.mCurrentFragment = HomeUserActivity.FRAGMENT_ALL_PRODUCT;
                 mHomeUserActivity.replaceFragment(new AllProductsFragment());
             }
         });
@@ -161,7 +155,7 @@ public class HomeFragmentUser extends Fragment {
             public void onClick(View view) {
                 mHomeUserActivity.ACTION = mHomeUserActivity.ACTION_CATEGORY;
                 mHomeUserActivity.CATEGORY = R.id.category_accessories;
-                mHomeUserActivity.mCurrentFragment = FRAGMENT_ALL_PRODUCT;
+                mHomeUserActivity.mCurrentFragment = HomeUserActivity.FRAGMENT_ALL_PRODUCT;
                 mHomeUserActivity.replaceFragment(new AllProductsFragment());
             }
         });
