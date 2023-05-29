@@ -40,12 +40,14 @@
                         android:textAppearance="@style/title"
                         android:text="Order ID: "/>
                     <TextView
+                        android:id="@+id/orderId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/title"
                         android:text="1999999"/>
                 </LinearLayout>
                 <TextView
+                    android:id="@+id/orderDate"
                     android:textAppearance="@style/body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -91,6 +93,7 @@
                         android:text="Quantity:   "
                         android:textAppearance="@style/body" />
                     <TextView
+                        android:id="@+id/quantityItem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/body"
@@ -108,6 +111,7 @@
                         android:textAppearance="@style/body" />
 
                     <TextView
+                        android:id="@+id/totalPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="20000000"
@@ -129,11 +133,11 @@
                     android:layout_height="34dp"
                     android:background="@drawable/bg_btn_order_item"
                     android:text="Detail"
-
                     android:textAppearance="@style/caption"
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/orderStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

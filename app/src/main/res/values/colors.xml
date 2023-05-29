@@ -9,5 +9,8 @@
     <color name="third_gray">#FF747474</color>
     <color name="fourth_gray">#FFF9F9F9</color>
     <color name="primary_yellow">#FFB48A4D</color>
-    <color name="light_red">#FF8892</color>
+    <color name="green1">#FF24B02A</color>
+    <color name="red3">#FFCB5C5C</color>
+    <color name="gray5">#FF9B9B9B</color>
+
 </resources>

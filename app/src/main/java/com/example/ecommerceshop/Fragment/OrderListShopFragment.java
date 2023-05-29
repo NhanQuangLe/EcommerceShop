@@ -131,6 +131,7 @@ public class OrderListShopFragment extends Fragment {
     }
 
     private void LoadAllOrders() {
+
     }
 
     private void initUI(){
