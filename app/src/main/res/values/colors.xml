@@ -9,8 +9,11 @@
     <color name="primary_gray_text">#676767</color>
     <color name="secondary_gray">#FF9B9B9B</color>
     <color name="third_gray">#FF747474</color>
-    <color name="fourth_gray">#FFF3F3F3</color>
+    <color name="fourth_gray">#FFF9F9F9</color>
     <color name="drak_gray">#FF555555</color>
     <color name="drak_x2_gray">#FF333333</color>
     <color name="primary_yellow">#FFB48A4D</color>
+    <color name="green1">#FF24B02A</color>
+    <color name="red3">#FFCB5C5C</color>
+    <color name="gray5">#FF9B9B9B</color>
 </resources>

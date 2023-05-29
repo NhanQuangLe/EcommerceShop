@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Phat.Fragment.AddProductShopFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:background="@color/primary_gray">
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:id="@+id/imgview"
+            android:layout_alignParentTop="true"
+           android:background="@drawable/bg_edit_text"/>
+
+        <LinearLayout
+            android:id="@+id/addImage"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgview"
+            android:layout_marginStart="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_a_photo"/>
+
+            <TextView
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/lato_bold"
+                android:text="Add image"
+                android:textColor="@color/black" />
+        </LinearLayout>
+        <me.relex.circleindicator.CircleIndicator
+            android:id="@+id/circleindicator"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/imgview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/deletebtn"
+            android:layout_marginEnd="20dp"
+            android:layout_alignParentRight="true"
+            android:text="delete"
+            android:textSize="12sp"
+            android:textColor="@color/primary_red"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgview"/>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginVertical="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thông tin sản phẩm: "
+                android:fontFamily="@font/lato_bold"
+                android:textColor="@color/primary_red"
+                android:textSize="20sp" />
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tên sản phẩm"
+                app:placeholderText="Iphone 13 Promax"
+                app:endIconMode="clear_text"
+                android:layout_marginBottom="10dp"
+                app:helperTextTextColor="@color/primary_red">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/productName"
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName|textCapWords"
+                    android:background="@drawable/bg_edit_text" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/DesInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mô tả sản phẩm"
+                app:placeholderText="Iphone 13 Promax Offical "
+                app:endIconMode="clear_text"
+                android:layout_marginBottom="15dp"
+                app:helperTextTextColor="@color/primary_red">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/productDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edit_text"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:minLines="10"
+                    android:scrollbars="vertical"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/CategoryProduct"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_edit_text"
+                android:paddingTop="15dp"
+                android:inputType="textCapSentences|textMultiLine"
+                android:drawableEnd="@drawable/ic_arrow_down"
+                android:drawablePadding="30dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="10dp"
+                android:text="Loại sản phẩm"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Số lượng"
+                android:layout_marginBottom="10dp"
+                app:placeholderText="20"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/primary_red">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/productQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:background="@drawable/bg_edit_text" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Giá"
+                android:layout_marginBottom="10dp"
+                app:placeholderText="22.000.000d"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/primary_red">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/productOriginalPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:background="@drawable/bg_edit_text" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nơi sản xuất"
+                android:layout_marginBottom="10dp"
+                app:placeholderText="America"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/primary_red">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/productCountry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName|textCapWords"
+                    android:background="@drawable/bg_edit_text" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/productBrand"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_edit_text"
+                android:paddingTop="15dp"
+                android:inputType="textCapSentences|textMultiLine"
+                android:drawableEnd="@drawable/ic_arrow_down"
+                android:drawablePadding="30dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="10dp"
+                android:text="Thương hiệu"
+                android:textSize="16sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_marginTop="14dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Có áp dụng khuyến mãi"
+                    android:textSize="18sp"
+                    android:textColor="@color/primary_red"
+                    android:fontFamily="@font/lato_bold"/>
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/discountSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    />
+            </RelativeLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Giá khuyến mãi"
+                android:visibility="gone"
+                app:placeholderText="20.000.000d"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/primary_red"
+                android:id="@+id/dispriceLayout">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/productDiscountPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:visibility="gone"
+                    android:background="@drawable/bg_edit_text" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ghi chú khuyến mãi"
+                app:placeholderText="Sale 10%"
+                app:endIconMode="clear_text"
+                android:visibility="gone"
+                app:helperTextTextColor="@color/primary_red"
+                android:id="@+id/disnotelayout">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/productNoteDiscount"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edit_text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/btnAddProduct"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thêm sản phẩm"
+                android:layout_marginHorizontal="30dp"
+                android:background="@drawable/bg_filter_list_item"/>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

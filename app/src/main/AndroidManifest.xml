@@ -11,15 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
-        <activity android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
         <activity
-            android:name=".MainUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainShopActivity"
+            android:name=".Phat.Activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,19 +21,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".qui.product_detail.ProductDetailActivity"
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.EcommerceShop.NoActionBar" />
+        <activity
+            android:name=".Phat.Activity.ImageAdsShopActivity"
             android:exported="false" />
         <activity
-            android:name=".qui.homeuser.HomeUserActivity"
+            android:name=".Phat.Activity.UpdateVoucherShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainShopActivity"
             android:exported="false">
 
         </activity>
         <activity
-            android:name=".nhan.Activity.UserOrdersActivity"
-            android:exported="false"
-            android:parentActivityName=".MainUserActivity">
-
-        </activity>
+            android:name=".Phat.Activity.AddVoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.SignUpActivity"
+            android:exported="false" />
 
     </application>
 

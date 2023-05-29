@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primary_gray"
+    tools:context=".Phat.Fragment.OrderListShopFragment">
+
+    <EditText
+        android:id="@+id/searchView"
+        android:layout_width="340dp"
+        android:layout_height="42dp"
+        android:background="@drawable/bg_search_view"
+        android:drawableStart="@drawable/ic_search"
+        android:hint="Search"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_filter"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/searchView" />
+
+    <HorizontalScrollView
+        android:id="@+id/statusList"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All orders"
+                android:id="@+id/allorders"
+                android:textAllCaps="false"
+                android:paddingHorizontal="20dp"
+                android:layout_marginEnd="20dp"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_filter_list_item_checked"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UnProcessed"
+                android:id="@+id/unprocessed"
+                android:textAllCaps="false"
+                android:layout_marginEnd="20dp"
+                android:paddingHorizontal="20dp"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_filter_list_item"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Processing"
+                android:id="@+id/processing"
+                android:textAllCaps="false"
+                android:layout_marginEnd="20dp"
+                android:paddingHorizontal="20dp"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_filter_list_item"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Completed"
+                android:id="@+id/completed"
+                android:textAllCaps="false"
+                android:layout_marginEnd="20dp"
+                android:paddingHorizontal="20dp"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_filter_list_item"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelled"
+                android:id="@+id/cancelled"
+                android:textAllCaps="false"
+                android:layout_marginEnd="20dp"
+                android:paddingHorizontal="20dp"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_filter_list_item"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusList">
+        <TextView
+            android:id="@+id/orderstatustv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:fontFamily="@font/lato_bold"
+            android:text="All orders"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_view_module" />
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orderList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/adapter_order_item_shop"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+</androidx.constraintlayout.widget.ConstraintLayout>
