@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentHomeUserBinding;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
@@ -33,7 +34,7 @@ import java.util.Random;
 
 public class HomeFragmentUser extends Fragment {
 
-    private HomeUserActivity mHomeUserActivity;
+    private MainUserActivity mMainUserActivity;
     private FragmentHomeUserBinding mFragmentHomeUserBinding;
 
 
@@ -50,9 +51,9 @@ public class HomeFragmentUser extends Fragment {
                              Bundle savedInstanceState) {
         mFragmentHomeUserBinding = FragmentHomeUserBinding.inflate(inflater,container,false);
         viewFragment = mFragmentHomeUserBinding.getRoot();
-        mHomeUserActivity = (HomeUserActivity) getActivity();
+        mMainUserActivity = (MainUserActivity) getActivity();
 
-        mHomeUserActivity.setSupportActionBar(mFragmentHomeUserBinding.toolbarHomeUser);
+        mMainUserActivity.setSupportActionBar(mFragmentHomeUserBinding.toolbarHomeUser);
         mFragmentHomeUserBinding.navView.setItemIconTintList(null);
 
         mFragmentHomeUserBinding.buttonToggle.setOnClickListener(new View.OnClickListener() {
@@ -88,10 +89,10 @@ public class HomeFragmentUser extends Fragment {
         mFragmentHomeUserBinding.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mHomeUserActivity.ACTION = mHomeUserActivity.ACTION_SEARCH;
-                mHomeUserActivity.mCurrentFragment = mHomeUserActivity.FRAGMENT_ALL_PRODUCT;
-                mHomeUserActivity.textSearch = mFragmentHomeUserBinding.editTextSearch.getText().toString();
-                mHomeUserActivity.replaceFragment(new AllProductsFragment());
+                mMainUserActivity.ACTION = mMainUserActivity.ACTION_SEARCH;
+                mMainUserActivity.mCurrentFragment = mMainUserActivity.FRAGMENT_ALL_PRODUCT;
+                mMainUserActivity.textSearch = mFragmentHomeUserBinding.editTextSearch.getText().toString();
+                mMainUserActivity.replaceFragment(new AllProductsFragment());
             }
         });
 
@@ -135,28 +136,28 @@ public class HomeFragmentUser extends Fragment {
         mFragmentHomeUserBinding.categoryLaptop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            mHomeUserActivity.ACTION = mHomeUserActivity.ACTION_CATEGORY;
-            mHomeUserActivity.CATEGORY = R.id.category_laptop;
-            mHomeUserActivity.mCurrentFragment = HomeUserActivity.FRAGMENT_ALL_PRODUCT;
-            mHomeUserActivity.replaceFragment(new AllProductsFragment());
+            mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
+            mMainUserActivity.CATEGORY = R.id.category_laptop;
+            mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
+            mMainUserActivity.replaceFragment(new AllProductsFragment());
             }
         });
         mFragmentHomeUserBinding.categoryPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mHomeUserActivity.ACTION = mHomeUserActivity.ACTION_CATEGORY;
-                mHomeUserActivity.CATEGORY = R.id.category_phone;
-                mHomeUserActivity.mCurrentFragment = HomeUserActivity.FRAGMENT_ALL_PRODUCT;
-                mHomeUserActivity.replaceFragment(new AllProductsFragment());
+                mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
+                mMainUserActivity.CATEGORY = R.id.category_phone;
+                mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
+                mMainUserActivity.replaceFragment(new AllProductsFragment());
             }
         });
         mFragmentHomeUserBinding.categoryAccessories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mHomeUserActivity.ACTION = mHomeUserActivity.ACTION_CATEGORY;
-                mHomeUserActivity.CATEGORY = R.id.category_accessories;
-                mHomeUserActivity.mCurrentFragment = HomeUserActivity.FRAGMENT_ALL_PRODUCT;
-                mHomeUserActivity.replaceFragment(new AllProductsFragment());
+                mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
+                mMainUserActivity.CATEGORY = R.id.category_accessories;
+                mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
+                mMainUserActivity.replaceFragment(new AllProductsFragment());
             }
         });
         return viewFragment;

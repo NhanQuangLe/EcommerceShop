@@ -31,7 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
-public class activity_sign_up extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private EditText signupEmail, signupPassword;
@@ -74,7 +74,7 @@ public class activity_sign_up extends AppCompatActivity {
     }
     private void setListeners() {
         buttonBack.setOnClickListener(view -> onBackPressed());
-        loginTextView.setOnClickListener(view -> startActivity(new Intent(activity_sign_up.this, activity_login.class)));
+        loginTextView.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> {
             HandleEyePassword();
@@ -116,13 +116,13 @@ public class activity_sign_up extends AppCompatActivity {
             if (task.isSuccessful())
             {
                 loading(false);
-                Toast.makeText(activity_sign_up.this, "SignUp Successful !", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(activity_sign_up.this, activity_login.class));
+                Toast.makeText(SignUpActivity.this, "SignUp Successful !", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             }
             else
             {
                 loading(false);
-                Toast.makeText(activity_sign_up.this, "SignUp Failed! " + Objects.requireNonNull(task.getException()).getMessage() + ". Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "SignUp Failed! " + Objects.requireNonNull(task.getException()).getMessage() + ". Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -220,7 +220,7 @@ public class activity_sign_up extends AppCompatActivity {
     }
     void navigateToSecondActivity(){
         finish();
-        Intent intent = new Intent(activity_sign_up.this, MainActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

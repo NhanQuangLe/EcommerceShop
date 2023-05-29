@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentAllProductsBinding;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class AllProductsFragment extends Fragment {
-    private HomeUserActivity mHomeUserActivity;
+    private MainUserActivity mMainUserActivity;
     private FragmentAllProductsBinding mFragmentAllProductsBinding;
     private View viewFragment;
     private ProductAdapter productAdapter;
@@ -37,9 +38,9 @@ public class AllProductsFragment extends Fragment {
         mFragmentAllProductsBinding = FragmentAllProductsBinding.inflate(inflater,container,false);
         viewFragment = mFragmentAllProductsBinding.getRoot();
 
-        mHomeUserActivity = (HomeUserActivity) getActivity();
+        mMainUserActivity = (MainUserActivity) getActivity();
 
-        mFragmentAllProductsBinding.editTextSearch.setText(mHomeUserActivity.getTextSearch());
+        mFragmentAllProductsBinding.editTextSearch.setText(mMainUserActivity.getTextSearch());
         mListProduct = new ArrayList<>();
         productAdapter = new ProductAdapter(mListProduct, new IClickProductItemListener() {
             @Override
@@ -52,14 +53,14 @@ public class AllProductsFragment extends Fragment {
         mFragmentAllProductsBinding.rcvProduct.setLayoutManager(gridLayoutManager);
         mFragmentAllProductsBinding.rcvProduct.setAdapter(productAdapter);
 
-        if (mHomeUserActivity.ACTION ==mHomeUserActivity.ACTION_SEARCH){
+        if (mMainUserActivity.ACTION == mMainUserActivity.ACTION_SEARCH){
             setListSearchProductFromFireBase();
         }
-        if (mHomeUserActivity.ACTION == mHomeUserActivity.ACTION_CATEGORY){
-            if (mHomeUserActivity.CATEGORY == R.id.category_laptop){
+        if (mMainUserActivity.ACTION == mMainUserActivity.ACTION_CATEGORY){
+            if (mMainUserActivity.CATEGORY == R.id.category_laptop){
                 setListProductCategory("Laptop");
             }
-            else if (mHomeUserActivity.CATEGORY == R.id.category_phone){
+            else if (mMainUserActivity.CATEGORY == R.id.category_phone){
                 setListProductCategory("Smartphone");
             }
             else {
@@ -76,8 +77,8 @@ public class AllProductsFragment extends Fragment {
         mFragmentAllProductsBinding.btnBackward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mHomeUserActivity.mCurrentFragment = mHomeUserActivity.FRAGMENT_HOME;
-                mHomeUserActivity.replaceFragment(new HomeFragmentUser());
+                mMainUserActivity.mCurrentFragment = mMainUserActivity.FRAGMENT_HOME;
+                mMainUserActivity.replaceFragment(new HomeFragmentUser());
             }
         });
         return viewFragment;

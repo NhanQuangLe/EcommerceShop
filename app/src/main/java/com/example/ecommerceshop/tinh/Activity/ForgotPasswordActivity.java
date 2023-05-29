@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.example.ecommerceshop.R;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class activity_forgot_password extends AppCompatActivity {
+public class ForgotPasswordActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private AppCompatImageView buttonBack;
@@ -36,7 +36,7 @@ public class activity_forgot_password extends AppCompatActivity {
 
     private void setListener() {
         buttonBack.setOnClickListener(view -> onBackPressed());
-        textGoToLogin.setOnClickListener(view -> startActivity(new Intent(activity_forgot_password.this, activity_login.class)));
+        textGoToLogin.setOnClickListener(view -> startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class)));
         buttonConfirm.setOnClickListener(view -> {
             if (IsValidEmail())
             {
@@ -56,13 +56,13 @@ public class activity_forgot_password extends AppCompatActivity {
                 textErrorEmail.setText("Email valid. Please check your email to reset password!");
                 textErrorEmail.setTextColor(Color.parseColor("#08FF00"));
                 textErrorEmail.setVisibility(View.VISIBLE);
-                Toast.makeText(activity_forgot_password.this, "Email sent!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgotPasswordActivity.this, "Email sent!", Toast.LENGTH_SHORT).show();
             }
             else
             {
                 loading(false);
                 buttonConfirm.setVisibility(View.VISIBLE);
-                Toast.makeText(activity_forgot_password.this, "Email sent failed or Email may not be registered!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgotPasswordActivity.this, "Email sent failed or Email may not be registered!", Toast.LENGTH_SHORT).show();
                 textErrorEmail.setText("Email sent failed or Email may not be registered!");
                 textErrorEmail.setTextColor(Color.parseColor("#E10000"));
                 textErrorEmail.setVisibility(View.VISIBLE);

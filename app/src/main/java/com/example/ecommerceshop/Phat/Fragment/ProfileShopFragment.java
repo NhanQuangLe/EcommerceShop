@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.example.ecommerceshop.Phat.Activity.ImageAdsShopActivity;
-import com.example.ecommerceshop.Phat.Activity.LoginActivity;
 import com.example.ecommerceshop.MainUserActivity;
+import com.example.ecommerceshop.Phat.Activity.ImageAdsShopActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
