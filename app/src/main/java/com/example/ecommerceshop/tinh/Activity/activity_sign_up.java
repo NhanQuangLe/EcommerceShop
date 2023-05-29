@@ -1,11 +1,9 @@
-package com.example.ecommerceshop.Activity;
+package com.example.ecommerceshop.tinh.Activity;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,15 +13,22 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.ecommerceshop.MainActivity;
 import com.example.ecommerceshop.R;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.Objects;
 
 public class activity_sign_up extends AppCompatActivity {
@@ -35,12 +40,22 @@ public class activity_sign_up extends AppCompatActivity {
     private ProgressBar signupProgressBar;
     private AppCompatImageView buttonBack;
     private ImageView eyeImagePass;
+    private ImageButton googleButton;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         auth = FirebaseAuth.getInstance();
         InitUI();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(this,gso);
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if(acct!=null){
+            navigateToSecondActivity();
+        }
         setListeners();
     }
 
@@ -55,6 +70,7 @@ public class activity_sign_up extends AppCompatActivity {
         buttonBack = findViewById(R.id.buttonBack);
         signupProgressBar = findViewById(R.id.progressBar);
         buttonSignUp = findViewById(R.id.buttonSignup);
+        googleButton = findViewById(R.id.buttonGoogle);
     }
     private void setListeners() {
         buttonBack.setOnClickListener(view -> onBackPressed());
@@ -69,6 +85,27 @@ public class activity_sign_up extends AppCompatActivity {
             if (checkEmail && checkPassword)
                 signUp();
         });
+        googleButton.setOnClickListener(v -> LoginWithGoogle());
+    }
+
+    private void LoginWithGoogle() {
+        Intent signInIntent = gsc.getSignInIntent();
+        startActivityForResult(signInIntent,100);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 100){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                task.getResult(ApiException.class);
+                navigateToSecondActivity();
+            } catch (ApiException e) {
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void signUp() {
@@ -180,5 +217,11 @@ public class activity_sign_up extends AppCompatActivity {
             buttonSignUp.setVisibility(View.VISIBLE);
             signupProgressBar.setVisibility(View.INVISIBLE);
         }
+    }
+    void navigateToSecondActivity(){
+        finish();
+        Intent intent = new Intent(activity_sign_up.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

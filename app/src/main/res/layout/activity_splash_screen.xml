@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     app:layoutDescription="@xml/activity_splash_screen_scene"
-    tools:context=".Activity.activity_splash_screen">
+    tools:context=".tinh.Activity.activity_splash_screen">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/backgroundLayout"

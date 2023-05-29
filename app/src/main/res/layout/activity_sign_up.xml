@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/background_login_signup"
-    tools:context=".Activity.activity_sign_up">
+    tools:context=".tinh.Activity.activity_sign_up">
 
 
     <androidx.appcompat.widget.AppCompatImageView

@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.models;
+package com.example.ecommerceshop.tinh.models;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.Activity;
+package com.example.ecommerceshop.tinh.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import android.content.Intent;
