@@ -2,6 +2,8 @@ package com.example.ecommerceshop.qui.homeuser;
 
 
 
+import android.widget.Toast;
+
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.List;
@@ -16,14 +18,14 @@ public class Product implements Serializable {
     private String productDiscountNote;
     private int productDiscountPrice;
     private int productPrice;
-    private int getProductQuantity;
+    private int productQuantity;
     private String productSite;
     private String uid;
 
 
     private List<String> uriList;
 
-    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int getProductQuantity, String productSite, String uid, List<String> urlList) {
+    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int productQuantity, String productSite, String uid, List<String> urlList) {
         this.productId = productId;
         this.productName = productName;
         this.productBrand = productBrand;
@@ -32,7 +34,7 @@ public class Product implements Serializable {
         this.productDiscountNote = productDiscountNote;
         this.productDiscountPrice = productDiscountPrice;
         this.productPrice = productPrice;
-        this.getProductQuantity = getProductQuantity;
+        this.productQuantity = productQuantity;
         this.productSite = productSite;
         this.uid = uid;
         this.uriList = urlList;
@@ -106,12 +108,12 @@ public class Product implements Serializable {
         this.productPrice = productPrice;
     }
 
-    public int getGetProductQuantity() {
-        return getProductQuantity;
+    public int getProductQuantity() {
+        return productQuantity;
     }
 
-    public void setGetProductQuantity(int getProductQuantity) {
-        this.getProductQuantity = getProductQuantity;
+    public void setGetProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
     }
 
     public String getProductSite() {
@@ -139,7 +141,7 @@ public class Product implements Serializable {
     }
 
     public String getDiscountPrice(){
-        int res =  (this.productPrice - this.productDiscountPrice);
+        int res =  this.productDiscountPrice;
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         String str1 = currencyVN.format(res);
@@ -156,7 +158,8 @@ public class Product implements Serializable {
 
     public String getPercentDiscount(){
         NumberFormat numEN = NumberFormat.getPercentInstance();
-        String percentageEN = "-" + numEN.format(this.productDiscountPrice/this.productPrice);
+        String percentageEN = "-" + numEN.format((this.productPrice*1.0-this.productDiscountPrice)/this.productPrice);
+
         return percentageEN;
     }
 }

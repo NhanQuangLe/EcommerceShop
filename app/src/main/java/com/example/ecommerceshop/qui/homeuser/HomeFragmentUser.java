@@ -213,39 +213,44 @@ public class HomeFragmentUser extends Fragment {
         List<String> uriList = new ArrayList<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Users");
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (uriList!=null) uriList.clear();
+                if (list!=null) list.clear();
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    DatabaseReference myRef2 = dataSnapshot.getRef().child("Shop").child("ImageAds");
-                    myRef2.addValueEventListener(new ValueEventListener() {
+
+                    DatabaseReference myRef = dataSnapshot.child("Shop").child("ImageAds").getRef();
+                    myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                             for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
                                 String value = dataSnapshot1.getValue(String.class);
                                 if (value!=null) uriList.add(value);
                             }
 
                             List<String> stringList = new ArrayList<>();
-                            Random random = new Random();
-                            int size = uriList.size();
-                            int num = size>=5? 5 : 2;
+                           Random random = new Random();
+                           int size = uriList.size();
+                           int num = size>=5? 5 : 3;
                             while (stringList.size() < num){
 
                                 if (!uriList.isEmpty()){
                                     int index = random.nextInt(size);
-                                    if (!stringList.contains(uriList.get(index))){
-                                        stringList.add(uriList.get(index));
-                                    }
-                                }
+                                   if (!stringList.contains(uriList.get(index))){
+                                       stringList.add(uriList.get(index));
+                                   }
+                               }
                                 else break;
 
                             }
-                            for (String str : stringList){
-                                list.add(new SlideModel(str,ScaleTypes.FIT));
+                           for (String str : stringList){
+                               list.add(new SlideModel(str,ScaleTypes.FIT));
                             }
 
-                            mFragmentHomeUserBinding.slide.setImageList(list,ScaleTypes.FIT);
+                           mFragmentHomeUserBinding.slide.setImageList(list,ScaleTypes.FIT);
 
                         }
 

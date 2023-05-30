@@ -15,11 +15,9 @@
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
             android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
+
         </activity>
         <activity
             android:name=".tinh.Activity.ForgotPasswordActivity"
@@ -29,7 +27,13 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.LoginActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false"
@@ -44,6 +48,7 @@
             android:name=".MainShopActivity"
             android:exported="false">
 
+
         </activity>
         <activity
             android:name=".Phat.Activity.AddVoucherActivity"
@@ -55,7 +60,9 @@
             android:windowSoftInputMode="adjustPan"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:name=".MainUserActivity"
-            android:exported="false">
+            android:exported="true">
+
+
 
         </activity>
 

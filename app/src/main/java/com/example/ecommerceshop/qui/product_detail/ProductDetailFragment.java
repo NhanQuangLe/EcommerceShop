@@ -3,16 +3,22 @@ package com.example.ecommerceshop.qui.product_detail;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.ecommerceshop.R;
@@ -20,13 +26,19 @@ import com.example.ecommerceshop.databinding.FragmentProductDetailBinding;
 import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +55,11 @@ public class ProductDetailFragment extends Fragment {
 
     private ProductAdapter productAdapter;
     private List<Product> mListProduct;
+    private int followers;
+    private Product product;
+    private FirebaseUser mCurrentUser;
+    private String keyHeart;
+    private boolean isChecked;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -59,6 +76,37 @@ public class ProductDetailFragment extends Fragment {
         mProductDetailActivity = (ProductDetailActivity) getActivity();
 
         unit();
+        iListener();
+
+
+        return mView;
+    }
+    private void unit() {
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        product = (Product) getArguments().get("product");
+        setInfoProduct(product);
+        setInfoShop(product.getUid());
+        setListShopProductFromFireBase(product.getUid());
+        setHeart();
+
+        mListProduct = new ArrayList<>();
+        productAdapter = new ProductAdapter(mListProduct, new IClickProductItemListener() {
+            @Override
+            public void sentDataProduct(Product product) {
+                onClickGoToProductDetail(product);
+            }
+
+
+        });
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        mFragmentProductDetailBinding.rcvProduct.setLayoutManager(linearLayoutManager);
+        mFragmentProductDetailBinding.rcvProduct.setAdapter(productAdapter);
+
+
+
+    }
+
+    private void iListener() {
         mFragmentProductDetailBinding.btnDetailDesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,47 +140,153 @@ public class ProductDetailFragment extends Fragment {
             }
         });
 
-        return mView;
+        mFragmentProductDetailBinding.checkBoxHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/FavouriteProducts");
+                if (isChecked==false){
+                    ((CompoundButton) view).setChecked(true);
+                    String key = String.valueOf((int) new Date().getTime());
+                    ref.child(key).setValue(product.getProductId());
+                }
+                else {
+                    String keytemp = keyHeart;
+                    keyHeart=null;
+                    ((CompoundButton) view).setChecked(false);
+                    ref.child(keytemp).removeValue();
+                }
+                isChecked=!isChecked;
+            }
+        });
+
     }
 
-    private void unit() {
-        Product product = (Product) getArguments().get("product");
+
+
+    private void setHeart() {
+
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/FavouriteProducts");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    String productId = dataSnapshot.getValue(String.class);
+                    if (productId==null) continue;
+                    if (productId.equals(product.getProductId())){
+                        keyHeart = dataSnapshot.getKey();
+                        break;
+                    }
+                }
+                if (keyHeart!=null){
+                    mFragmentProductDetailBinding.checkBoxHeart.setChecked(true);
+                    isChecked=true;
+                }
+                else {
+
+                    mFragmentProductDetailBinding.checkBoxHeart.setChecked(false);
+                    isChecked=false;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void setInfoProduct(Product product) {
         setSlideProductImage(product.getUriList());
         mFragmentProductDetailBinding.productName.setText(product.getProductName());
         mFragmentProductDetailBinding.productBrand.setText(product.getProductBrand());
-        mFragmentProductDetailBinding.productPrice.setText(product.getPrice());
+
         if (product.getProductDiscountPrice()==0){
+            mFragmentProductDetailBinding.productPrice.setText(product.getPrice());
             mFragmentProductDetailBinding.productDiscountPrice.setVisibility(View.GONE);
             mFragmentProductDetailBinding.frameDiscount.setVisibility(View.GONE);
         }
         else {
-            mFragmentProductDetailBinding.productDiscountPrice.setText(product.getDiscountPrice());
+            mFragmentProductDetailBinding.productPrice.setText(product.getDiscountPrice());
+            mFragmentProductDetailBinding.productDiscountPrice.setText(product.getPrice());
             mFragmentProductDetailBinding.productDiscountPrice.setPaintFlags(mFragmentProductDetailBinding.productDiscountPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             mFragmentProductDetailBinding.productDiscountPercent.setText(product.getPercentDiscount());
         }
         mFragmentProductDetailBinding.productDesc.setText(product.getProductDescription());
-        mListProduct = new ArrayList<>();
-        productAdapter = new ProductAdapter(mListProduct, new IClickProductItemListener() {
+        mFragmentProductDetailBinding.productQuantity.setText(String.valueOf(product.getProductQuantity()));
+
+    }
+
+    private void setInfoShop(String shopId) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Users/"+shopId+"/Shop");
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void sentDataProduct(Product product) {
-                onClickGoToProductDetail(product);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String name = snapshot.child("ShopName").getValue(String.class);
+                mFragmentProductDetailBinding.shopName.setText(name);
+                String address = snapshot.child("Address").getValue(String.class);
+                mFragmentProductDetailBinding.shopAddress.setText(address);
+                String uri = snapshot.child("Avatar").getValue(String.class);
+                Glide.with(getActivity()).load(uri).into((ImageView) mFragmentProductDetailBinding.shopAvatar);
+                mFragmentProductDetailBinding.shopProductQuantity.setText(String.valueOf(snapshot.child("Products").getChildrenCount()));
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
         });
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        mFragmentProductDetailBinding.rcvProduct.setLayoutManager(linearLayoutManager);
-        mFragmentProductDetailBinding.rcvProduct.setAdapter(productAdapter);
-        setListShopProductFromFireBase(product.getUid());
+
+        DatabaseReference myRef2 = database.getReference("Users");
+        myRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (followers!=0) followers=0;
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    DatabaseReference myRef3 = dataSnapshot.getRef().child("Customer").child("Followers");
+                    myRef3.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                           for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                               if (dataSnapshot1.child("UserID").getValue(String.class).equals(shopId)) {
+                                   followers++;
+                                   break;
+                                }
+                           }
+                            DecimalFormat df = new DecimalFormat();
+                            df.setMaximumFractionDigits(1);
+                            String followersStr;
+                            if (followers<1000) followersStr = String.valueOf(followers);
+                            else followersStr= df.format(followers*1.0/1000);
+
+                            mFragmentProductDetailBinding.shopFollower.setText(followersStr);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
     private void setSlideProductImage(List<String> listUri) {
         List<SlideModel> list = new ArrayList<>();
         for (String uri : listUri){
-            list.add(new SlideModel(uri, ScaleTypes.FIT));
+            list.add(new SlideModel(uri,ScaleTypes.CENTER_INSIDE));
         }
-        mFragmentProductDetailBinding.slideProductImage.setImageList(list,ScaleTypes.FIT);
+        mFragmentProductDetailBinding.slideProductImage.setImageList(list,ScaleTypes.CENTER_INSIDE);
     }
 
     private void setListShopProductFromFireBase(String shopId) {
