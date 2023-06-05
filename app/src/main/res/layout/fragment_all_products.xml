@@ -64,12 +64,35 @@
                         android:layout_gravity="center_vertical"/>
                 </FrameLayout>
             </LinearLayout>
-            <android.widget.Button
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:backgroundTint="#333333"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/ic_shopping_cart" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp">
+                <FrameLayout
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/ic_shopping_cart" />
+                <FrameLayout
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/bg_circle"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/icon_cart_quantity">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12"
+                        android:id="@+id/current_cart_quantity"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+            </RelativeLayout>
+
+
+
+
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>

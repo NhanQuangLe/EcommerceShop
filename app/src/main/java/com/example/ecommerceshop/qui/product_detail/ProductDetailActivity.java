@@ -67,6 +67,10 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
             replaceFragment(productDetailFragment);
         }
         else {
+            if (productDetailFragment.isShowNavCart){
+                productDetailFragment.HideNavCarDetail();
+                return;
+            }
             super.onBackPressed();
         }
     }

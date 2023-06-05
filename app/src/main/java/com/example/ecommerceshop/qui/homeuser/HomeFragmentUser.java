@@ -21,6 +21,8 @@ import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentHomeUserBinding;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -132,6 +134,7 @@ public class HomeFragmentUser extends Fragment {
         mFragmentHomeUserBinding.rcvProductPhone.setAdapter(productAdapterPhone);
         mFragmentHomeUserBinding.rcvProductAccessories.setAdapter(productAdapterAccessories);
         setListProductFromFireBase();
+        setCart();
 
         mFragmentHomeUserBinding.categoryLaptop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +165,28 @@ public class HomeFragmentUser extends Fragment {
         });
         return viewFragment;
     }
+
+    private void setCart() {
+        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Cart");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long quantity = snapshot.getChildrenCount();
+                if (quantity==0) mFragmentHomeUserBinding.iconCartQuantity.setVisibility(View.GONE);
+                else {
+                    mFragmentHomeUserBinding.iconCartQuantity.setVisibility(View.VISIBLE);
+                    mFragmentHomeUserBinding.currentCartQuantity.setText(String.valueOf(quantity));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void setListProductFromFireBase() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();

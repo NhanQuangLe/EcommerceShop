@@ -3,6 +3,7 @@ package com.example.ecommerceshop.qui.product_detail;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.media.Image;
 import android.os.Bundle;
 
@@ -11,9 +12,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentProductDetailBinding;
 import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
@@ -44,7 +50,9 @@ import java.util.Locale;
 
 
 public class ProductDetailFragment extends Fragment {
-
+    public boolean isShowNavCart =false;
+    private String path;
+    private long cur_quantity_firebase;
     private  ISenDataListener iSenDataListener;
     public interface ISenDataListener{
         void senDataAndReplaceFragment(String textSearch);
@@ -72,7 +80,6 @@ public class ProductDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         mFragmentProductDetailBinding = FragmentProductDetailBinding.inflate(inflater,container,false);
         mView = mFragmentProductDetailBinding.getRoot();
-
         mProductDetailActivity = (ProductDetailActivity) getActivity();
 
         unit();
@@ -81,6 +88,8 @@ public class ProductDetailFragment extends Fragment {
 
         return mView;
     }
+
+
     private void unit() {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         product = (Product) getArguments().get("product");
@@ -88,7 +97,6 @@ public class ProductDetailFragment extends Fragment {
         setInfoShop(product.getUid());
         setListShopProductFromFireBase(product.getUid());
         setHeart();
-
         mListProduct = new ArrayList<>();
         productAdapter = new ProductAdapter(mListProduct, new IClickProductItemListener() {
             @Override
@@ -158,9 +166,149 @@ public class ProductDetailFragment extends Fragment {
                 isChecked=!isChecked;
             }
         });
+        mFragmentProductDetailBinding.navHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(mProductDetailActivity,MainUserActivity.class);
+                startActivity(i);
+                mProductDetailActivity.finish();
+            }
+        });
+        mFragmentProductDetailBinding.navCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showNavCarDetail();
+                path="";
+                cur_quantity_firebase=0;
+
+
+            }
+        });
+        mFragmentProductDetailBinding.layoutParent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFragmentProductDetailBinding.navCartDetail.setVisibility(View.INVISIBLE);
+            }
+        });
+        mFragmentProductDetailBinding.icClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HideNavCarDetail();
+            }
+        });
+        mFragmentProductDetailBinding.btnMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String quantityStr = mFragmentProductDetailBinding.cardQuantity.getText().toString();
+                int quantity = Integer.parseInt(quantityStr);
+                if (quantity==1) return;
+                quantity--;
+                mFragmentProductDetailBinding.cardQuantity.setText(String.valueOf(quantity));
+            }
+        });
+        mFragmentProductDetailBinding.btnPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String quantityStr = mFragmentProductDetailBinding.cardQuantity.getText().toString();
+                int quantity = Integer.parseInt(quantityStr);
+                if (quantity==product.getProductQuantity()){
+                    Toast.makeText(mProductDetailActivity, "Số lượng có sẵn không đủ đáp ứng!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                quantity++;
+                mFragmentProductDetailBinding.cardQuantity.setText(String.valueOf(quantity));
+            }
+        });
+        mFragmentProductDetailBinding.btnAddCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                path = "";
+                cur_quantity_firebase=0;
+                String quantityStr = mFragmentProductDetailBinding.cardQuantity.getText().toString();
+                int quantity = Integer.parseInt(quantityStr);
+                Cart cart = new Cart(product.getProductId(),quantity,product.getUid());
+                DatabaseReference ref0 = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Cart");
+                ref0.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                            if (product.getProductId().equals(dataSnapshot.child("productId").getValue(String.class))){
+                                path = dataSnapshot.getKey();
+                                 cur_quantity_firebase = dataSnapshot.child("productQuantity").getValue(Long.class);
+                                break;
+                            }
+                        }
+                        if (!path.equals("")){
+                            long newQuantity = quantity+cur_quantity_firebase;
+                            ref0.child(path).child("productQuantity").setValue(newQuantity, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                                    HideNavCarDetail();
+                                }
+                            });
+                            return;
+                        }
+                        else {
+                            String key = String.valueOf((int) new Date().getTime());
+                            ref0.child(key).setValue(cart, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                                    HideNavCarDetail();
+                                }
+                            });
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
+
+            }
+        });
+
 
     }
 
+    private void showNavCarDetail() {
+        Glide.with(getContext()).load(product.getUriList().get(0)).into(mFragmentProductDetailBinding.imgProductAddCart);
+        mFragmentProductDetailBinding.subLayout.setVisibility(View.VISIBLE);
+        isShowNavCart=true;
+        mFragmentProductDetailBinding.cardQuantity.setText("1");
+        mFragmentProductDetailBinding.navCartDetail.startAnimation(AnimationUtils.loadAnimation(
+                getContext(),
+                R.anim.move_up
+        ));
+
+
+        mFragmentProductDetailBinding.subLayout.setClickable(true);
+    }
+    public void HideNavCarDetail() {
+        mFragmentProductDetailBinding.navCartDetail.startAnimation(AnimationUtils.loadAnimation(
+                getContext(),
+                R.anim.move_down
+        ));
+        isShowNavCart=false;
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFragmentProductDetailBinding.subLayout.setVisibility(View.GONE);
+            }
+        }, 400);
+
+
+
+        mFragmentProductDetailBinding.subLayout.setClickable(false);
+    }
 
 
     private void setHeart() {
@@ -213,6 +361,7 @@ public class ProductDetailFragment extends Fragment {
         }
         mFragmentProductDetailBinding.productDesc.setText(product.getProductDescription());
         mFragmentProductDetailBinding.productQuantity.setText(String.valueOf(product.getProductQuantity()));
+        mFragmentProductDetailBinding.psoldQuantity.setText(String.valueOf(product.getPsoldQuantity()));
 
     }
 
@@ -249,7 +398,7 @@ public class ProductDetailFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                               if (dataSnapshot1.child("UserID").getValue(String.class).equals(shopId)) {
+                               if (dataSnapshot1.child("ShopID").getValue(String.class).equals(shopId)) {
                                    followers++;
                                    break;
                                 }

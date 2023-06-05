@@ -21,11 +21,27 @@ public class Product implements Serializable {
     private int productQuantity;
     private String productSite;
     private String uid;
+    private int psoldQuantity;
 
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
+    }
+
+    public int getPsoldQuantity() {
+        return psoldQuantity;
+    }
+
+    public void setPsoldQuantity(int psoldQuantity) {
+        this.psoldQuantity = psoldQuantity;
+    }
 
     private List<String> uriList;
 
-    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int productQuantity, String productSite, String uid, List<String> urlList) {
+    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int productQuantity, String productSite, String uid, int psoldQuantity, List<String> uriList) {
         this.productId = productId;
         this.productName = productName;
         this.productBrand = productBrand;
@@ -37,8 +53,10 @@ public class Product implements Serializable {
         this.productQuantity = productQuantity;
         this.productSite = productSite;
         this.uid = uid;
-        this.uriList = urlList;
+        this.psoldQuantity = psoldQuantity;
+        this.uriList = uriList;
     }
+
     public Product() {
 
     }
@@ -108,13 +126,7 @@ public class Product implements Serializable {
         this.productPrice = productPrice;
     }
 
-    public int getProductQuantity() {
-        return productQuantity;
-    }
 
-    public void setGetProductQuantity(int productQuantity) {
-        this.productQuantity = productQuantity;
-    }
 
     public String getProductSite() {
         return productSite;
