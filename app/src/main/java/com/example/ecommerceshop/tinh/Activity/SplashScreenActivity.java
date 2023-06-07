@@ -8,7 +8,7 @@ import android.os.Handler;
 
 import com.example.ecommerceshop.R;
 
-public class activity_splash_screen extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +16,7 @@ public class activity_splash_screen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(activity_splash_screen.this, activity_login.class));
+            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
             finish();
         }, 4000);
     }

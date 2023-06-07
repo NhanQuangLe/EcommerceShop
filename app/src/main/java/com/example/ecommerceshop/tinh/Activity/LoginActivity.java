@@ -14,11 +14,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.ecommerceshop.MainActivity;
+
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.MainUserActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class activity_login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private AppCompatImageView buttonBack;
@@ -36,8 +37,8 @@ public class activity_login extends AppCompatActivity {
         setListener();
     }
     private void setListener() {
-        textSignUp.setOnClickListener(view -> startActivity(new Intent(activity_login.this, SignUpActivity.class)));
-        textForgotPass.setOnClickListener(view -> startActivity(new Intent(activity_login.this, activity_forgot_password.class)));
+        textSignUp.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
+        textForgotPass.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class)));
         buttonBack.setOnClickListener(view -> onBackPressed());
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> {
@@ -60,12 +61,12 @@ public class activity_login extends AppCompatActivity {
 
         auth.signInWithEmailAndPassword(email,pass).addOnSuccessListener(authResult -> {
             loading(false);
-            Toast.makeText(activity_login.this, "Login Successful !", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(activity_login.this, MainActivity.class));
+            Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
             finish();
         }).addOnFailureListener(e -> {
             loading(false);
-            Toast.makeText(activity_login.this, "Login Failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Login Failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/text_view_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="E - COMMERCESTORE"
+            android:textColor="#EA1C00"
+            android:textSize="18sp"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold" />
+        <android.widget.Button
+            android:id="@+id/btnBackward"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/ic_backward"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+       >
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/image_avt_user"
+            app:civ_border_color="#FF000000"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/profile_image"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Huỳnh Ngọc Quí"
+                android:id="@+id/name"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thông tin tài khoản"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+
+                android:layout_below="@+id/name"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

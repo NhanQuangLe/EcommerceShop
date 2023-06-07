@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="15dp"
         android:layout_marginStart="15dp"
@@ -38,14 +38,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/title"
-                        android:text="Voucher ID: "/>
+                        android:text="Voucher code: "/>
                     <TextView
+                        android:id="@+id/vouchercode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/title"
-                        android:text="199"/>
+                        android:text="30T4"/>
                 </LinearLayout>
                 <TextView
+                    android:id="@+id/startdate"
                     android:textAppearance="@style/body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,14 +65,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nội dung: "
+                    android:text="Discount Pirce: "
                     android:textAppearance="@style/body"/>
 
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Giảm 10% bill"
-                    android:id="@+id/email_order"
+                    android:text="1000000"
+                    android:id="@+id/discountprice"
                     android:textAppearance="@style/body" />
             </LinearLayout>
             <RelativeLayout
@@ -88,8 +91,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/body"
-                        android:text="Thời hạn:   "/>
+                        android:text="Expired Date:   "/>
                     <TextView
+                        android:id="@+id/expireddate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/body"
@@ -103,8 +107,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/body"
-                        android:text="Số lượng:   "/>
+                        android:text="Quantity:   "/>
                     <TextView
+                        android:id="@+id/quantity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/body"
@@ -123,18 +128,18 @@
                     android:id="@+id/btn_detail"
                     android:layout_width="85dp"
                     android:layout_height="34dp"
-                    android:text="Chỉnh sửa"
+                    android:text="Edit"
                     android:background="@drawable/bg_btn_order_item"
-
                     android:textColor="@color/black"
                     android:textAppearance="@style/caption"/>
 
                 <TextView
+                    android:id="@+id/voucherstatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
-                    android:text="Hết hạn"
+                    android:text="UnExpired"
                     android:textAppearance="@style/body"
                     android:textColor="@color/secondary_red" />
             </RelativeLayout>

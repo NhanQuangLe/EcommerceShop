@@ -74,7 +74,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
     private void setListeners() {
         buttonBack.setOnClickListener(view -> onBackPressed());
-        loginTextView.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, activity_login.class)));
+        loginTextView.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> {
             HandleEyePassword();
@@ -117,7 +117,7 @@ public class SignUpActivity extends AppCompatActivity {
             {
                 loading(false);
                 Toast.makeText(SignUpActivity.this, "SignUp Successful !", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(SignUpActivity.this, activity_login.class));
+                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             }
             else
             {
