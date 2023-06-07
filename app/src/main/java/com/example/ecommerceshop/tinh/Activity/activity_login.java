@@ -36,7 +36,7 @@ public class activity_login extends AppCompatActivity {
         setListener();
     }
     private void setListener() {
-        textSignUp.setOnClickListener(view -> startActivity(new Intent(activity_login.this, activity_sign_up.class)));
+        textSignUp.setOnClickListener(view -> startActivity(new Intent(activity_login.this, SignUpActivity.class)));
         textForgotPass.setOnClickListener(view -> startActivity(new Intent(activity_login.this, activity_forgot_password.class)));
         buttonBack.setOnClickListener(view -> onBackPressed());
         eyeImagePass.setImageResource(R.drawable.ic_eye);
