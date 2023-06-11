@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ecommerceshop.Phat.Activity.RequestToShopActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Activity.UserOrdersActivity;
 import com.example.ecommerceshop.nhan.Model.Customer;
@@ -45,7 +46,7 @@ public class UserProfileFragment extends Fragment {
                 }
             });
     private View mView;
-    private TextView tv_customerName, tv_customerEmail, tv_customerFollowers;
+    private TextView tv_customerName, tv_customerEmail, tv_customerFollowers,dkbh;
     private ImageView iv_customerAvatar;
     private ConstraintLayout cl_History_Order;
     public UserProfileFragment() {
@@ -67,6 +68,13 @@ public class UserProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         initUI();
+        dkbh=mView.findViewById(R.id.dkbh);
+        dkbh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), RequestToShopActivity.class));
+            }
+        });
         LoadData();
         setEventInteract();
         return mView;

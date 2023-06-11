@@ -191,7 +191,7 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 String pDay = decimalFormat.format(day);
-                String pMonth = decimalFormat.format(month);
+                String pMonth = decimalFormat.format(month+1);
                 String pYear = ""+year;
                 String pDate=pDay+"/"+pMonth+"/"+pYear;
                 expiredDate.setText(pDate);

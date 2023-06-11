@@ -119,14 +119,14 @@ public class AddVoucherActivity extends AppCompatActivity {
     private void datepickDialog(){
         Calendar c = Calendar.getInstance();
         int mDay = c.get(Calendar.DAY_OF_MONTH);
-        int mMonth = c.get(Calendar.MONTH)+1;
+        int mMonth = c.get(Calendar.MONTH);
         int mYear = c.get(Calendar.YEAR);
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 String pDay = decimalFormat.format(day);
-                String pMonth = decimalFormat.format(month);
+                String pMonth = decimalFormat.format(month+1);
                 String pYear = ""+year;
                 String pDate=pDay+"/"+pMonth+"/"+pYear;
                 expiredDate.setText(pDate);

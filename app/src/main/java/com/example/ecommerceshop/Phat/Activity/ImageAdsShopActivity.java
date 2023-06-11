@@ -85,9 +85,19 @@ public class ImageAdsShopActivity extends AppCompatActivity {
         uploadImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadImage();
+                inputdate();
             }
         });
+    }
+
+    private void inputdate() {
+        if(photoList.size()==0){
+            Toast.makeText(this, "Photo is required!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else{
+            uploadImage();
+        }
     }
 
     private void uploadImage() {
