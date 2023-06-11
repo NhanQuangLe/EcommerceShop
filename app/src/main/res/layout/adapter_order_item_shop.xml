@@ -65,14 +65,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email: "
+                    android:text="Receiver: "
                     android:textAppearance="@style/body"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="vanphat@gmail.com"
-                    android:id="@+id/email_order"
+                    android:text="Nguyen Van Phat"
+                    android:id="@+id/receiverName"
                     android:textAppearance="@style/body" />
             </LinearLayout>
             <RelativeLayout
@@ -90,14 +90,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Quantity:   "
+                        android:text="Phone:   "
                         android:textAppearance="@style/body" />
                     <TextView
-                        android:id="@+id/quantityItem"
+                        android:id="@+id/receiverPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/body"
-                        android:text="5"/>
+                        android:text="0328624352"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"

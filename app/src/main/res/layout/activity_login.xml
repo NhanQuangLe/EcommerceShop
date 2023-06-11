@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/background_login_signup"
+    android:background="@color/fourth_gray"
     tools:context=".tinh.Activity.LoginActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/buttonBack"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:padding="10dp"
@@ -26,8 +26,8 @@
         android:text="@string/login"
         app:layout_constraintTop_toBottomOf="@id/buttonBack"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="30dp"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="36sp"/>
@@ -37,7 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="30dp"
         app:layout_constraintTop_toBottomOf="@id/textLogin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -53,7 +52,7 @@
             android:layout_marginTop="30dp"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:textColorHint="@color/primary_gray"
+
             android:background="@drawable/background_input"/>
         <TextView
             android:id="@+id/textErrorEmail"
@@ -79,7 +78,6 @@
                 android:textColor="@color/black"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:textColorHint="@color/primary_gray"
                 android:background="@drawable/background_input"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -110,7 +108,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/forgot_your_password"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:textColor="@color/black"
         android:textSize="14sp"
@@ -124,7 +122,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sign_up_account"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="30dp"
         android:drawableRight="@drawable/ic_move_muiten"
         android:textColor="@color/black"
@@ -139,11 +137,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="?android:attr/progressBarStyleSmallInverse"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:visibility="invisible"
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
     <Button
         android:id="@+id/buttonLogin"

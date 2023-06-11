@@ -43,7 +43,9 @@
             android:exported="false" />
         <activity
             android:name=".MainShopActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Phat.Activity.AddVoucherActivity"
             android:exported="false" />
@@ -78,6 +80,24 @@
             android:exported="false" />
         <activity
             android:name=".nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.RequestToShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.SuccessRegisActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.RegistrationToShopInAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.ProfileSettingShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.StatiscalShopActivity"
             android:exported="false" />
     </application>
 
