@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/main_background_color"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity">
     <LinearLayout
         android:id="@+id/topControl"
         android:layout_width="match_parent"
@@ -70,6 +71,7 @@
                         android:orientation="horizontal"
                         >
                         <EditText
+                            android:id="@+id/et_FullName"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:hint="Họ và tên"
@@ -79,7 +81,7 @@
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
                             android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/secondary_gray">
+                            android:textColor="@color/black">
                         </EditText>
                     </LinearLayout>
                     <LinearLayout
@@ -101,6 +103,7 @@
                         android:orientation="horizontal"
                         >
                         <EditText
+                            android:id="@+id/et_PhoneNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:hint="Số điện thoại"
@@ -110,7 +113,7 @@
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
                             android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/secondary_gray">
+                            android:textColor="@color/black">
                         </EditText>
                     </LinearLayout>
                     <LinearLayout
@@ -151,19 +154,21 @@
                     android:orientation="vertical"
                     >
                     <LinearLayout
+                        android:id="@+id/btn_ChooseAddress"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         >
                         <TextView
+                            android:id="@+id/tv_MainAddress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tỉnh/Thành phố, Quận/Huyện, Phường/Xã"
+                            android:hint="Tỉnh/Thành phố, Quận/Huyện, Phường/Xã"
                             android:textSize="14dp"
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
                             android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/secondary_gray">
+                            android:textColor="@color/black">
                         </TextView>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -198,6 +203,7 @@
                         android:orientation="horizontal"
                         >
                         <EditText
+                            android:id="@+id/et_Detail"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:hint="Tên đường, Tòa nhà, Số nhà"
@@ -207,7 +213,7 @@
                             android:layout_marginLeft="16dp"
                             android:layout_gravity="center"
                             android:fontFamily="@font/lato_regular"
-                            android:textColor="@color/secondary_gray">
+                            android:textColor="@color/black">
                         </EditText>
                     </LinearLayout>
                     <LinearLayout
@@ -269,6 +275,7 @@
                             android:gravity="center"
                             >
                             <androidx.appcompat.widget.SwitchCompat
+                                android:id="@+id/sw_DefaultAddress"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
@@ -282,14 +289,15 @@
 
                 </LinearLayout>
             </LinearLayout>
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/aBtn_DeleteAddress"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:text="Xóa địa chỉ"
                 android:textSize="12dp"
                 android:textColor="@color/primary_red"
                 android:gravity="center"
-                android:backgroundTint="@color/white"
+                android:background="@color/white"
                 android:layout_marginTop="28dp"
                 android:layout_gravity="center_horizontal"
                 />
@@ -303,9 +311,11 @@
         android:layout_marginBottom="38dp"
         android:orientation="vertical">
         <Button
+
+            android:id="@+id/btn_UpdateAddress"
             android:layout_width="343dp"
             android:layout_height="48dp"
-            android:text="Thêm địa chỉ"
+            android:text="Cập nhật"
             android:gravity="center"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/border_button_setting_25"

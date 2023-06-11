@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_order_shop"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-    >
+        >
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="20dp"
-        >
+            >
             <ImageView
+                android:id="@+id/iv_ShopAvatar"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:src="@drawable/iphone"
-            />
+                />
             <TextView
+                android:id="@+id/tv_ShopName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Shop FatPhoneFoo"
@@ -50,7 +53,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/lato_regular"
                 android:textColor="@color/primary_red"
-            >
+                >
             </TextView>
         </LinearLayout>
 
@@ -63,19 +66,24 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
         android:id="@+id/item_order_product"
         android:layout_width="match_parent"
         android:layout_height="95dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_order_shop">
+        app:layout_constraintTop_toBottomOf="@+id/item_order_shop"
+        android:orientation="vertical"
+        >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-        >
+            >
             <androidx.cardview.widget.CardView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -84,6 +92,7 @@
                 app:cardCornerRadius="5dp">
 
                 <ImageView
+                    android:id="@+id/iv_ProductAvatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -99,6 +108,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_ProductName"
                     android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:layout_marginBottom="3dp"
@@ -110,6 +120,7 @@
                     android:layout_gravity="left"
                     android:textSize="14dp" />
                 <TextView
+                    android:id="@+id/tv_ProductBrand"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
@@ -129,11 +140,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato_regular"
-                        android:text="Màu: "
+                        android:text="Loại: "
                         android:textColor="@color/secondary_gray"
                         android:textSize="11dp" />
 
                     <TextView
+                        android:id="@+id/tv_ProductCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato_regular"
@@ -145,7 +157,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                 >
+                    >
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -164,6 +176,7 @@
                             android:textSize="11dp" />
 
                         <TextView
+                            android:id="@+id/tv_ProductPurchaseQuantity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/lato_regular"
@@ -173,6 +186,7 @@
                             android:textSize="11dp" />
                     </LinearLayout>
                     <TextView
+                        android:id="@+id/tv_ProductDiscountPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/lato_bold"
@@ -191,11 +205,56 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_order_product"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/secondary_gray"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            >
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="172dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_button"
+                android:textColor="@color/primary_red"
+                android:padding="0dp"
+                android:text="Xem chi tiết" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="172dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_button"
+                android:padding="0dp"
+                android:textColor="@color/primary_red"
+                android:layout_marginLeft="14dp"
+                android:text="Mua lại">
+
+            </androidx.appcompat.widget.AppCompatButton>
+        </LinearLayout>
+
+    </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/priceBox"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        app:layout_constraintTop_toBottomOf="@+id/item_order_product"
+        app:layout_constraintTop_toBottomOf="@+id/bottomButtons"
         app:layout_constraintLeft_toLeftOf="parent"
         >
         <LinearLayout
@@ -223,6 +282,7 @@
                 android:textSize="13dp"
                 android:layout_marginRight="8dp"/>
             <TextView
+                android:id="@+id/tv_SumMoney"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/lato_bold"
@@ -243,36 +303,5 @@
             app:layout_constraintTop_toTopOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/priceBox"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            >
-            <Button
-                android:layout_width="172dp"
-                android:layout_height="40dp"
-                android:background="@drawable/border_button"
-                android:backgroundTint="@color/white"
-                android:padding="0dp"
-                android:text="Xem chi tiết" />
 
-            <Button
-                android:layout_width="172dp"
-                android:layout_height="40dp"
-                android:background="@drawable/border_button"
-                android:backgroundTint="@color/white"
-                android:padding="0dp"
-                android:layout_marginLeft="14dp"
-                android:text="Mua lại">
-
-            </Button>
-        </LinearLayout>
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
