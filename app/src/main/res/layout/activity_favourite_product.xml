@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/main_background_color"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
@@ -61,10 +61,12 @@
                         android:scrollbars="none"
                         >
                         <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_ProductTypes"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="horizontal"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/adapter_item_filter_product_type">
 
 
                         </androidx.recyclerview.widget.RecyclerView>
@@ -78,11 +80,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <ListView
-                    android:id="@+id/listFavouriteProduct"
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_FavouriteProducts"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                </ListView>
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/adapter_item_favorite_product"></androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

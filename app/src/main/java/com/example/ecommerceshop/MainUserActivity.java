@@ -9,9 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityHomeUserBinding;
-import com.example.ecommerceshop.nhan.Fragment.UserProfileFragment;
+import com.example.ecommerceshop.nhan.ProfileCustomer.UserProfileFragment;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -36,8 +35,8 @@ public class MainUserActivity extends AppCompatActivity {
         mActivityHomeUserBinding = ActivityHomeUserBinding.inflate(getLayoutInflater());
         setContentView(mActivityHomeUserBinding.getRoot());
         homeFragmentUser = new HomeFragmentUser();
-        replaceFragment(homeFragmentUser);
-
+        //replaceFragment(homeFragmentUser);
+        replaceFragment(new UserProfileFragment());
         bottomNavigationView =findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
