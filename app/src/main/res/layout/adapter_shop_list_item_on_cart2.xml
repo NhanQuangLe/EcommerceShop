@@ -18,13 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
 
-            android:background="@android:color/transparent"
-            android:button="@drawable/custom_checkbox" />
 
         <TextView
             android:id="@+id/shop_Name"
@@ -34,13 +28,14 @@
             android:fontFamily="sans-serif-medium"
             android:text="shopcr7qn"
             android:textColor="#444444"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:layout_marginStart="20dp"
+            android:paddingBottom="10dp"/>
 
         <ImageButton
             android:id="@+id/imageButton4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="3dp"
             android:layout_marginTop="1dp"
             android:background="@android:color/transparent"

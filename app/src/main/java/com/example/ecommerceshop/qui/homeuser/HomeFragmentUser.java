@@ -20,6 +20,7 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentHomeUserBinding;
+import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,30 +52,31 @@ public class HomeFragmentUser extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mFragmentHomeUserBinding = FragmentHomeUserBinding.inflate(inflater,container,false);
+        mFragmentHomeUserBinding = FragmentHomeUserBinding.inflate(inflater, container, false);
         viewFragment = mFragmentHomeUserBinding.getRoot();
         mMainUserActivity = (MainUserActivity) getActivity();
 
         mMainUserActivity.setSupportActionBar(mFragmentHomeUserBinding.toolbarHomeUser);
         mFragmentHomeUserBinding.navView.setItemIconTintList(null);
 
+        init();
+
+        View headerView = mFragmentHomeUserBinding.navView.inflateHeaderView(R.layout.header_view);
+
+        Button btnBackward = headerView.findViewById(R.id.btnBackward);
         mFragmentHomeUserBinding.buttonToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
+                if (!mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)) {
                     mFragmentHomeUserBinding.drawer.openDrawer(GravityCompat.START);
                 }
 
             }
         });
-
-        View headerView = mFragmentHomeUserBinding.navView.inflateHeaderView(R.layout.header_view);
-
-        Button btnBackward = headerView.findViewById(R.id.btnBackward);
         btnBackward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
+                if (mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)) {
                     mFragmentHomeUserBinding.drawer.closeDrawer(GravityCompat.START);
                 }
             }
@@ -83,7 +85,7 @@ public class HomeFragmentUser extends Fragment {
         textViewHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)){
+                if (mFragmentHomeUserBinding.drawer.isDrawerOpen(GravityCompat.START)) {
                     mFragmentHomeUserBinding.drawer.closeDrawer(GravityCompat.START);
                 }
             }
@@ -99,15 +101,51 @@ public class HomeFragmentUser extends Fragment {
         });
 
 
+        mFragmentHomeUserBinding.categoryLaptop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
+                mMainUserActivity.CATEGORY = R.id.category_laptop;
+                mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
+                mMainUserActivity.replaceFragment(new AllProductsFragment());
+            }
+        });
+        mFragmentHomeUserBinding.categoryPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
+                mMainUserActivity.CATEGORY = R.id.category_phone;
+                mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
+                mMainUserActivity.replaceFragment(new AllProductsFragment());
+            }
+        });
+        mFragmentHomeUserBinding.categoryAccessories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
+                mMainUserActivity.CATEGORY = R.id.category_accessories;
+                mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
+                mMainUserActivity.replaceFragment(new AllProductsFragment());
+            }
+        });
+        mFragmentHomeUserBinding.btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickGoToCart();
+            }
+        });
+        return viewFragment;
+    }
 
+    private void init() {
         setImageSlide();
-        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        LinearLayoutManager linearLayoutManager3 = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager3 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         mFragmentHomeUserBinding.rcvProductLaptop.setLayoutManager(linearLayoutManager1);
         mFragmentHomeUserBinding.rcvProductPhone.setLayoutManager(linearLayoutManager2);
-        mFragmentHomeUserBinding.rcvProductPhone.setLayoutManager(linearLayoutManager3);
-        mListLaptop= new ArrayList<>();
+        mFragmentHomeUserBinding.rcvProductAccessories.setLayoutManager(linearLayoutManager3);
+        mListLaptop = new ArrayList<>();
         mListPhone = new ArrayList<>();
         mListAccessories = new ArrayList<>();
         productAdapterLaptop = new ProductAdapter(mListLaptop, new IClickProductItemListener() {
@@ -135,45 +173,17 @@ public class HomeFragmentUser extends Fragment {
         mFragmentHomeUserBinding.rcvProductAccessories.setAdapter(productAdapterAccessories);
         setListProductFromFireBase();
         setCart();
-
-        mFragmentHomeUserBinding.categoryLaptop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
-            mMainUserActivity.CATEGORY = R.id.category_laptop;
-            mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
-            mMainUserActivity.replaceFragment(new AllProductsFragment());
-            }
-        });
-        mFragmentHomeUserBinding.categoryPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
-                mMainUserActivity.CATEGORY = R.id.category_phone;
-                mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
-                mMainUserActivity.replaceFragment(new AllProductsFragment());
-            }
-        });
-        mFragmentHomeUserBinding.categoryAccessories.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mMainUserActivity.ACTION = mMainUserActivity.ACTION_CATEGORY;
-                mMainUserActivity.CATEGORY = R.id.category_accessories;
-                mMainUserActivity.mCurrentFragment = MainUserActivity.FRAGMENT_ALL_PRODUCT;
-                mMainUserActivity.replaceFragment(new AllProductsFragment());
-            }
-        });
-        return viewFragment;
     }
 
     private void setCart() {
         FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Cart");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 long quantity = snapshot.getChildrenCount();
-                if (quantity==0) mFragmentHomeUserBinding.iconCartQuantity.setVisibility(View.GONE);
+                if (quantity == 0)
+                    mFragmentHomeUserBinding.iconCartQuantity.setVisibility(View.GONE);
                 else {
                     mFragmentHomeUserBinding.iconCartQuantity.setVisibility(View.VISIBLE);
                     mFragmentHomeUserBinding.currentCartQuantity.setText(String.valueOf(quantity));
@@ -202,13 +212,11 @@ public class HomeFragmentUser extends Fragment {
                             if (mListLaptop != null) mListLaptop.clear();
                             for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                 Product product = dataSnapshot1.getValue(Product.class);
-                                if (product.getProductCategory().equals("Laptop")){
+                                if (product.getProductCategory().equals("Laptop")) {
                                     mListLaptop.add(product);
-                                }
-                                else if (product.getProductCategory().equals("Smartphone")){
+                                } else if (product.getProductCategory().equals("Smartphone")) {
                                     mListPhone.add(product);
-                                }
-                                else {
+                                } else if (product.getProductCategory().equals("Accessory")){
                                     mListAccessories.add(product);
                                 }
 
@@ -218,6 +226,7 @@ public class HomeFragmentUser extends Fragment {
                             productAdapterAccessories.notifyDataSetChanged();
 
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
                             Toast.makeText(getContext(), "Thất bại!", Toast.LENGTH_SHORT).show();
@@ -233,6 +242,7 @@ public class HomeFragmentUser extends Fragment {
         });
 
     }
+
     private void setImageSlide() {
         List<SlideModel> list = new ArrayList<>();
         List<String> uriList = new ArrayList<>();
@@ -242,40 +252,39 @@ public class HomeFragmentUser extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (uriList!=null) uriList.clear();
-                if (list!=null) list.clear();
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                if (uriList != null) uriList.clear();
+                if (list != null) list.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                     DatabaseReference myRef = dataSnapshot.child("Shop").child("ImageAds").getRef();
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                            for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                 String value = dataSnapshot1.getValue(String.class);
-                                if (value!=null) uriList.add(value);
+                                if (value != null) uriList.add(value);
                             }
 
                             List<String> stringList = new ArrayList<>();
-                           Random random = new Random();
-                           int size = uriList.size();
-                           int num = size>=5? 5 : 3;
-                            while (stringList.size() < num){
+                            Random random = new Random();
+                            int size = uriList.size();
+                            int num = size >= 5 ? 5 : 3;
+                            while (stringList.size() < num) {
 
-                                if (!uriList.isEmpty()){
+                                if (!uriList.isEmpty()) {
                                     int index = random.nextInt(size);
-                                   if (!stringList.contains(uriList.get(index))){
-                                       stringList.add(uriList.get(index));
-                                   }
-                               }
-                                else break;
+                                    if (!stringList.contains(uriList.get(index))) {
+                                        stringList.add(uriList.get(index));
+                                    }
+                                } else break;
 
                             }
-                           for (String str : stringList){
-                               list.add(new SlideModel(str,ScaleTypes.FIT));
+                            for (String str : stringList) {
+                                list.add(new SlideModel(str, ScaleTypes.FIT));
                             }
 
-                           mFragmentHomeUserBinding.slide.setImageList(list,ScaleTypes.FIT);
+                            mFragmentHomeUserBinding.slide.setImageList(list, ScaleTypes.FIT);
 
                         }
 
@@ -294,13 +303,20 @@ public class HomeFragmentUser extends Fragment {
         });
 
     }
+
     private void onClickGoToProductDetail(Product product) {
         Intent intent = new Intent(getContext(), ProductDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("product",product);
+        bundle.putSerializable("product", product);
         intent.putExtras(bundle);
         getContext().startActivity(intent);
     }
+
+    private void onClickGoToCart() {
+        Intent intent = new Intent(getContext(), CartActivity.class);
+        getContext().startActivity(intent);
+    }
+
     public FragmentHomeUserBinding getmFragmentHomeUserBinding() {
         return mFragmentHomeUserBinding;
     }

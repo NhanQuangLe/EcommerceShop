@@ -1,25 +1,28 @@
 package com.example.ecommerceshop.qui.product_detail;
 
 public class Cart {
+    private String cartId;
+
+    public String getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(String cartId) {
+        this.cartId = cartId;
+    }
+
     private String productId;
     private int productQuantity;
-    private String ShopId;
+    private String shopId;
 
-    public Cart(String productId, int productQuantity, String shopId) {
+    public Cart(String cartId, String productId, int productQuantity, String shopId) {
+        this.cartId = cartId;
         this.productId = productId;
         this.productQuantity = productQuantity;
-        ShopId = shopId;
+        this.shopId = shopId;
     }
 
     public Cart() {
-    }
-
-    public String getShopId() {
-        return ShopId;
-    }
-
-    public void setShopId(String shopId) {
-        ShopId = shopId;
     }
 
     public String getProductId() {
@@ -36,5 +39,13 @@ public class Cart {
 
     public void setProductQuantity(int productQuantity) {
         this.productQuantity = productQuantity;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 }

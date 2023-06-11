@@ -4,6 +4,8 @@ package com.example.ecommerceshop.qui.homeuser;
 
 import android.widget.Toast;
 
+import com.example.ecommerceshop.qui.product_detail.Review;
+
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.List;
@@ -22,6 +24,16 @@ public class Product implements Serializable {
     private String productSite;
     private String uid;
     private int psoldQuantity;
+    private List<String> uriList;
+    private List<Review> productReviews;
+
+    public List<Review> getProductReviews() {
+        return productReviews;
+    }
+
+    public void setProductReviews(List<Review> productReviews) {
+        this.productReviews = productReviews;
+    }
 
     public int getProductQuantity() {
         return productQuantity;
@@ -39,9 +51,8 @@ public class Product implements Serializable {
         this.psoldQuantity = psoldQuantity;
     }
 
-    private List<String> uriList;
 
-    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int productQuantity, String productSite, String uid, int psoldQuantity, List<String> uriList) {
+    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int productQuantity, String productSite, String uid, int psoldQuantity, List<String> uriList, List<Review> productReviews) {
         this.productId = productId;
         this.productName = productName;
         this.productBrand = productBrand;
@@ -55,7 +66,9 @@ public class Product implements Serializable {
         this.uid = uid;
         this.psoldQuantity = psoldQuantity;
         this.uriList = uriList;
+        this.productReviews = productReviews;
     }
+
 
     public Product() {
 

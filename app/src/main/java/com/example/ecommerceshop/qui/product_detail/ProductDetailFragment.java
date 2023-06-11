@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -226,7 +227,8 @@ public class ProductDetailFragment extends Fragment {
                 cur_quantity_firebase=0;
                 String quantityStr = mFragmentProductDetailBinding.cardQuantity.getText().toString();
                 int quantity = Integer.parseInt(quantityStr);
-                Cart cart = new Cart(product.getProductId(),quantity,product.getUid());
+                String key = String.valueOf((int) new Date().getTime());
+                Cart cart = new Cart(key,product.getProductId(),quantity,product.getUid());
                 DatabaseReference ref0 = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Cart");
                 ref0.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -250,8 +252,8 @@ public class ProductDetailFragment extends Fragment {
                             return;
                         }
                         else {
-                            String key = String.valueOf((int) new Date().getTime());
-                            ref0.child(key).setValue(cart, new DatabaseReference.CompletionListener() {
+
+                            ref0.child(cart.getCartId()).setValue(cart, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                     Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
@@ -371,11 +373,11 @@ public class ProductDetailFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String name = snapshot.child("ShopName").getValue(String.class);
+                String name = snapshot.child("ShopInfos").child("shopName").getValue(String.class);
                 mFragmentProductDetailBinding.shopName.setText(name);
-                String address = snapshot.child("Address").getValue(String.class);
+                String address = snapshot.child("ShopInfos").child("shopAddress").getValue(String.class);
                 mFragmentProductDetailBinding.shopAddress.setText(address);
-                String uri = snapshot.child("Avatar").getValue(String.class);
+                String uri = snapshot.child("ShopInfos").child("shopAvt").getValue(String.class);
                 Glide.with(getActivity()).load(uri).into((ImageView) mFragmentProductDetailBinding.shopAvatar);
                 mFragmentProductDetailBinding.shopProductQuantity.setText(String.valueOf(snapshot.child("Products").getChildrenCount()));
             }
@@ -398,7 +400,8 @@ public class ProductDetailFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                               if (dataSnapshot1.child("ShopID").getValue(String.class).equals(shopId)) {
+                               String shopIdFollower = dataSnapshot1.getValue(String.class);
+                               if (shopIdFollower.equals(shopId)) {
                                    followers++;
                                    break;
                                 }
@@ -406,6 +409,7 @@ public class ProductDetailFragment extends Fragment {
                             DecimalFormat df = new DecimalFormat();
                             df.setMaximumFractionDigits(1);
                             String followersStr;
+                            Log.e("follow",""+followers);
                             if (followers<1000) followersStr = String.valueOf(followers);
                             else followersStr= df.format(followers*1.0/1000);
 
