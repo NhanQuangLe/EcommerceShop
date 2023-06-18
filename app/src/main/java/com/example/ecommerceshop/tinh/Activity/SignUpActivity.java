@@ -98,13 +98,21 @@ public class SignUpActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 100){
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-            try {
-                task.getResult(ApiException.class);
+            if (task.isSuccessful())
+            {
                 navigateToSecondActivity();
-            } catch (ApiException e) {
+                Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
                 Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
+//            try {
+//                task.getResult(ApiException.class);
+//                navigateToSecondActivity();
+//            } catch (ApiException e) {
+//                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 
