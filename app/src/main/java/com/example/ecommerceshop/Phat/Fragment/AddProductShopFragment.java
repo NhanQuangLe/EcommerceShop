@@ -209,7 +209,7 @@ public class AddProductShopFragment extends Fragment  {
     private void uploadData( String timestamp) {
 
         Product product = new Product(timestamp,ProductName, ProductDescription,productCategory,ProductBrand,ProductSite,ProductDiscountNote
-        ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid() );
+        ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid(),0 );
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(timestamp).setValue(product).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
