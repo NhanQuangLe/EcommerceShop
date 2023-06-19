@@ -11,25 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
-        <activity
-            android:name=".StatiscalShopActivity"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.EcommerceShop.NoActionBar" />
-        <activity
-            android:name=".ProfileSettingShopActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SuccessRegisActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RequestToShopActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AdminActivity"
-            android:exported="false" />
+        
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
             android:exported="true">
