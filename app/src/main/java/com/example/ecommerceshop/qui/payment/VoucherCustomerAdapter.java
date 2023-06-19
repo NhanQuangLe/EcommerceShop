@@ -13,7 +13,9 @@ import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.AdapterItemVoucherCustomerBinding;
 import com.google.firebase.database.core.Context;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class VoucherCustomerAdapter extends RecyclerView.Adapter<VoucherCustomerAdapter.VoucherCustomerViewHolder>{
 
@@ -47,12 +49,19 @@ public class VoucherCustomerAdapter extends RecyclerView.Adapter<VoucherCustomer
             holder.mBinding.tvVoucherCode.setText(voucher.getVouchercode());
             holder.mBinding.tvVoucherDes.setText(voucher.getVoucherdes());
             holder.mBinding.tvVoucherExpired.setText(voucher.getExpiredDate());
+            holder.mBinding.discountPrice.setText(getPrice(voucher.getDiscountPrice()));
             if (voucher.isCanUse()){
                 holder.mBinding.layoutVoucher.setBackgroundColor(Color.parseColor("#ECE8E8"));
             }
             else {
                 holder.mBinding.layoutVoucher.setBackgroundColor(Color.parseColor("#D9D9D9"));
-                holder.mBinding.layoutVoucher.setClickable(false);
+                holder.mBinding.checkbox.setEnabled(false);
+            }
+            if (voucher.isCheck()){
+                holder.mBinding.checkbox.setChecked(true);
+            }
+            else {
+                holder.mBinding.checkbox.setChecked(false);
             }
             holder.mBinding.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -75,5 +84,12 @@ public class VoucherCustomerAdapter extends RecyclerView.Adapter<VoucherCustomer
             super(mBinding.getRoot());
             this.mBinding=mBinding;
         }
+    }
+    public String getPrice(long money) {
+        long res = money;
+        Locale localeVN = new Locale("vi", "VN");
+        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+        String str1 = currencyVN.format(res);
+        return str1;
     }
 }

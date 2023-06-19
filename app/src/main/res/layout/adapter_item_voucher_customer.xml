@@ -40,7 +40,7 @@
                     android:text="NO3004203 "
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="5dp"
                     android:textColor="#444444" />
             </LinearLayout>
 
@@ -52,6 +52,28 @@
                 android:id="@+id/tv_voucher_des"
                 android:layout_marginTop="5dp"
                 android:textColor="#444444" />
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Trị giá:"
+                   android:textSize="14sp"
+
+                   android:layout_marginTop="5dp"
+                   android:textColor="#444444" />
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/discount_price"
+                   android:textSize="14sp"
+                   android:layout_marginStart="10dp"
+                   android:layout_marginTop="5dp"
+                   android:textColor="#444444" />
+
+           </LinearLayout>
 
             <LinearLayout
                 android:layout_marginTop="5dp"

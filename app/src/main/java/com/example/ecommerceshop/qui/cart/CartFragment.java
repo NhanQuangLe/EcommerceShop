@@ -183,6 +183,7 @@ public class CartFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String shopName = snapshot.child("ShopInfos").child("shopName").getValue(String.class);
+                                Log.e("name",shopName);
                                 mapProductCart.put(cart.getShopId(), new ArrayList<ProductCart>());
                                 DatabaseReference refProduct = snapshot.child("Products/" + cart.getProductId()).getRef();
                                 refProduct.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -196,7 +197,7 @@ public class CartFragment extends Fragment {
                                             String uri = product.getUriList().get(0);
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(),
                                                                             productPrice, productDiscountPrice, uri, cart.getShopId(),shopName);
-                                            Log.e("name",shopName);
+
                                             mapProductCart.get(cart.getShopId()).add(productCart);
                                             mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId())));
                                             shopProductCartAdapter.notifyDataSetChanged();

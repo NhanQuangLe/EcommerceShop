@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,12 +93,13 @@ public class AllProductsFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (mListProduct !=null) mListProduct.clear();
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
                     DatabaseReference myRef2 = dataSnapshot.getRef().child("Shop").child("Products");
                     myRef2.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (mListProduct !=null) mListProduct.clear();
+
                             for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                 Product product = dataSnapshot1.getValue(Product.class);
                                 if (product.getProductCategory().equals(brand)){
@@ -105,6 +107,7 @@ public class AllProductsFragment extends Fragment {
                                 }
                             }
                             productAdapter.notifyDataSetChanged();
+
                         }
 
                         @Override

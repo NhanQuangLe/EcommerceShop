@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -58,6 +59,12 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
                 addressListener.EditAddress(address);
             }
         });
+        holder.layout_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addressListener.ReturnAddressForPayment(address);
+            }
+        });
     }
     @Override
     public int getItemCount() {
@@ -68,6 +75,7 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
 
         TextView tv_FullName, tv_PhoneNumber, tv_InfoDetail, tv_MainAddress, tv_DeFaultAddresss;
         TextView btn_EditAddress;
+        LinearLayout layout_address;
         public UserAddressViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_FullName = itemView.findViewById(R.id.tv_FullName);
@@ -76,6 +84,8 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
             tv_MainAddress = itemView.findViewById(R.id.tv_MainAddress);
             tv_DeFaultAddresss = itemView.findViewById(R.id.tv_DeFaultAddresss);
             btn_EditAddress = itemView.findViewById(R.id.btn_EditAddress);
+            layout_address = itemView.findViewById(R.id.layout_address);
+
         }
     }
 }

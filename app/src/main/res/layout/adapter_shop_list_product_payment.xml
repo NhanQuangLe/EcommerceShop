@@ -180,7 +180,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:id="@+id/tv_khuyenmai"
                     android:textColor="#777575"
                     android:textStyle="bold"
@@ -201,7 +200,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="45,000đ"
+                    android:id="@+id/tv_tien_van_chuyen"
                     android:textColor="#777575"
                     android:textStyle="bold"
                     android:textSize="14sp" />
@@ -221,6 +220,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/tv_tong_thanh_toan"
                     android:text="16,990,990đ"
                     android:textColor="#DB3022"
                     android:textStyle="bold"

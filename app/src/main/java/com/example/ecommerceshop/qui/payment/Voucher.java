@@ -9,7 +9,27 @@ public class Voucher {
     private int discountPrice;
     private String expiredDate;
 
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    private String shopId;
+
     private boolean isCanUse;
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
+
+    private boolean isCheck;
 
 
 
