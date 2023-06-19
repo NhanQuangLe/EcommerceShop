@@ -1,36 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:columnCount="2"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <TextView
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:textColor="@color/secondary_gray"
-        android:fontFamily="@font/lato_regular"
-        android:textSize="14dp"
-        android:text="A"
-    />
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:columnCount="2"
+        android:id="@+id/ll_BoundaryAddress"
+        android:layout_marginBottom="3px"
+        android:background="@color/white"
+        >
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="39.5dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/black"
+            android:id="@+id/tv_HeaderAddress"
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textColor="@color/secondary_gray"
             android:fontFamily="@font/lato_regular"
+            android:background="@color/white"
             android:textSize="14dp"
-            android:text="An Giang"
-        />
+            android:text="A"
+            />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/secondary_gray"
-            android:layout_marginRight="1dp"
-        />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_AddressName"
+                android:layout_width="match_parent"
+                android:layout_height="39.5dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:fontFamily="@font/lato_regular"
+                android:textSize="14dp"
+                android:text="An Giang"
+                />
+            <!--        <LinearLayout-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="1px"-->
+            <!--            android:background="@color/secondary_gray"-->
+            <!--            android:layout_marginRight="1dp"-->
+            <!--        />-->
+        </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="45dp"
+        android:layout_height="10px"
+        android:gravity="center"
+        android:background="@color/white"
+        android:layout_marginTop="-10px"
+    />
 </LinearLayout>

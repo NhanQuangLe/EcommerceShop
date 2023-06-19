@@ -85,7 +85,7 @@ public class UpdateProductShopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_updelete_product_shop);
         initUi();
         LoadData();
-        progressDialog=new ProgressDialog(UpdateProductShopActivity.this);
+        progressDialog = new ProgressDialog(UpdateProductShopActivity.this);
         progressDialog.setTitle("Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth=FirebaseAuth.getInstance();

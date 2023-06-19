@@ -1,17 +1,16 @@
 package com.example.ecommerceshop.nhan.Model;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Customer extends User{
-    String Avatar, Name, PhoneNumber, Email, DateOfBirth, Gender;
+public class Customer{
+    String CustomerID, Avatar, Name, PhoneNumber, Email, DateOfBirth, Gender;
     ArrayList<Shop> Followers;
 
     public Customer() {
     }
 
-    public Customer(String userID, String userType, String avatar, String name, String phoneNumber, String email, String dateOfBirth, String gender, ArrayList<Shop> followers) {
-        super(userID, userType);
+    public Customer(String customerID, String avatar, String name, String phoneNumber, String email, String dateOfBirth, String gender, ArrayList<Shop> followers) {
+        CustomerID = customerID;
         Avatar = avatar;
         Name = name;
         PhoneNumber = phoneNumber;
@@ -21,22 +20,12 @@ public class Customer extends User{
         Followers = followers;
     }
 
-    public Customer(String avatar, String name, String phoneNumber, String email, String dateOfBirth, String gender, ArrayList<Shop> followers) {
-        Avatar = avatar;
-        Name = name;
-        PhoneNumber = phoneNumber;
-        Email = email;
-        DateOfBirth = dateOfBirth;
-        Gender = gender;
-        Followers = followers;
+    public String getCustomerID() {
+        return CustomerID;
     }
 
-    public ArrayList<Shop> getFollowers() {
-        return Followers;
-    }
-
-    public void setFollowers(ArrayList<Shop> followers) {
-        Followers = followers;
+    public void setCustomerID(String customerID) {
+        CustomerID = customerID;
     }
 
     public String getAvatar() {
@@ -85,5 +74,13 @@ public class Customer extends User{
 
     public void setGender(String gender) {
         Gender = gender;
+    }
+
+    public ArrayList<Shop> getFollowers() {
+        return Followers;
+    }
+
+    public void setFollowers(ArrayList<Shop> followers) {
+        Followers = followers;
     }
 }

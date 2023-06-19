@@ -2,6 +2,10 @@ package com.example.ecommerceshop.qui.homeuser;
 
 
 
+import android.widget.Toast;
+
+import com.example.ecommerceshop.qui.product_detail.Review;
+
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.List;
@@ -16,14 +20,39 @@ public class Product implements Serializable {
     private String productDiscountNote;
     private int productDiscountPrice;
     private int productPrice;
-    private int getProductQuantity;
+    private int productQuantity;
     private String productSite;
     private String uid;
-
-
+    private int psoldQuantity;
     private List<String> uriList;
+    private List<Review> productReviews;
 
-    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int getProductQuantity, String productSite, String uid, List<String> urlList) {
+    public List<Review> getProductReviews() {
+        return productReviews;
+    }
+
+    public void setProductReviews(List<Review> productReviews) {
+        this.productReviews = productReviews;
+    }
+
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
+    }
+
+    public int getPsoldQuantity() {
+        return psoldQuantity;
+    }
+
+    public void setPsoldQuantity(int psoldQuantity) {
+        this.psoldQuantity = psoldQuantity;
+    }
+
+
+    public Product(String productId, String productName, String productBrand, String productCategory, String productDescription, String productDiscountNote, int productDiscountPrice, int productPrice, int productQuantity, String productSite, String uid, int psoldQuantity, List<String> uriList, List<Review> productReviews) {
         this.productId = productId;
         this.productName = productName;
         this.productBrand = productBrand;
@@ -32,11 +61,15 @@ public class Product implements Serializable {
         this.productDiscountNote = productDiscountNote;
         this.productDiscountPrice = productDiscountPrice;
         this.productPrice = productPrice;
-        this.getProductQuantity = getProductQuantity;
+        this.productQuantity = productQuantity;
         this.productSite = productSite;
         this.uid = uid;
-        this.uriList = urlList;
+        this.psoldQuantity = psoldQuantity;
+        this.uriList = uriList;
+        this.productReviews = productReviews;
     }
+
+
     public Product() {
 
     }
@@ -106,13 +139,7 @@ public class Product implements Serializable {
         this.productPrice = productPrice;
     }
 
-    public int getGetProductQuantity() {
-        return getProductQuantity;
-    }
 
-    public void setGetProductQuantity(int getProductQuantity) {
-        this.getProductQuantity = getProductQuantity;
-    }
 
     public String getProductSite() {
         return productSite;
@@ -139,7 +166,7 @@ public class Product implements Serializable {
     }
 
     public String getDiscountPrice(){
-        int res =  (this.productPrice - this.productDiscountPrice);
+        int res =  this.productDiscountPrice;
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         String str1 = currencyVN.format(res);
@@ -156,7 +183,8 @@ public class Product implements Serializable {
 
     public String getPercentDiscount(){
         NumberFormat numEN = NumberFormat.getPercentInstance();
-        String percentageEN = "-" + numEN.format(this.productDiscountPrice/this.productPrice);
+        String percentageEN = "-" + numEN.format((this.productPrice*1.0-this.productDiscountPrice)/this.productPrice);
+
         return percentageEN;
     }
 }

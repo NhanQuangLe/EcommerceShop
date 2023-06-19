@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,12 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
-
+        <activity
+            android:name=".qui.payment.PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".qui.cart.CartActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.EcommerceShop.NoActionBar" />
-        
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
             android:exported="true">
@@ -80,6 +86,24 @@
             android:exported="false" />
         <activity
             android:name=".Phat.Activity.StatiscalShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.orders.UserOrdersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.addresses.UserAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity"
             android:exported="false" />
     </application>
 

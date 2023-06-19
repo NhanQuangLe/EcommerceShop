@@ -15,6 +15,8 @@ import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentAllProductsBinding;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,7 +50,7 @@ public class AllProductsFragment extends Fragment {
                 onClickGoToProductDetail(product);
             }
         });
-
+        setCart();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
         mFragmentAllProductsBinding.rcvProduct.setLayoutManager(gridLayoutManager);
         mFragmentAllProductsBinding.rcvProduct.setAdapter(productAdapter);
@@ -168,6 +170,26 @@ public class AllProductsFragment extends Fragment {
         bundle.putSerializable("product",product);
         intent.putExtras(bundle);
         getContext().startActivity(intent);
+    }
+    private void setCart() {
+        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Cart");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                long quantity = snapshot.getChildrenCount();
+                if (quantity==0) mFragmentAllProductsBinding.iconCartQuantity.setVisibility(View.GONE);
+                else {
+                    mFragmentAllProductsBinding.iconCartQuantity.setVisibility(View.VISIBLE);
+                    mFragmentAllProductsBinding.currentCartQuantity.setText(String.valueOf(quantity));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }

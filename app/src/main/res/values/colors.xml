@@ -20,4 +20,6 @@
     <color name="background_avatar">#FFFFFF</color>
     <color name="error_red_color">#FF0000</color>
     <color name="text_valid_green_color">#013000</color>
+    <color name="voucher_cannot_use_color">#D9D9D9</color>
+
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".nhan.Fragment.UserProfileFragment">
+    tools:context=".nhan.ProfileCustomer.UserProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/userShortInfo"
@@ -373,6 +373,7 @@
                 />
 
             <LinearLayout
+                android:id="@+id/llFavouriteProducts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -419,6 +420,7 @@
                 />
 
             <LinearLayout
+                android:id="@+id/ll_UserAddresses"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -557,6 +559,7 @@
                 />
 
             <LinearLayout
+                android:id="@+id/ll_ShopFollowers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -601,13 +604,8 @@
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
                 />
-            <TextView
-                android:id="@+id/dkbh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="dkbanhan"/>
-        </LinearLayout>
 
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 

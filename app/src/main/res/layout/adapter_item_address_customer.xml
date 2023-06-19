@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background_address"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:paddingTop="20dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp"
+    android:paddingBottom="10dp"
     android:layout_margin="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -18,10 +21,10 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <TextView
-                android:id="@+id/fullName"
+                android:id="@+id/tv_FullName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phan Trọng Tính"
+                android:text="Lê Quang Nhân"
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/lato_bold"
@@ -30,29 +33,27 @@
                 android:layout_width="0.5px"
                 android:layout_height="match_parent"
                 android:background="@color/secondary_gray"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
                 />
             <TextView
-                android:id="@+id/phoneNumber"
+                android:id="@+id/tv_PhoneNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0379361210"
+                android:text="0868008460"
                 android:textSize="12sp"
                 android:textColor="@color/primary_gray_text"
                 android:fontFamily="@font/lato_regular"
-                app:layout_constraintLeft_toLeftOf="@id/fullName"
+                app:layout_constraintLeft_toLeftOf="@id/tv_FullName"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
         </LinearLayout>
-
-
         <TextView
-            android:id="@+id/edit"
+            android:id="@+id/btn_EditAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit"
+            android:text="Sửa"
             android:textSize="14sp"
             android:textColor="@color/primary_red"
             android:fontFamily="@font/lato_bold"
@@ -61,25 +62,40 @@
             app:layout_constraintRight_toRightOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="300dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/lato_regular"
-        android:text="Cach cau cho Hoi 1km, Ap This downvote is wrong. The question is perfectly answered . The fact that a shortcut exists for this particular starred-button does not invalidate this answer nha may A, xa Tan Phu, huyen Thoi Binh, tinh Ca Mau"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:padding="10dp"/>
+        android:orientation="vertical"
+        android:layout_marginTop="7dp">
 
-    <CheckBox
-        android:layout_width="244dp"
+        <TextView
+            android:id="@+id/tv_InfoDetail"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:text="Gần trạm thu phí"
+            android:textColor="@color/black"
+            android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/tv_MainAddress"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato_regular"
+            android:layout_marginTop="5dp"
+            android:text="Xã Nghĩa Phương, huyện Tư Nghĩa, Quảng Ngãi"
+            android:textColor="@color/black"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_DeFaultAddresss"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:height="0px"
+        android:text="Mặc định"
         android:layout_marginTop="10dp"
-        android:button="@drawable/custom_checkbox_address"
-        android:fontFamily="@font/lato_regular"
-        android:text="@string/checkbox_address"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        android:layout_marginLeft="10dp"/>
+        android:textColor="@color/primary_red"
+        android:padding="5dp"
+        android:background="@drawable/border_button"
+    />
 </LinearLayout>
