@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.ecommerceshop.databinding.FragmentHistoryOrdersBinding;
+import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.nhan.Model.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -44,8 +45,10 @@ public class HistoryOrdersFragment extends Fragment {
         fragmentHistoryOrdersBinding = FragmentHistoryOrdersBinding.inflate(inflater, container, false);
         mViewFragment = fragmentHistoryOrdersBinding.getRoot();
         listHistoryOrders = new ArrayList<>();
-        mHistoryAdapterView = fragmentHistoryOrdersBinding.listOrder;
+        mHistoryAdapterView = fragmentHistoryOrdersBinding.rvHistoryOrder;
         firebaseAuth = FirebaseAuth.getInstance();
+        mHistoryAdapter = new HistoryOrdersAdapter(getContext(), listHistoryOrders);
+        mHistoryAdapterView.setAdapter(mHistoryAdapter);
         LoadData();
         return mViewFragment;
     }
@@ -62,22 +65,47 @@ public class HistoryOrdersFragment extends Fragment {
                         for(DataSnapshot ds : snapshot.getChildren())
                         {
                             HistoryOrder ho = new HistoryOrder();
-                            ho.setCreateDate(ds.child("CreateDate").getValue(String.class));
-                            ho.setOrderID(ds.child("OrderID").getValue(String.class));
-                            ho.setProduct(ds.child("Product").getValue(Product.class));
-                            ho.setReceiveAddress(ds.child("ReceiveAddress").getValue(String.class));
-                            ho.setShopAvatar(ds.child("Shop").child("ShopAvatar").getValue(String.class));
-                            ho.setShopName(ds.child("Shop").child("ShopName").getValue(String.class));
-                            ho.setStatus(ds.child("Status").getValue(String.class));
-                            ho.setTotalPrice(ds.child("TotalPrice").getValue(int.class));
-                            ho.setTransportFee(ds.child("TransportFee").getValue(int.class));
-                            listHistoryOrders.add(ho);
+                            ho.setOrderId(ds.child("orderId").getValue(String.class));
+                            ho.setCustomerId(ds.child("customerId").getValue(String.class));
+                            dbReference.child(ds.child("shopId").getValue(String.class))
+                                .child("Shop")
+                                .child("ShopInfos").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    ho.setShopAvt(snapshot.child("shopAvt").getValue(String.class));
+                                    ho.setShopName(snapshot.child("shopName").getValue(String.class));
+                                    ho.setShopId(ds.child("shopId").getValue(String.class));
+                                    ho.setShipPrice(ds.child("shipPrice").getValue(int.class));
+                                    ho.setDiscountPrice(ds.child("discountPrice").getValue(int.class));
+                                    ho.setOrderStatus(ds.child("orderStatus").getValue(String.class));
+                                    ho.setTotalPrice(ds.child("totalPrice").getValue(int.class));
+                                    ho.setOrderedDate(ds.child("orderDate").getValue(String.class));
+                                    ho.setReceiveAddress(ds.child("receiveAddress").getValue(Address.class));
+                                    ArrayList<Product> products = new ArrayList<>();
+                                    for(DataSnapshot product : ds.child("items").getChildren())
+                                    {
+                                        Product pd = new Product();
+                                        pd.setProductID(product.child("pid").getValue(String.class));
+                                        pd.setProductAvatar(product.child("pAvatar").getValue(String.class));
+                                        pd.setProductBrand(product.child("pBrand").getValue(String.class));
+                                        pd.setProductName(product.child("pName").getValue(String.class));
+                                        pd.setProductCategory(product.child("pCategory").getValue(String.class));
+                                        pd.setProductDiscountPrice(product.child("pPrice").getValue(int.class));
+                                        pd.setPurchaseQuantity(product.child("pQuantity").getValue(int.class));
+                                        products.add(pd);
+                                    }
+                                    ho.setItems(products);
+                                    listHistoryOrders.add(ho);
+                                    mHistoryAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getContext(), error.getMessage() + "", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-
-                        mHistoryAdapter = new HistoryOrdersAdapter(getContext(), listHistoryOrders);
-                        mHistoryAdapterView.setAdapter(mHistoryAdapter);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Toast.makeText(getContext(), error.getMessage() + "", Toast.LENGTH_SHORT).show();

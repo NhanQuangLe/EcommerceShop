@@ -25,9 +25,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.type.DateTime;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FavouriteProductsActivity extends AppCompatActivity {
 
@@ -130,7 +133,7 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                     @Override
                     public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                         for(int i = 0; i < listFavouriteProduct.size(); i++)
-                            if(listFavouriteProduct.get(i).getProductID().equals(snapshot.child("ProductID").getValue(String.class)))
+                            if(listFavouriteProduct.get(i).getProductID().equals(snapshot.child("productId").getValue(String.class)))
                             {
                                 listFavouriteProduct.remove(i);
                                 favouriteProductsAdapter.notifyDataSetChanged();
@@ -169,19 +172,20 @@ public class FavouriteProductsActivity extends AppCompatActivity {
     public void AddProductToCart(Product favouriteProduct) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference();
-        Cart cart = new Cart(favouriteProduct.getProductID(), favouriteProduct.getShopID(), 1);
+        String cartId = Long.toString(new Date().getTime());
+        Cart cart = new Cart(cartId, favouriteProduct.getProductID(), favouriteProduct.getShopID(), 1);
         dbRef.child("Users")
                 .child(firebaseAuth.getUid())
                 .child("Customer")
                 .child("Cart")
-                .push().setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
+                .child(cartId).setValue(cart, new DatabaseReference.CompletionListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                         dbRef.child("Users")
                                 .child(firebaseAuth.getUid())
                                 .child("Customer")
                                 .child("FavouriteProducts")
-                                .child(cart.getProductID())
+                                .child(cart.getProductId())
                                 .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -189,12 +193,8 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                                     }
                                 });
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(FavouriteProductsActivity.this, "Không thêm được vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                    }
                 });
+
     }
     public void DeleteFavouriteProduct(Product favouriteProduct) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();

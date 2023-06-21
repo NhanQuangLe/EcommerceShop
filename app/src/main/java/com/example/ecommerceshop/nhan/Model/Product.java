@@ -6,7 +6,6 @@ public class Product {
     String productAvatar, productBrand, productCategory, productName, productID, productSite, shopID;
     int purchaseQuantity;
     int productDiscountPrice;
-
     float productRating;
     ArrayList<Review> productReviews;
 

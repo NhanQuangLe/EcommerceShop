@@ -20,6 +20,7 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
 
     private Context context;
     private ArrayList<HistoryOrder> historyOrders;
+    private HistoryProductsInOrderAdapter historyProductsInOrderAdapter;
     public HistoryOrdersAdapter(Context context, ArrayList<HistoryOrder> historyOrders) {
         this.context = context;
         this.historyOrders = historyOrders;
@@ -35,17 +36,11 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
     @Override
     public void onBindViewHolder(@NonNull HistoryOrdersAdapter.OrderViewholder holder, int position) {
         HistoryOrder historyOrder = historyOrders.get(position);
-        Picasso.get().load(Uri.parse(historyOrder.getShopAvatar())).into(holder.iv_ShopAvatar);
+        Picasso.get().load(Uri.parse(historyOrder.getShopAvt())).into(holder.iv_ShopAvatar);
         holder.tv_ShopName.setText(historyOrder.getShopName());
-
-        Picasso.get().load(Uri.parse(historyOrder.getProduct().getProductAvatar())).into(holder.iv_ProductAvatar);
-        holder.tv_ProductName.setText(historyOrder.getProduct().getProductName());
-        holder.tv_ProductBrand.setText(historyOrder.getProduct().getProductBrand());
-        holder.tv_ProductCategory.setText(historyOrder.getProduct().getProductCategory());
-        holder.tv_ProductPurchaseQuantity.setText(Integer.toString(historyOrder.getProduct().getPurchaseQuantity()));
-        holder.tv_ProductDiscountPrice.setText(Integer.toString(historyOrder.getProduct().getProductDiscountPrice()));
-
-        holder.tv_SumMoney.setText(Integer.toString(historyOrder.getTotalPrice()));
+        historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, historyOrder.getItems());
+        holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
+        holder.tv_SumMoney.setText(String.valueOf(historyOrder.getTotalPrice()));
     }
 
     @Override
@@ -56,22 +51,14 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
     public static class OrderViewholder extends RecyclerView.ViewHolder{
         ImageView iv_ShopAvatar;
         TextView tv_ShopName;
-
-        ImageView iv_ProductAvatar;
-
-        TextView tv_ProductName, tv_ProductBrand, tv_ProductCategory, tv_ProductPurchaseQuantity, tv_ProductDiscountPrice;
+        RecyclerView rv_ProductList;
         TextView tv_SumMoney;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
             iv_ShopAvatar = itemView.findViewById(R.id.iv_ShopAvatar);
             tv_ShopName = itemView.findViewById(R.id.tv_ShopName);
-            iv_ProductAvatar = itemView.findViewById(R.id.iv_ProductAvatar);
-            tv_ProductName = itemView.findViewById(R.id.tv_ProductName);
-            tv_ProductBrand = itemView.findViewById(R.id.tv_ProductBrand);
-            tv_ProductCategory = itemView.findViewById(R.id.tv_ProductCategory);
-            tv_ProductPurchaseQuantity = itemView.findViewById(R.id.tv_ProductPurchaseQuantity);
-            tv_ProductDiscountPrice = itemView.findViewById(R.id.tv_ProductDiscountPrice);
+            rv_ProductList = itemView.findViewById(R.id.rv_ProductList);
             tv_SumMoney = itemView.findViewById(R.id.tv_SumMoney);
         }
     }
