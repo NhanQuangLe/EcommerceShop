@@ -5,7 +5,15 @@ import java.util.List;
 
 public class Product implements Serializable {
     private String productId, productName, productDescription, productCategory, productBrand, productSite, productDiscountNote, uid;
-    private int productQuantity, productPrice, productDiscountPrice;
+    private int productQuantity, productPrice, productDiscountPrice, psoldQuantity;
+
+    public int getPsoldQuantity() {
+        return psoldQuantity;
+    }
+
+    public void setPsoldQuantity(int psoldQuantity) {
+        psoldQuantity = psoldQuantity;
+    }
 
     private List<String> uriList;
 
@@ -29,7 +37,7 @@ public class Product implements Serializable {
 
     public Product(String productId, String productName, String productDescription, String productCategory,
                    String productBrand, String productSite, String productDiscountNote , int productQuantity,
-                   int productPrice, int productDiscountPrice , List<String> uriList, String uid) {
+                   int productPrice, int productDiscountPrice , List<String> uriList, String uid, int PsoldQuantity) {
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -42,6 +50,7 @@ public class Product implements Serializable {
         this.productPrice = productPrice;
         this.productDiscountPrice = productDiscountPrice;
         this.uriList = uriList;
+        this.psoldQuantity=PsoldQuantity;
     }
 
     public String getProductId() {

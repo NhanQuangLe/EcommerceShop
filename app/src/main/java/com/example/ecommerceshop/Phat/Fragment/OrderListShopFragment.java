@@ -2,6 +2,7 @@ package com.example.ecommerceshop.Phat.Fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +16,22 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.ecommerceshop.Phat.Adapter.AdapterOrderShop;
+import com.example.ecommerceshop.Phat.Adapter.AdapterProductShop;
+import com.example.ecommerceshop.Phat.Model.OrderShop;
+import com.example.ecommerceshop.Phat.Model.Product;
 import com.example.ecommerceshop.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
 public class OrderListShopFragment extends Fragment {
     View mview;
     ImageView imageView4;
@@ -26,6 +41,9 @@ public class OrderListShopFragment extends Fragment {
     HorizontalScrollView statusList;
     boolean isfilter=false;
     AppCompatButton cancelled,completed,processing,unprocessed,allorders;
+    ArrayList<OrderShop> orderShops;
+    FirebaseAuth firebaseAuth;
+    AdapterOrderShop adapterOrderShop;
     @Override
     public void onCreate(Bundle savedInstanceState) {super.onCreate(savedInstanceState);}
     @Override
@@ -50,19 +68,18 @@ public class OrderListShopFragment extends Fragment {
         });
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                try{
+                    adapterOrderShop.getFilter().filter(charSequence);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
-
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) {}
         });
         allorders.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,12 +145,80 @@ public class OrderListShopFragment extends Fragment {
     }
 
     private void LoadFilterOrderList(String status) {
+        orderShops = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                orderShops.clear();
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    String uid = ""+ds.getRef().getKey();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                    ref.child(uid).child("Customer").child("Orders").orderByChild("shopId")
+                            .equalTo(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        for (DataSnapshot ds: snapshot.getChildren()){
+                                            OrderShop orderShop = ds.getValue(OrderShop.class);
+                                            if(orderShop.getOrderStatus().equals(status)){
+                                                orderShops.add(orderShop);
+                                            }
+                                        }
+                                        adapterOrderShop = new AdapterOrderShop(getContext(), orderShops);
+                                        orderList.setAdapter(adapterOrderShop);
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void LoadAllOrders() {
-
+        orderShops = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                orderShops.clear();
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    String uid = ""+ds.getRef().getKey();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                    ref.child(uid).child("Customer").child("Orders").orderByChild("shopId")
+                            .equalTo(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        for (DataSnapshot ds: snapshot.getChildren()){
+                                            OrderShop orderShop = ds.getValue(OrderShop.class);
+                                            orderShops.add(orderShop);
+                                        }
+                                        adapterOrderShop = new AdapterOrderShop(getContext(), orderShops);
+                                        orderList.setAdapter(adapterOrderShop);
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-
     private void initUI(){
         imageView4 = mview.findViewById(R.id.imageView4);
         searchView = mview.findViewById(R.id.searchView);
@@ -145,5 +230,6 @@ public class OrderListShopFragment extends Fragment {
         processing = mview.findViewById(R.id.processing);
         unprocessed = mview.findViewById(R.id.unprocessed);
         allorders = mview.findViewById(R.id.allorders);
+        firebaseAuth=FirebaseAuth.getInstance();
     }
 }

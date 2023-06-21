@@ -41,6 +41,7 @@ import java.util.Set;
 public class UserAddressActivity extends AppCompatActivity {
     public static final int EDIT_ACTIVITY = 1601;
     public static final int NEW_ACTIVITY = 1602;
+    public static final int TRA_VE_TU_USER_ADDRESS_ACTIVITY = 1000;
 
     ArrayList<Address> listAddress;
     UserAddressAdapter userAddressAdapter;
@@ -100,6 +101,14 @@ public class UserAddressActivity extends AppCompatActivity {
             @Override
             public void EditAddress(Address address) {
                 EditUserAddress(address);
+            }
+
+            @Override
+            public void ReturnAddressForPayment(Address address) {
+                Intent i = new Intent();
+                i.putExtra("address",address);
+                setResult(TRA_VE_TU_USER_ADDRESS_ACTIVITY,i);
+                finish();
             }
         });
         listAddressView.setAdapter(userAddressAdapter);

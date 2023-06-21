@@ -64,7 +64,7 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private List<String> uriList , producttypeList, trademarkList ;
     String ProductName, ProductDescription, productCategory, ProductBrand, ProductSite, ProductDiscountNote, Productid;
-    int ProductQuantity, productPrice, ProductDiscountPrice;
+    int ProductQuantity, productPrice, ProductDiscountPrice, pSoldQuantity;
     boolean isDiscount;
     String[] categorys, trademarks;
     boolean isdeleted=false;
@@ -247,7 +247,8 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     }
     private void loadProductDetail() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(Productid).addValueEventListener(new ValueEventListener() {
+        reference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(Productid)
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Product product = new Product();
@@ -260,6 +261,7 @@ public class UpdateProductShopActivity extends AppCompatActivity {
                     productOriginalPrice.setText(String.valueOf(product.getProductPrice()));
                     productBrand.setText(product.getProductBrand());
                     productCountry.setText(product.getProductSite());
+                    pSoldQuantity=product.getPsoldQuantity();
                     if(product.getProductDiscountPrice()==0){
                         discountSwitch.setChecked(false);
                         dispriceLayout.setVisibility(View.GONE);
@@ -405,9 +407,9 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     }
     private void updateProduct(String productid) {
         Product product = new Product(productid,ProductName, ProductDescription,productCategory,ProductBrand,ProductSite,ProductDiscountNote
-                ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid() );
+                ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid(), pSoldQuantity );
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(firebaseAuth.getUid()).child("Products").child(productid)
+        databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(productid)
                 .setValue(product)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

@@ -37,16 +37,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         if (product!=null){
             holder.mBinding.productName.setText(product.getProductName());
             holder.mBinding.productBrand.setText(product.getProductBrand());
-            holder.mBinding.productPrice.setText(product.getPrice());
+
             Glide.with(holder.mBinding.getRoot()).load(product.getUriList().get(0)).into(holder.mBinding.productImage);
             if (product.getProductDiscountPrice()==0){
                 holder.mBinding.productDiscountPrice.setVisibility(View.GONE);
                 holder.mBinding.frameDiscount.setVisibility(View.GONE);
+                holder.mBinding.productPrice.setText(product.getPriceStr());
             }
             else {
-                holder.mBinding.productDiscountPrice.setText(product.getDiscountPrice());
+                holder.mBinding.productDiscountPrice.setVisibility(View.VISIBLE);
+                holder.mBinding.frameDiscount.setVisibility(View.VISIBLE);
+                holder.mBinding.productPrice.setText(product.getPriceAfterDiscountStr());
+                holder.mBinding.productDiscountPrice.setText(product.getPriceStr());
                 holder.mBinding.productDiscountPrice.setPaintFlags(holder.mBinding.productDiscountPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.mBinding.productDiscountPercent.setText(product.getPercentDiscount());
+                holder.mBinding.productDiscountPercent.setText(product.getPercentDiscountStr());
             }
             holder.mBinding.layoutProduct.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,27 +16,26 @@
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
         <activity
-            android:name=".nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity"
+            android:name=".qui.payment.OrderSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".qui.payment.PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".qui.cart.CartActivity"
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".tinh.Activity.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SignUpActivity"
             android:exported="false" />
-
         <activity
             android:name=".tinh.Activity.LoginActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="false"
@@ -47,7 +48,9 @@
             android:exported="false" />
         <activity
             android:name=".MainShopActivity"
-            android:exported="false"></activity>
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".Phat.Activity.AddVoucherActivity"
             android:exported="false" />
@@ -57,8 +60,14 @@
         <activity
             android:name=".MainUserActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".nhan.ProfileCustomer.orders.UserOrdersActivity"
             android:exported="false" />
@@ -73,6 +82,30 @@
             android:exported="false" />
         <activity
             android:name=".nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.RequestToShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.SuccessRegisActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.RegistrationToShopInAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.ProfileSettingShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.OrderDetailShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.StatiscalShopActivity"
             android:exported="false" />
     </application>
 

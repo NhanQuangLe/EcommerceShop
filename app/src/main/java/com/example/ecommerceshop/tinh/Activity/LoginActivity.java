@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ecommerceshop.MainShopActivity;
+import com.example.ecommerceshop.Phat.Activity.AdminActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.MainUserActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,16 +60,24 @@ public class LoginActivity extends AppCompatActivity {
         loading(true);
         String email = loginEmail.getText().toString().trim();
         String pass = loginPass.getText().toString().trim();
-
-        auth.signInWithEmailAndPassword(email,pass).addOnSuccessListener(authResult -> {
+        if(email.equals("admin@gmail.com")&&pass.equals("16032003")){
             loading(false);
             Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
+            startActivity(new Intent(LoginActivity.this, AdminActivity.class));
             finish();
-        }).addOnFailureListener(e -> {
-            loading(false);
-            Toast.makeText(LoginActivity.this, "Login Failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+        }
+        else {
+            auth.signInWithEmailAndPassword(email,pass).addOnSuccessListener(authResult -> {
+                loading(false);
+                Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, MainShopActivity.class));
+                finish();
+            }).addOnFailureListener(e -> {
+                loading(false);
+                Toast.makeText(LoginActivity.this, "Login Failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+        }
+
     }
 
     private void InitUI()

@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         app:cardElevation="10dp"
         android:padding="5dp"
         app:cardCornerRadius="5dp"
@@ -45,12 +45,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
                 <LinearLayout
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true">
                     <TextView
+                        android:id="@+id/ordItemName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/title"
@@ -59,13 +60,14 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp">
+                        android:layout_marginTop="10dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/body"
                             android:text="Brand: "/>
                         <TextView
+                            android:id="@+id/ordItemBrand"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/body"
@@ -87,6 +89,7 @@
                             android:textAppearance="@style/body"
                             android:text="Units: "/>
                         <TextView
+                            android:id="@+id/orderItemQuantity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/body"
@@ -102,6 +105,7 @@
                             android:textAppearance="@style/body"
                             android:text="Price: "/>
                         <TextView
+                            android:id="@+id/ordItemPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"

@@ -36,7 +36,7 @@ public class MainUserActivity extends AppCompatActivity {
         setContentView(mActivityHomeUserBinding.getRoot());
         homeFragmentUser = new HomeFragmentUser();
         //replaceFragment(homeFragmentUser);
-        replaceFragment(new UserProfileFragment());
+        replaceFragment(homeFragmentUser);
         bottomNavigationView =findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -70,9 +70,12 @@ public class MainUserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (homeFragmentUser.getmFragmentHomeUserBinding().drawer.isDrawerOpen(GravityCompat.START)){
-            homeFragmentUser.getmFragmentHomeUserBinding().drawer.closeDrawer(GravityCompat.START);
+        if (homeFragmentUser.getmFragmentHomeUserBinding()!=null){
+            if (homeFragmentUser.getmFragmentHomeUserBinding().drawer.isDrawerOpen(GravityCompat.START)){
+                homeFragmentUser.getmFragmentHomeUserBinding().drawer.closeDrawer(GravityCompat.START);
+            }
         }
+
         else {
             if (mCurrentFragment!=FRAGMENT_HOME){
                 mCurrentFragment = FRAGMENT_HOME;

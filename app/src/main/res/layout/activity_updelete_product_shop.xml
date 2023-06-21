@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_gray">
+    android:background="@color/primary_gray"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Phat.Activity.UpdateProductShopActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/actionbar"
@@ -52,8 +54,6 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".Phat.Fragment.AddProductShopFragment"
         android:layout_height="match_parent"
         android:layout_marginTop="55dp"
         android:background="@color/primary_gray">
@@ -169,7 +169,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_edit_text"
                         android:inputType="textCapSentences|textMultiLine"
-                        android:minLines="10"
+                        android:minLines="20"
                         android:scrollbars="vertical"/>
                 </com.google.android.material.textfield.TextInputLayout>
 

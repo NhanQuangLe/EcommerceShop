@@ -70,18 +70,18 @@ public class UserProfileFragment extends Fragment {
         DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(firebaseAuth.getUid())
                 .child("Customer").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mFragmentUserProfileBinding.tvCustomerName.setText(snapshot.child("CustomerInfos/name").getValue(String.class));
-                mFragmentUserProfileBinding.tvCustomerEmail.setText(snapshot.child("CustomerInfos/email").getValue(String.class));
-                mFragmentUserProfileBinding.tvCustomerNumberFollowers.setText(Long.toString(snapshot.child("Followers").getChildrenCount()));
-                Picasso.get().load(snapshot.child("CustomerInfos/avatar").getValue(String.class)).into(mFragmentUserProfileBinding.ivCustomerAvatar);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        mFragmentUserProfileBinding.tvCustomerName.setText(snapshot.child("CustomerInfos/name").getValue(String.class));
+                        mFragmentUserProfileBinding.tvCustomerEmail.setText(snapshot.child("CustomerInfos/email").getValue(String.class));
+                        mFragmentUserProfileBinding.tvCustomerNumberFollowers.setText(Long.toString(snapshot.child("Followers").getChildrenCount()));
+                        Picasso.get().load(snapshot.child("CustomerInfos/avatar").getValue(String.class)).into(mFragmentUserProfileBinding.ivCustomerAvatar);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void setEventInteract(){
