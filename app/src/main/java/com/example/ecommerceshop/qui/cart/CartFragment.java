@@ -68,6 +68,7 @@ public class CartFragment extends Fragment {
     private ShopProductCartAdapter shopProductCartAdapter;
 
     private List<ProductCart> listSelectedProductCart;
+    int numSelectedCart = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -183,20 +184,21 @@ public class CartFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String shopName = snapshot.child("ShopInfos").child("shopName").getValue(String.class);
-                                Log.e("name",shopName);
+                                Log.e("name", shopName);
                                 mapProductCart.put(cart.getShopId(), new ArrayList<ProductCart>());
                                 DatabaseReference refProduct = snapshot.child("Products/" + cart.getProductId()).getRef();
                                 refProduct.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         Product product = snapshot.getValue(Product.class);
-                                        if (product!=null) {
+                                        if (product != null) {
                                             String productName = product.getProductName();
+                                            String brand = product.getProductBrand();
                                             int productPrice = product.getProductPrice();
                                             int productDiscountPrice = product.getProductDiscountPrice();
                                             String uri = product.getUriList().get(0);
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(),
-                                                                            productPrice, productDiscountPrice, uri, cart.getShopId(),shopName);
+                                                    productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand);
 
                                             mapProductCart.get(cart.getShopId()).add(productCart);
                                             mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId())));
@@ -220,8 +222,7 @@ public class CartFragment extends Fragment {
                             }
                         });
 
-                    }
-                    else {
+                    } else {
                         DatabaseReference refShop = FirebaseDatabase.getInstance().getReference("Users/" + cart.getShopId() + "/Shop");
                         refShop.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -232,18 +233,19 @@ public class CartFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         Product product = snapshot.getValue(Product.class);
-                                        if (product!=null) {
+                                        if (product != null) {
                                             String productName = product.getProductName();
+                                            String brand = product.getProductBrand();
                                             int productPrice = product.getProductPrice();
                                             int productDiscountPrice = product.getProductDiscountPrice();
                                             String uri = product.getUriList().get(0);
-                                            ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(), productPrice, productDiscountPrice, uri, cart.getShopId(),shopName);
+                                            ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(), productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand);
 //                                            Log.e("size",mShopListProductCarts.get(mShopListProductCarts.size()-1).getProductCarts().size()+"");
 //                                            mapProductCart.get(cart.getShopId()).add(productCart);
 //                                            Log.e("size",mShopListProductCarts.get(mShopListProductCarts.size()-1).getProductCarts().size()+"");
                                             for (ShopProductCart shopProductCart : mShopListProductCarts) {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
-                                                    Log.e("qui","Giong");
+                                                    Log.e("qui", "Giong");
                                                     shopProductCart.getProductCarts().add(productCart);
                                                     break;
                                                 }
@@ -251,7 +253,6 @@ public class CartFragment extends Fragment {
                                             shopProductCartAdapter.notifyDataSetChanged();
 
                                         }
-
 
 
                                     }
@@ -321,7 +322,6 @@ public class CartFragment extends Fragment {
             }
 
 
-
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
@@ -367,13 +367,10 @@ public class CartFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
-                        for (ProductCart cart : listSelectedProductCart) {
-                            DatabaseReference ref2 = ref.child(cart.getProductCardId());
-                            ref2.removeValue();
-                        }
-                        dialog.dismiss();
 
+                        dialog.dismiss();
+                        numSelectedCart = 0;
+                        deleteCart();
 
                     }
                 });
@@ -415,28 +412,47 @@ public class CartFragment extends Fragment {
         ));
         mFragmentCartBinding.btnDelete.setVisibility(View.GONE);
     }
-    public String getPrice(long price){
-        long res =  price;
+
+    private void deleteCart() {
+        if (numSelectedCart == listSelectedProductCart.size()){
+            hideButtonDelete();
+            listSelectedProductCart.clear();
+            checkTotalMoney();
+            return;
+        }
+        ProductCart productCart = listSelectedProductCart.get(numSelectedCart);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
+        ref.child(productCart.getProductCardId()).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                    numSelectedCart++;
+                    deleteCart();
+            }
+        });
+    }
+
+    public String getPrice(long price) {
+        long res = price;
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         String str1 = currencyVN.format(res);
         return str1;
     }
-    public void checkTotalMoney(){
-        totalMoney=0;
+
+    public void checkTotalMoney() {
+        totalMoney = 0;
         mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
 //        Log.e("Size",listSelectedProductCart.size()+"");
 //        for (ProductCart productCart1: listSelectedProductCart){
 //            Log.e("Name",productCart1.getProductName());
 //        }
-        for (ProductCart productCart1: listSelectedProductCart){
+        for (ProductCart productCart1 : listSelectedProductCart) {
 //            Log.e("Name2",productCart1.getProductName());
-            if (productCart1.getProductDiscountPrice()==0){
-                totalMoney+=productCart1.getProductPrice()* productCart1.getProductQuantity();
+            if (productCart1.getProductDiscountPrice() == 0) {
+                totalMoney += productCart1.getProductPrice() * productCart1.getProductQuantity();
                 mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
-            }
-            else {
-                totalMoney+=productCart1.getProductDiscountPrice()* productCart1.getProductQuantity();
+            } else {
+                totalMoney += (productCart1.getProductPrice() - productCart1.getProductDiscountPrice()) * productCart1.getProductQuantity();
                 mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
             }
         }

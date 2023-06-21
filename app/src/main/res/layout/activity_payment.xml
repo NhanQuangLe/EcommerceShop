@@ -194,62 +194,95 @@
             <LinearLayout
                 android:id="@+id/optionButton"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
+                android:orientation="vertical"
+                >
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="20dp">
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    >
+                    android:paddingStart="20dp"
+                    android:paddingTop="15dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="15dp"
+                   >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tổng thanh toán"
-                        android:textSize="14sp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0đ"
-                        android:id="@+id/tv_total_money"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:textColor="#DB3022"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/btn_buy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:background="#D0011B"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="30dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_policy_payment"
+                        android:drawablePadding="6dp"
+                        android:text="Nhấn Đặt hàng đồng nghĩa với việc bạn đã đồng ý tuân thủ với Điều khoản của chúng tôi"
+                        android:textStyle="normal"
+                        android:textColor="#555555"
                         android:textSize="14sp"
-                        android:text="Đặt hàng"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
+                        android:layout_weight="1"/>
+
+
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="bottom">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="20dp">
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tổng thanh toán"
+                            android:textSize="14sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0đ"
+                            android:id="@+id/tv_total_money"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="#DB3022"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_buy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:background="#D0011B"
+                        android:paddingStart="30dp"
+                        android:paddingEnd="30dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="Đặt hàng"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF" />
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

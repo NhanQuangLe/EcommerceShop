@@ -69,6 +69,7 @@ public class VoucherCustomerAdapter extends RecyclerView.Adapter<VoucherCustomer
                         iCheckedChangeListener.sendStatus(b,voucher);
                 }
             });
+
         }
     }
 

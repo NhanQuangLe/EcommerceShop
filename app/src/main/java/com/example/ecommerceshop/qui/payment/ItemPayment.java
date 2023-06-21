@@ -13,14 +13,14 @@ public class ItemPayment {
     private long tienKhuyenMai;
     private long tongThanhToan;
     private long tienVanChuyen;
-    private List<Voucher> listSelectedVoucherAdapter;
+    private Voucher voucher;
 
-    public List<Voucher> getListSelectedVoucherAdapter() {
-        return listSelectedVoucherAdapter;
+    public Voucher getVoucher() {
+        return voucher;
     }
 
-    public void setListSelectedVoucherAdapter(List<Voucher> listSelectedVoucherAdapter) {
-        this.listSelectedVoucherAdapter = listSelectedVoucherAdapter;
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
     }
 
     public ItemPayment(String shopId, String shopName, List<ProductCart> listProductCart, long tongTienHang, long tienKhuyenMai, long tongThanhToan, long tienVanChuyen) {
@@ -34,7 +34,7 @@ public class ItemPayment {
     }
 
     public ItemPayment() {
-        this.listSelectedVoucherAdapter = new ArrayList<>();
+
     }
 
     public String getShopId() {
@@ -80,7 +80,7 @@ public class ItemPayment {
             if (productCart.getProductDiscountPrice() == 0)
                 tongTienHang += productCart.getProductPrice() * productCart.getProductQuantity();
             else
-                tongTienHang += productCart.getProductDiscountPrice() * productCart.getProductQuantity();
+                tongTienHang += (productCart.getProductPrice() - productCart.getProductDiscountPrice()) * productCart.getProductQuantity();
         }
         return tongTienHang;
     }

@@ -2,11 +2,9 @@ package com.example.ecommerceshop.qui.cart;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,8 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.AdapterItemOnCartBinding;
-import com.example.ecommerceshop.qui.homeuser.Product;
-import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -73,7 +69,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
             else {
                 holder.mBinding.productPrice.setText(productCart.getProductPriceStr());
                 holder.mBinding.productPrice.setPaintFlags(holder.mBinding.productPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.mBinding.productDiscountPrice.setText(productCart.getProductDiscountPriceStr());
+                holder.mBinding.productDiscountPrice.setText(productCart.getProductAfterDiscountStr());
             }
             holder.mBinding.productQuantity.setText(String.valueOf(productCart.getProductQuantity()));
 

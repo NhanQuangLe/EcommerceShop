@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
+        <activity
+            android:name=".qui.payment.OrderSuccessActivity"
+            android:exported="false" />
         <activity
             android:name=".qui.payment.PaymentActivity"
             android:exported="false" />
@@ -30,7 +35,7 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="false"
@@ -43,11 +48,9 @@
             android:exported="false" />
         <activity
             android:name=".MainShopActivity"
-            android:exported="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".Phat.Activity.AddVoucherActivity"
             android:exported="false" />
@@ -61,6 +64,7 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -97,7 +101,8 @@
         <activity
             android:name=".Phat.Activity.ProfileSettingShopActivity"
             android:exported="false" />
-        <activity android:name=".Phat.Activity.OrderDetailShopActivity"
+        <activity
+            android:name=".Phat.Activity.OrderDetailShopActivity"
             android:exported="false" />
         <activity
             android:name=".Phat.Activity.StatiscalShopActivity"

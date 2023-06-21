@@ -2,8 +2,6 @@ package com.example.ecommerceshop.qui.homeuser;
 
 
 
-import android.widget.Toast;
-
 import com.example.ecommerceshop.qui.product_detail.Review;
 
 import java.io.Serializable;
@@ -165,15 +163,15 @@ public class Product implements Serializable {
         this.uriList = uriList;
     }
 
-    public String getDiscountPrice(){
-        int res =  this.productDiscountPrice;
+    public String getPriceAfterDiscountStr(){
+        int res =  this.productPrice - this.productDiscountPrice;
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         String str1 = currencyVN.format(res);
 
         return str1;
     }
-    public String getPrice(){
+    public String getPriceStr(){
         int res =  this.productPrice;
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
@@ -181,9 +179,9 @@ public class Product implements Serializable {
         return str1;
     }
 
-    public String getPercentDiscount(){
+    public String getPercentDiscountStr(){
         NumberFormat numEN = NumberFormat.getPercentInstance();
-        String percentageEN = "-" + numEN.format((this.productPrice*1.0-this.productDiscountPrice)/this.productPrice);
+        String percentageEN = "-" + numEN.format((1.0*this.productDiscountPrice)/this.productPrice);
 
         return percentageEN;
     }

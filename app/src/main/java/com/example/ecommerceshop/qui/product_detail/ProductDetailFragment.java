@@ -3,8 +3,6 @@ package com.example.ecommerceshop.qui.product_detail;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,7 +14,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -39,12 +36,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -351,15 +346,15 @@ public class ProductDetailFragment extends Fragment {
         mFragmentProductDetailBinding.productBrand.setText(product.getProductBrand());
 
         if (product.getProductDiscountPrice()==0){
-            mFragmentProductDetailBinding.productPrice.setText(product.getPrice());
+            mFragmentProductDetailBinding.productPrice.setText(product.getPriceStr());
             mFragmentProductDetailBinding.productDiscountPrice.setVisibility(View.GONE);
             mFragmentProductDetailBinding.frameDiscount.setVisibility(View.GONE);
         }
         else {
-            mFragmentProductDetailBinding.productPrice.setText(product.getDiscountPrice());
-            mFragmentProductDetailBinding.productDiscountPrice.setText(product.getPrice());
+            mFragmentProductDetailBinding.productPrice.setText(product.getPriceAfterDiscountStr());
+            mFragmentProductDetailBinding.productDiscountPrice.setText(product.getPriceStr());
             mFragmentProductDetailBinding.productDiscountPrice.setPaintFlags(mFragmentProductDetailBinding.productDiscountPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            mFragmentProductDetailBinding.productDiscountPercent.setText(product.getPercentDiscount());
+            mFragmentProductDetailBinding.productDiscountPercent.setText(product.getPercentDiscountStr());
         }
         mFragmentProductDetailBinding.productDesc.setText(product.getProductDescription());
         mFragmentProductDetailBinding.productQuantity.setText(String.valueOf(product.getProductQuantity()));

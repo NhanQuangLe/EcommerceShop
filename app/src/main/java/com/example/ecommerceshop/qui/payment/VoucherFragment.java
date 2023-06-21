@@ -40,11 +40,13 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
     private List<Voucher> mListVoucher;
     private VoucherCustomerAdapter mVoucherCustomerAdapter;
     private FirebaseUser mCurrentUser;
-    private List<Voucher> mListSelectedVoucher;
-    private List<Voucher> listVoucherFromAdapter;
+    private Voucher voucherFromItemPayment;
+    private Voucher voucherSelected;
+    private Voucher voucherPrevious;
     private long money;
     private String shopId;
     private ISenData iSenData;
+    boolean isCheck=false;
 
     public void setiSenData(ISenData iSenData) {
         this.iSenData = iSenData;
@@ -64,8 +66,6 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
         mPaymentActivity = (PaymentActivity) getActivity();
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mListVoucher = new ArrayList<>();
-        mListSelectedVoucher = new ArrayList<>();
-//        listVoucherFromAdapter = new ArrayList<>();
         mVoucherCustomerAdapter = new VoucherCustomerAdapter(this);
         mVoucherCustomerAdapter.setData(mListVoucher);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
@@ -102,15 +102,14 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
                         }
                         Date now = new Date();
                         if (checkExpired(dateExpired, now) && voucher.getQuantity() > 0) {
-                            Log.e("size",listVoucherFromAdapter.size()+"");
-                            List<String> voucherIds = new ArrayList<>();
-                            for (Voucher voucherTemp : listVoucherFromAdapter){
-                                voucherIds.add(voucherTemp.getVoucherid());
+
+                            if (voucherFromItemPayment!=null){
+                                if (voucher.getVoucherid().equals(voucherFromItemPayment.getVoucherid())){
+                                    voucher.setCheck(true);
+                                    mFragmentVoucherBinding.tvQuantityChoose.setText("1");
+                                }
                             }
-                            if (voucherIds.contains(voucher.getVoucherid())){
-                                voucher.setCheck(true);
-                                sendStatus(voucher.isCheck(),voucher);
-                            }
+
                             mListVoucher.add(voucher);
 
                         }
@@ -131,8 +130,9 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
         });
     }
 
-    public void receiveDataFromAdapter(long money, String shopId, List<Voucher> vouchers) {
-        listVoucherFromAdapter = vouchers;
+    public void receiveDataFromAdapter(long money, String shopId, Voucher voucher) {
+        this.voucherFromItemPayment = voucher;
+        this.voucherPrevious = voucher;
         this.money = money;
         this.shopId = shopId;
 
@@ -147,19 +147,45 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
     @Override
     public void sendStatus(boolean b, Voucher voucher) {
         if (b) {
-            mListSelectedVoucher.add(voucher);
-            mFragmentVoucherBinding.tvQuantityChoose.setText(mListSelectedVoucher.size() + "");
+            isCheck = true;
+            voucherSelected = voucher;
+            voucherPrevious = voucherSelected;
+            mFragmentVoucherBinding.tvQuantityChoose.setText("1");
+            setUnCheckOtherVoucher(voucher);
         } else {
-            mListSelectedVoucher.remove(voucher);
-            mFragmentVoucherBinding.tvQuantityChoose.setText(mListSelectedVoucher.size() + "");
+            if (voucherPrevious!=null){
+                if (voucher.getVoucherid().equals(voucherPrevious.getVoucherid())){
+                    voucherSelected = null;
+                    mFragmentVoucherBinding.tvQuantityChoose.setText("0");
+                }
+            }
+
         }
+    }
+
+    private void setUnCheckOtherVoucher(Voucher voucher) {
+        List<Voucher> vouchersTemp = new ArrayList<>(mListVoucher);
+        mListVoucher.clear();
+        for (Voucher voucher1:vouchersTemp){
+            if (voucher1.getVoucherid().equals(voucher.getVoucherid())) {
+                voucher1.setCheck(true);
+            }
+            else {
+                voucher1.setCheck(false);
+            }
+            mListVoucher.add(voucher1);
+
+        }
+    mVoucherCustomerAdapter.notifyDataSetChanged();
+
+
     }
 
     private void iListener() {
         mFragmentVoucherBinding.buttonAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iSenData.senDataToAdapter(mListSelectedVoucher);
+                iSenData.senDataToAdapter(voucherSelected);
                 if (getParentFragmentManager() != null) {
                     getParentFragmentManager().popBackStack();
                 }

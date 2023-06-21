@@ -20,8 +20,15 @@ public class ProductCart implements Parcelable {
     private String uri;
     private String shopId;
     private String shopName;
+    private String brand;
 
+    public String getBrand() {
+        return brand;
+    }
 
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 
     private boolean isChecked = false;
 
@@ -29,7 +36,7 @@ public class ProductCart implements Parcelable {
     public ProductCart() {
     }
 
-    public ProductCart( String productCardId,String productId, String productName, int productQuantity, int productPrice, int productDiscountPrice, String uri, String shopId, String shopName) {
+    public ProductCart( String productCardId,String productId, String productName, int productQuantity, int productPrice, int productDiscountPrice, String uri, String shopId, String shopName, String brand) {
         this.productId = productId;
         this.productCardId = productCardId;
         this.productName = productName;
@@ -39,6 +46,7 @@ public class ProductCart implements Parcelable {
         this.uri = uri;
         this.shopId = shopId;
         this.shopName = shopName;
+        this.brand = brand;
     }
 
     protected ProductCart(Parcel in) {
@@ -51,6 +59,7 @@ public class ProductCart implements Parcelable {
         uri = in.readString();
         shopId = in.readString();
         shopName = in.readString();
+        brand = in.readString();
         isChecked = in.readByte() != 0;
     }
 
@@ -149,8 +158,8 @@ public class ProductCart implements Parcelable {
         String str1 = currencyVN.format(res);
         return str1;
     }
-    public String getProductDiscountPriceStr(){
-        int res =  this.productDiscountPrice;
+    public String getProductAfterDiscountStr(){
+        int res =  this.productPrice - this.productDiscountPrice;
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         String str1 = currencyVN.format(res);
@@ -173,6 +182,7 @@ public class ProductCart implements Parcelable {
         parcel.writeString(uri);
         parcel.writeString(shopId);
         parcel.writeString(shopName);
+        parcel.writeString(brand);
         parcel.writeByte((byte) (isChecked ? 1 : 0));
     }
 }

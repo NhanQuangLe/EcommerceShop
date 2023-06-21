@@ -65,24 +65,27 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
                 public void onClick(View view) {
 
                     VoucherFragment voucherFragment = new VoucherFragment();
-                    voucherFragment.receiveDataFromAdapter(itemPayment.getTongTienHang(),itemPayment.getShopId(), itemPayment.getListSelectedVoucherAdapter());
+                    voucherFragment.receiveDataFromAdapter(itemPayment.getTongTienHang(),itemPayment.getShopId(), itemPayment.getVoucher());
                     ((PaymentActivity) mContext).replaceFragment(voucherFragment);
                     voucherFragment.setiSenData(new ISenData() {
                         @Override
-                        public void senDataToAdapter(List<Voucher> vouchers) {
+                        public void senDataToAdapter(Voucher voucher) {
                             if (itemPayment.getTienKhuyenMai()!=0) {
                                 itemPayment.setTienKhuyenMai(0);
+                                itemPayment.setVoucher(null);
                                 itemPayment.setTongThanhToan(itemPayment.getTongTienHang());
                                 holder.adapterShopListProductPaymentBinding.tvChooseVoucher.setText("Chọn hoặc nhập mã");
                                 holder.adapterShopListProductPaymentBinding.tvKhuyenmai.setText(getPrice(itemPayment.getTienKhuyenMai()));
                                 String tmp = getPrice(itemPayment.getTongThanhToan());
                                 holder.adapterShopListProductPaymentBinding.tvTongThanhToan.setText(tmp);
                             }
-                            if (itemPayment.getListSelectedVoucherAdapter()!=null) itemPayment.getListSelectedVoucherAdapter().clear();
-                            for (Voucher voucher : vouchers) {
-                                itemPayment.setTienKhuyenMai(itemPayment.getTienKhuyenMai()+voucher.getDiscountPrice());
-                                itemPayment.getListSelectedVoucherAdapter().add(voucher);
-                            }
+
+                                if (voucher!=null){
+                                    itemPayment.setTienKhuyenMai(itemPayment.getTienKhuyenMai()+voucher.getDiscountPrice());
+                                    itemPayment.setVoucher(voucher);
+                                }
+
+
                             itemPayment.setTongThanhToan(itemPayment.getTongTienHang()-itemPayment.getTienKhuyenMai());
 
                             if (itemPayment.getTienKhuyenMai()!=0){

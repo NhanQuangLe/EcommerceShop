@@ -5,16 +5,28 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityPaymentBinding;
@@ -32,8 +44,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -63,7 +81,15 @@ public class PaymentActivity extends AppCompatActivity {
     private ItemPaymentAdapter itemPaymentAdapter;
     private List<ItemPayment> mListItemPayment;
     private List<Voucher> listSelectedVoucher;
-    private FirebaseUser mCurrentUser;
+    private Address myAddress;
+    private static FirebaseUser mCurrentUser;
+    ProgressDialog TempDialog;
+    CountDownTimer countDownTimer;
+    Calendar calendar;
+    int i=0;
+    int numItemPayment=0;
+    int numCart=0;
+    private static final int THREAD_POOL_SIZE = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,12 +125,54 @@ public class PaymentActivity extends AppCompatActivity {
         mActivityPaymentBinding.btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (ItemPayment itemPayment:mListItemPayment){
-                    Log.e("khuyen mai",itemPayment.getTienKhuyenMai()+"");
-                }
+                final Dialog dialog = new Dialog(PaymentActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.layout_dialog_ok_cancel);
+                Window window = dialog.getWindow();
+                if (window == null) return;
+                window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                WindowManager.LayoutParams windowAttributes = window.getAttributes();
+                windowAttributes.gravity = Gravity.CENTER;
+
+                window.setAttributes(windowAttributes);
+                dialog.setCancelable(true);
+                TextView tvContent = dialog.findViewById(R.id.tv_content);
+                TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
+                TextView tvOk = dialog.findViewById(R.id.tv_ok);
+                tvContent.setText("Nhấn đặt hàng đồng nghĩa với việc bạn đã đồng ý những điều khoản của chúng tôi!");
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                tvOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        dialog.dismiss();
+                        numItemPayment=0;
+                        long orderId = calendar.getTimeInMillis();
+                        createOrderFirebase(orderId);
+
+
+
+
+
+                    }
+                });
+                dialog.show();
+
+
             }
         });
     }
+
+
+
 
     public void replaceFragment(Fragment fragment){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -114,13 +182,20 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void init() {
+        calendar = Calendar.getInstance();
+        TempDialog = new ProgressDialog(PaymentActivity.this);
+        TempDialog.setMessage("Đơn hàng của bạn đang được tạo");
+        TempDialog.setCancelable(false);
+        TempDialog.setProgress(i);
+        TempDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        TempDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.GRAY));
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mActivityPaymentBinding.rcvItemPayment.setLayoutManager(linearLayoutManager);
         itemPaymentAdapter = new ItemPaymentAdapter(this);
         itemPaymentAdapter.setiSendData(new ISenData() {
             @Override
-            public void senDataToAdapter(List<Voucher> vouchers) {
+            public void senDataToAdapter(Voucher voucher) {
 
             }
 
@@ -202,23 +277,70 @@ public class PaymentActivity extends AppCompatActivity {
         });
     }
     private void setAddress(Address address) {
+        myAddress = address;
         mActivityPaymentBinding.addressDetail.setText(address.getDetail());
         mActivityPaymentBinding.addressName.setText(address.getFullName());
         mActivityPaymentBinding.addressPhone.setText(address.getPhoneNumber());
         String addressMain = address.getWard()+", "+address.getDistrict()+", "+address.getProvince();
         mActivityPaymentBinding.addressMain.setText(addressMain);
     }
+    public void createOrderFirebase(long id)  {
 
-    public void addToListSelectedVoucher(List<Voucher> vouchers){
-        List<String> voucherIds = new ArrayList<>();
-        for (Voucher voucher:listSelectedVoucher){
-            voucherIds.add(voucher.getVoucherid());
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Orders");
+        if (numItemPayment==mListItemPayment.size()) {
+            navigateToOrderSuccess();
+            return;
         }
-        for (Voucher voucher:vouchers){
-            if (!voucherIds.contains(voucher.getVoucherid())){
-                listSelectedVoucher.add(voucher);
+        ItemPayment itemPayment = mListItemPayment.get(numItemPayment);
+            String orderId = id+"";
+            String customerId = mCurrentUser.getUid();
+            long discountPrice = itemPayment.getTienKhuyenMai();
+            String orderStatus = "1";
+            Date date = new Date();
+            SimpleDateFormat sp = new SimpleDateFormat("dd/MM/yyyy");
+            String orderedDate = sp.format(date);
+            long shipPrice = 0;
+            String shopId = itemPayment.getShopId();
+            long totalPrice = itemPayment.getTongThanhToan();
+            List<ItemOrder> Items = new ArrayList<>();
+            for (ProductCart productCart:itemPayment.getListProductCart()){
+                String pid = productCart.getProductId();
+                String pAvatar = productCart.getUri();
+                String pName = productCart.getProductName();
+                String pBrand = productCart.getBrand();
+                long pPrice = 0;
+                if (productCart.getProductDiscountPrice()!=0){
+                    pPrice = productCart.getProductDiscountPrice();
+                }
+                else pPrice = productCart.getProductPrice();
+                long pQuantity = productCart.getProductQuantity();
+                ItemOrder itemOrder = new ItemOrder(pid,pAvatar,pBrand,pName,pPrice,pQuantity);
+                Items.add(itemOrder);
             }
-        }
+            Address receiveAddress = myAddress;
+
+            Order order = new Order(orderId,customerId,discountPrice,orderStatus,orderedDate,shipPrice, shopId,totalPrice,  Items, receiveAddress);
+            ref.child(order.getOrderId()).setValue(order, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                    numItemPayment++;
+                    createOrderFirebase(id+1);
+
+                }
+            });
+
+
+
     }
+
+    private void navigateToOrderSuccess() {
+        Intent intent = new Intent(PaymentActivity.this,OrderSuccessActivity.class);
+        startActivity(intent);
+        finishAffinity();
+    }
+
+
+
+
 
 }

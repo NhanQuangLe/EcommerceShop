@@ -1,7 +1,6 @@
 package com.example.ecommerceshop.qui.payment;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -38,7 +37,7 @@ public class ProductCartAdapter2 extends RecyclerView.Adapter<ProductCartAdapter
                 holder.adapterItemOnCart2Binding.finalPrice.setText(productCart.getProductPriceStr());
             }
             else {
-                holder.adapterItemOnCart2Binding.finalPrice.setText(productCart.getProductDiscountPriceStr());
+                holder.adapterItemOnCart2Binding.finalPrice.setText(productCart.getProductAfterDiscountStr());
             }
             holder.adapterItemOnCart2Binding.productQuantity.setText(""+productCart.getProductQuantity());
         }
