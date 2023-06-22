@@ -400,10 +400,12 @@
                                         android:layout_centerVertical="true"
                                         android:layout_marginStart="20dp">
                                         <TextView
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="170dp"
                                             android:layout_height="wrap_content"
                                             android:text="Laptop MSI Bravo 15"
                                             android:textStyle="bold"
+                                            android:singleLine="true"
+                                            android:ellipsize="end"
                                             android:textColor="#555"
                                             android:id="@+id/shopName"
                                             android:textSize="16sp" />

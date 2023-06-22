@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.qui.homeuser;
+package com.example.ecommerceshop.qui.homeuser.searchProducts;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,10 @@ import android.view.ViewGroup;
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentAllProductsBinding;
+import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
+import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
+import com.example.ecommerceshop.qui.homeuser.Product;
+import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -84,6 +90,24 @@ public class AllProductsFragment extends Fragment {
                 mMainUserActivity.replaceFragment(new HomeFragmentUser());
             }
         });
+
+        mFragmentAllProductsBinding.editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try{
+                    productAdapter.getFilter().filter(charSequence);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
         return viewFragment;
     }
 
@@ -132,16 +156,16 @@ public class AllProductsFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (mListProduct!=null) mListProduct.clear();
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
                     DatabaseReference myRef2 = dataSnapshot.child("Shop").child("Products").getRef();
                     myRef2.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (mListProduct!=null) mListProduct.clear();
+
                             for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
                                 Product product = dataSnapshot1.getValue(Product.class);
                                 if (product!=null){
-
                                     if (product.getProductName().toLowerCase(Locale.ROOT).contains(res) || product.getProductBrand().toLowerCase(Locale.ROOT).contains(res)
                                         || product.getProductCategory().toLowerCase(Locale.ROOT).contains(res)){
                                         mListProduct.add(product);

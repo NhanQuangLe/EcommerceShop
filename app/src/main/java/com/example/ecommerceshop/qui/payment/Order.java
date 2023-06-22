@@ -15,11 +15,20 @@ public class Order {
     private long totalPrice;
     private List<ItemOrder> Items;
     private Address receiveAddress;
+    private String voucherUsedId;
+
+    public String getVoucherUsedId() {
+        return voucherUsedId;
+    }
+
+    public void setVoucherUsedId(String voucherUsedId) {
+        this.voucherUsedId = voucherUsedId;
+    }
 
     public Order() {
     }
 
-    public Order(String orderId, String customerId, long discountPrice, String orderStatus, String orderedDate, long shipPrice, String shopId, long totalPrice, List<ItemOrder> items, Address receiveAddress) {
+    public Order(String orderId, String customerId, long discountPrice, String orderStatus, String orderedDate, long shipPrice, String shopId, long totalPrice, List<ItemOrder> items, Address receiveAddress, String voucherUsedId) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.discountPrice = discountPrice;
@@ -30,6 +39,7 @@ public class Order {
         this.totalPrice = totalPrice;
         this.Items = items;
         this.receiveAddress = receiveAddress;
+        this.voucherUsedId=voucherUsedId;
     }
 
     public String getOrderId() {

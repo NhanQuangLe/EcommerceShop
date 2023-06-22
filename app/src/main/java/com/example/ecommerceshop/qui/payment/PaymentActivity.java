@@ -60,7 +60,7 @@ public class PaymentActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == UserAddressActivity.TRA_VE_TU_USER_ADDRESS_ACTIVITY){
+                    if (result.getResultCode() == UserAddressActivity.TRA_VE_TU_USER_ADDRESS_ACTIVITY) {
                         Intent i = result.getData();
                         Address address = (Address) i.getSerializableExtra("address");
                         setAddress(address);
@@ -70,10 +70,9 @@ public class PaymentActivity extends AppCompatActivity {
             });
 
 
-
     private View mView;
-    public static final int FRAGMENT_PAYMENT  = 0;
-    public static final int FRAGMENT_ALL_PRODUCT2  = 1;
+    public static final int FRAGMENT_PAYMENT = 0;
+    public static final int FRAGMENT_ALL_PRODUCT2 = 1;
     public int mCurrentFragment = FRAGMENT_PAYMENT;
     public Fragment paymentFragment;
 
@@ -86,10 +85,11 @@ public class PaymentActivity extends AppCompatActivity {
     ProgressDialog TempDialog;
     CountDownTimer countDownTimer;
     Calendar calendar;
-    int i=0;
-    int numItemPayment=0;
-    int numCart=0;
+    int i = 0;
+    int numItemPayment = 0;
+    int numCart = 0;
     private static final int THREAD_POOL_SIZE = 10;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +99,7 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(mView);
 
         Bundle bundle = getIntent().getExtras();
-       listSelectedCart = bundle.getParcelableArrayList("listSelectedCart");
+        listSelectedCart = bundle.getParcelableArrayList("listSelectedCart");
 
 
         init();
@@ -117,7 +117,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent();
-                i.setClass(getApplicationContext(),UserAddressActivity.class);
+                i.setClass(getApplicationContext(), UserAddressActivity.class);
                 mActivityResultLauncher.launch(i);
             }
         });
@@ -154,12 +154,9 @@ public class PaymentActivity extends AppCompatActivity {
 
 
                         dialog.dismiss();
-                        numItemPayment=0;
+                        numItemPayment = 0;
                         long orderId = calendar.getTimeInMillis();
                         createOrderFirebase(orderId);
-
-
-
 
 
                     }
@@ -172,11 +169,9 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
 
-
-
-    public void replaceFragment(Fragment fragment){
+    public void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_view,fragment);
+        transaction.replace(R.id.content_view, fragment);
         transaction.addToBackStack(fragment.getClass().getName());
         transaction.commitAllowingStateLoss();
     }
@@ -241,29 +236,29 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void setInitTotalPayment() {
         long finalPayment = 0;
-        for (ItemPayment itemPayment:mListItemPayment){
-            finalPayment+=itemPayment.getTongTienHang();
+        for (ItemPayment itemPayment : mListItemPayment) {
+            finalPayment += itemPayment.getTongTienHang();
         }
         mActivityPaymentBinding.tvTotalMoney.setText(itemPaymentAdapter.getPrice(finalPayment));
     }
 
     private void setTotalPayment(List<ItemPayment> itemPaymentList) {
         long finalPayment = 0;
-        for (ItemPayment itemPayment:itemPaymentList){
-            finalPayment+=itemPayment.getTongThanhToan();
+        for (ItemPayment itemPayment : itemPaymentList) {
+            finalPayment += itemPayment.getTongThanhToan();
         }
         mActivityPaymentBinding.tvTotalMoney.setText(itemPaymentAdapter.getPrice(finalPayment));
     }
 
     private void setAddressDefault() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Addresses");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Addresses");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Address address = dataSnapshot.getValue(Address.class);
-                    if (address!=null){
-                        if (address.isDefault()){
+                    if (address != null) {
+                        if (address.isDefault()) {
                             setAddress(address);
                         }
                     }
@@ -276,71 +271,93 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
     }
+
     private void setAddress(Address address) {
         myAddress = address;
         mActivityPaymentBinding.addressDetail.setText(address.getDetail());
         mActivityPaymentBinding.addressName.setText(address.getFullName());
         mActivityPaymentBinding.addressPhone.setText(address.getPhoneNumber());
-        String addressMain = address.getWard()+", "+address.getDistrict()+", "+address.getProvince();
+        String addressMain = address.getWard() + ", " + address.getDistrict() + ", " + address.getProvince();
         mActivityPaymentBinding.addressMain.setText(addressMain);
     }
-    public void createOrderFirebase(long id)  {
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Orders");
-        if (numItemPayment==mListItemPayment.size()) {
+    public void createOrderFirebase(long id) {
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Orders");
+        if (numItemPayment == mListItemPayment.size()) {
             navigateToOrderSuccess();
             return;
         }
         ItemPayment itemPayment = mListItemPayment.get(numItemPayment);
-            String orderId = id+"";
-            String customerId = mCurrentUser.getUid();
-            long discountPrice = itemPayment.getTienKhuyenMai();
-            String orderStatus = "1";
-            Date date = new Date();
-            SimpleDateFormat sp = new SimpleDateFormat("dd/MM/yyyy");
-            String orderedDate = sp.format(date);
-            long shipPrice = 0;
-            String shopId = itemPayment.getShopId();
-            long totalPrice = itemPayment.getTongThanhToan();
-            List<ItemOrder> Items = new ArrayList<>();
-            for (ProductCart productCart:itemPayment.getListProductCart()){
-                String pid = productCart.getProductId();
-                String pAvatar = productCart.getUri();
-                String pName = productCart.getProductName();
-                String pBrand = productCart.getBrand();
-                long pPrice = 0;
-                if (productCart.getProductDiscountPrice()!=0){
-                    pPrice = productCart.getProductDiscountPrice();
-                }
-                else pPrice = productCart.getProductPrice();
-                long pQuantity = productCart.getProductQuantity();
-                ItemOrder itemOrder = new ItemOrder(pid,pAvatar,pBrand,pName,pPrice,pQuantity);
-                Items.add(itemOrder);
-            }
-            Address receiveAddress = myAddress;
+        String orderId = id + "";
+        String customerId = mCurrentUser.getUid();
+        long discountPrice = itemPayment.getTienKhuyenMai();
+        String orderStatus = "1";
+        Date date = new Date();
+        SimpleDateFormat sp = new SimpleDateFormat("dd/MM/yyyy");
+        String orderedDate = sp.format(date);
+        long shipPrice = 0;
+        String shopId = itemPayment.getShopId();
 
-            Order order = new Order(orderId,customerId,discountPrice,orderStatus,orderedDate,shipPrice, shopId,totalPrice,  Items, receiveAddress);
-            ref.child(order.getOrderId()).setValue(order, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+
+        String voucherUsedId = null;
+        if (itemPayment.getVoucher()!=null){
+            voucherUsedId = itemPayment.getVoucher().getVoucherid();
+        }
+
+        long totalPrice = itemPayment.getTongThanhToan();
+        List<ItemOrder> Items = new ArrayList<>();
+        for (ProductCart productCart : itemPayment.getListProductCart()) {
+            String pid = productCart.getProductId();
+            String pAvatar = productCart.getUri();
+            String pName = productCart.getProductName();
+            String pBrand = productCart.getBrand();
+            String pCategory = productCart.getProductCategory();
+
+            long pPrice = 0;
+            if (productCart.getProductDiscountPrice() != 0) {
+                pPrice = productCart.getProductDiscountPrice();
+            } else pPrice = productCart.getProductPrice();
+            long pQuantity = productCart.getProductQuantity();
+            ItemOrder itemOrder = new ItemOrder(pid, pAvatar, pBrand, pName, pPrice, pQuantity, pCategory);
+            Items.add(itemOrder);
+        }
+        Address receiveAddress = myAddress;
+
+        Order order = new Order(orderId, customerId, discountPrice, orderStatus, orderedDate, shipPrice, shopId, totalPrice, Items, receiveAddress, voucherUsedId);
+        String finalVoucherUsedId = voucherUsedId;
+        ref.child(order.getOrderId()).setValue(order, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (finalVoucherUsedId != null) {
+                    updateVoucherOfItemOrder(finalVoucherUsedId, id);
+                }
+                else {
                     numItemPayment++;
-                    createOrderFirebase(id+1);
-
+                    createOrderFirebase(id + 1);
                 }
-            });
+            }
+        });
 
 
+    }
 
+    private void updateVoucherOfItemOrder(String voucherUsedId, long id) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Vouchers");
+        ref.child(voucherUsedId).child("isUsed").setValue(true, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                numItemPayment++;
+                createOrderFirebase(id + 1);
+            }
+        });
     }
 
     private void navigateToOrderSuccess() {
-        Intent intent = new Intent(PaymentActivity.this,OrderSuccessActivity.class);
+        Intent intent = new Intent(PaymentActivity.this, OrderSuccessActivity.class);
         startActivity(intent);
         finishAffinity();
     }
-
-
-
 
 
 }

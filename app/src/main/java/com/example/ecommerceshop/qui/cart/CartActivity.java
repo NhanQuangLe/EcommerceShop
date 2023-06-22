@@ -20,6 +20,12 @@ public class CartActivity extends AppCompatActivity {
     public static final int FRAGMENT_CART  = 0;
     public static final int FRAGMENT_ALL_PRODUCT2  = 1;
     public int mCurrentFragment = FRAGMENT_CART;
+
+    public CartFragment getCartFragment() {
+        return cartFragment;
+    }
+
+    CartFragment cartFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +33,8 @@ public class CartActivity extends AppCompatActivity {
         mView = mActivityCartBinding.getRoot();
         setContentView(mView);
 
-
-        replaceFragment(new CartFragment());
+        cartFragment = new CartFragment();
+        replaceFragment(cartFragment);
     }
 
     public void replaceFragment(Fragment fragment){

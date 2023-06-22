@@ -148,7 +148,7 @@ public class CartFragment extends Fragment {
 
     private void addSelectedItemCart(ProductCart productCart) {
         listSelectedProductCart.add(productCart);
-        checkTotalMoney();
+        addTotalMoney(productCart);
 
         if (listSelectedProductCart.size() > 1) {
             return;
@@ -161,7 +161,7 @@ public class CartFragment extends Fragment {
 
     private void removeSelectedItemCart(ProductCart productCart) {
         listSelectedProductCart.remove(productCart);
-        checkTotalMoney();
+        subTotalMoney(productCart);
         if (listSelectedProductCart.size() == 0) {
             hideButtonDelete();
         }
@@ -194,12 +194,12 @@ public class CartFragment extends Fragment {
                                         if (product != null) {
                                             String productName = product.getProductName();
                                             String brand = product.getProductBrand();
+                                            String productCategory = product.getProductCategory();
                                             int productPrice = product.getProductPrice();
                                             int productDiscountPrice = product.getProductDiscountPrice();
                                             String uri = product.getUriList().get(0);
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(),
-                                                    productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand);
-
+                                                    productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
                                             mapProductCart.get(cart.getShopId()).add(productCart);
                                             mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId())));
                                             shopProductCartAdapter.notifyDataSetChanged();
@@ -236,16 +236,13 @@ public class CartFragment extends Fragment {
                                         if (product != null) {
                                             String productName = product.getProductName();
                                             String brand = product.getProductBrand();
+                                            String productCategory = product.getProductCategory();
                                             int productPrice = product.getProductPrice();
                                             int productDiscountPrice = product.getProductDiscountPrice();
                                             String uri = product.getUriList().get(0);
-                                            ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(), productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand);
-//                                            Log.e("size",mShopListProductCarts.get(mShopListProductCarts.size()-1).getProductCarts().size()+"");
-//                                            mapProductCart.get(cart.getShopId()).add(productCart);
-//                                            Log.e("size",mShopListProductCarts.get(mShopListProductCarts.size()-1).getProductCarts().size()+"");
+                                            ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(), productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
                                             for (ShopProductCart shopProductCart : mShopListProductCarts) {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
-                                                    Log.e("qui", "Giong");
                                                     shopProductCart.getProductCarts().add(productCart);
                                                     break;
                                                 }
@@ -279,7 +276,7 @@ public class CartFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 listSelectedProductCart.clear();
-                checkTotalMoney();
+                mFragmentCartBinding.tvTotalMoney.setText(getPrice(0));
                 Cart cart = snapshot.getValue(Cart.class);
                 if (cart == null || mShopListProductCarts == null || mShopListProductCarts.isEmpty())
                     return;
@@ -388,6 +385,38 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                for (ProductCart productCart:listSelectedProductCart){
+                    if (productCart.getShopId().equals(mCurrentUser.getUid())){
+                        final Dialog dialog = new Dialog(getContext());
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.layout_dialog_ok_cancel);
+                        Window window = dialog.getWindow();
+                        if (window == null) return;
+                        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+                        windowAttributes.gravity = Gravity.CENTER;
+
+                        window.setAttributes(windowAttributes);
+                        dialog.setCancelable(true);
+                        TextView tvContent = dialog.findViewById(R.id.tv_content);
+                        tvContent.setText("Không thể mua hàng thuộc Shop của bạn");
+                        TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
+                        tvCancel.setVisibility(View.GONE);
+                        TextView tvOk = dialog.findViewById(R.id.tv_ok);
+
+                        tvOk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+
+                            }
+                        });
+                        dialog.show();
+                        return;
+                    }
+                }
                 Intent intent = new Intent(getContext(), PaymentActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("listSelectedCart", (ArrayList<? extends Parcelable>) listSelectedProductCart);
@@ -414,10 +443,10 @@ public class CartFragment extends Fragment {
     }
 
     private void deleteCart() {
-        if (numSelectedCart == listSelectedProductCart.size()){
+        if (numSelectedCart == listSelectedProductCart.size()) {
             hideButtonDelete();
             listSelectedProductCart.clear();
-            checkTotalMoney();
+            mFragmentCartBinding.tvTotalMoney.setText(getPrice(0));
             return;
         }
         ProductCart productCart = listSelectedProductCart.get(numSelectedCart);
@@ -425,8 +454,8 @@ public class CartFragment extends Fragment {
         ref.child(productCart.getProductCardId()).removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                    numSelectedCart++;
-                    deleteCart();
+                numSelectedCart++;
+                deleteCart();
             }
         });
     }
@@ -439,23 +468,65 @@ public class CartFragment extends Fragment {
         return str1;
     }
 
-    public void checkTotalMoney() {
-        totalMoney = 0;
-        mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
-//        Log.e("Size",listSelectedProductCart.size()+"");
-//        for (ProductCart productCart1: listSelectedProductCart){
-//            Log.e("Name",productCart1.getProductName());
-//        }
-        for (ProductCart productCart1 : listSelectedProductCart) {
+    public void addTotalMoney(ProductCart productCart) {
+//        totalMoney = 0;
+//        mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+//
+//        for (ProductCart productCart1 : listSelectedProductCart) {
 //            Log.e("Name2",productCart1.getProductName());
-            if (productCart1.getProductDiscountPrice() == 0) {
-                totalMoney += productCart1.getProductPrice() * productCart1.getProductQuantity();
-                mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
-            } else {
-                totalMoney += (productCart1.getProductPrice() - productCart1.getProductDiscountPrice()) * productCart1.getProductQuantity();
-                mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
-            }
+//            if (productCart1.getProductDiscountPrice() == 0) {
+//                totalMoney += productCart1.getProductPrice() * productCart1.getProductQuantity();
+//                mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+//            } else {
+//                totalMoney += (productCart1.getProductPrice() - productCart1.getProductDiscountPrice()) * productCart1.getProductQuantity();
+//                mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+//            }
+//        }
+//        Log.e("Total Money",mFragmentCartBinding.tvTotalMoney.getText().toString());
+        if (productCart.getProductDiscountPrice() == 0) {
+            totalMoney += productCart.getProductPrice() * productCart.getProductQuantity();
+            mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+        } else {
+            totalMoney += (productCart.getProductPrice() - productCart.getProductDiscountPrice()) * productCart.getProductQuantity();
+            mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
         }
-
+        mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
     }
+    public void subTotalMoney(ProductCart productCart) {
+//        totalMoney = 0;
+//        mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+//
+//        for (ProductCart productCart1 : listSelectedProductCart) {
+//            Log.e("Name2",productCart1.getProductName());
+//            if (productCart1.getProductDiscountPrice() == 0) {
+//                totalMoney += productCart1.getProductPrice() * productCart1.getProductQuantity();
+//                mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+//            } else {
+//                totalMoney += (productCart1.getProductPrice() - productCart1.getProductDiscountPrice()) * productCart1.getProductQuantity();
+//                mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+//            }
+//        }
+//        Log.e("Total Money",mFragmentCartBinding.tvTotalMoney.getText().toString());
+        if (productCart.getProductDiscountPrice() == 0) {
+            totalMoney -= productCart.getProductPrice() * productCart.getProductQuantity();
+            mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+        } else {
+            totalMoney -= (productCart.getProductPrice() - productCart.getProductDiscountPrice()) * productCart.getProductQuantity();
+            mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+        }
+        mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
+    }
+
+//    public void checkUI(ShopProductCart shopProductCart) {
+//        List<String> cartIds = new ArrayList<>();
+//        for (ProductCart productCart:listSelectedProductCart){
+//            cartIds.add(productCart.getProductCardId());
+//        }
+//        for (ProductCart productCart:shopProductCart.getProductCarts()){
+//            if (!cartIds.contains(productCart.getProductCardId())){
+//                listSelectedProductCart.add(productCart);
+//                addTotalMoney(productCart);
+//            }
+//        }
+//    }
 }

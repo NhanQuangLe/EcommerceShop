@@ -129,6 +129,8 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:text="0đ"
+                   android:layout_gravity="right"
+                   android:gravity="right"
                    android:id="@+id/tv_total_money"
                    android:textStyle="bold"
                    android:textSize="18sp"

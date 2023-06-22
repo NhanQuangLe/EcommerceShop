@@ -34,7 +34,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
-            android:layout_width="80dp"
+            android:layout_width="60dp"
             android:layout_height="80dp"
             android:src="@drawable/image_avt_user"
             app:civ_border_color="#FF000000"/>
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Huỳnh Ngọc Quí"
-                android:id="@+id/name"
+                android:id="@+id/customer_name"
                 android:textStyle="bold"
                 android:textSize="16sp" />
             <TextView

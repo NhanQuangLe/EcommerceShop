@@ -4,23 +4,29 @@ import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.ecommerceshop.Phat.Utils.FilterProduct;
 import com.example.ecommerceshop.databinding.AdapterItemProductCustomerBinding;
+import com.example.ecommerceshop.qui.homeuser.searchProducts.FilterProductUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> implements Filterable {
 
-    private List<Product> mList;
+    public List<Product> mList, filterList;
     private IClickProductItemListener iClickProductItemListener;
-
+    private FilterProductUser filterProduct;
     public ProductAdapter(List<Product> mList,IClickProductItemListener listener ) {
         this.mList = mList;
         this.iClickProductItemListener = listener;
+        this.filterList = mList;
     }
 
     @NonNull
@@ -66,6 +72,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public int getItemCount() {
         if (mList!=null) return  mList.size();
         return 0;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if(filterProduct == null){
+            filterProduct=new FilterProductUser(this, filterList);
+        }
+        return filterProduct;
     }
 
     public  class ProductViewHolder extends RecyclerView.ViewHolder{

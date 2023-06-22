@@ -73,12 +73,12 @@
             android:textColor="#DB3022"
             android:textSize="12sp" />
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="5dp"
+        android:id="@+id/layout_change_quantity"
         android:background="#f5f5f5f5"
         android:gravity="center"
 

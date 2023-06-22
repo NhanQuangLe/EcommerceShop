@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +24,10 @@ import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentHomeUserBinding;
 import com.example.ecommerceshop.qui.cart.CartActivity;
+import com.example.ecommerceshop.qui.homeuser.searchProducts.AllProductsFragment;
+import com.example.ecommerceshop.qui.homeuser.searchShops.AllShopsFragment;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.example.ecommerceshop.qui.spinner.SpinnerItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +45,8 @@ public class HomeFragmentUser extends Fragment {
 
     private MainUserActivity mMainUserActivity;
     private FragmentHomeUserBinding mFragmentHomeUserBinding;
-
+    private Spinner spinner;
+    private SpinnerAdapter spinnerAdapter;
 
     private View viewFragment;
     private ProductAdapter productAdapterLaptop;
@@ -48,6 +55,8 @@ public class HomeFragmentUser extends Fragment {
     private List<Product> mListLaptop;
     private List<Product> mListPhone;
     private List<Product> mListAccessories;
+    private FirebaseUser mCurrentUser;
+    private String selectedSpinner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +71,20 @@ public class HomeFragmentUser extends Fragment {
         init();
 
         View headerView = mFragmentHomeUserBinding.navView.inflateHeaderView(R.layout.header_view);
+        TextView tvCustomerName = headerView.findViewById(R.id.customer_name);
+        // set name drawer
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/CustomerInfos/name");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tvCustomerName.setText(snapshot.getValue(String.class));
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         Button btnBackward = headerView.findViewById(R.id.btnBackward);
         mFragmentHomeUserBinding.buttonToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,16 +112,35 @@ public class HomeFragmentUser extends Fragment {
                 }
             }
         });
+        mFragmentHomeUserBinding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedSpinner = ((SpinnerItem)spinnerAdapter.getItem(i)).getItemName();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         mFragmentHomeUserBinding.btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mMainUserActivity.ACTION = mMainUserActivity.ACTION_SEARCH;
-                mMainUserActivity.mCurrentFragment = mMainUserActivity.FRAGMENT_ALL_PRODUCT;
-                mMainUserActivity.textSearch = mFragmentHomeUserBinding.editTextSearch.getText().toString();
-                mMainUserActivity.replaceFragment(new AllProductsFragment());
+                if (selectedSpinner.equals("Sản phẩm")){
+                    mMainUserActivity.ACTION = mMainUserActivity.ACTION_SEARCH;
+                    mMainUserActivity.mCurrentFragment = mMainUserActivity.FRAGMENT_ALL_PRODUCT;
+                    mMainUserActivity.textSearch = mFragmentHomeUserBinding.editTextSearch.getText().toString();
+                    mMainUserActivity.replaceFragment(new AllProductsFragment());
+                }
+                else {
+                    mMainUserActivity.ACTION = mMainUserActivity.ACTION_SEARCH;
+                    mMainUserActivity.mCurrentFragment = mMainUserActivity.FRAGMENT_ALL_SHOP;
+                    mMainUserActivity.textSearch = mFragmentHomeUserBinding.editTextSearch.getText().toString();
+                    mMainUserActivity.replaceFragment(new AllShopsFragment());
+                }
+
             }
         });
-
 
         mFragmentHomeUserBinding.categoryLaptop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +179,10 @@ public class HomeFragmentUser extends Fragment {
     }
 
     private void init() {
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        spinnerAdapter = new com.example.ecommerceshop.qui.spinner.SpinnerAdapter(getContext(),getListSpinnerItem());
+        mFragmentHomeUserBinding.spinner.setAdapter(spinnerAdapter);
+
         setImageSlide();
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -173,6 +218,13 @@ public class HomeFragmentUser extends Fragment {
         mFragmentHomeUserBinding.rcvProductAccessories.setAdapter(productAdapterAccessories);
         setListProductFromFireBase();
         setCart();
+    }
+
+    private List<SpinnerItem> getListSpinnerItem() {
+        List<SpinnerItem> list = new ArrayList<>();
+        list.add(new SpinnerItem("Sản phẩm"));
+        list.add(new SpinnerItem("Shop"));
+        return list;
     }
 
     private void setCart() {

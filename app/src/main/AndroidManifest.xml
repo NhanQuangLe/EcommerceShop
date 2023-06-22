@@ -32,10 +32,15 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SignUpActivity"
-            android:exported="false" />
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".tinh.Activity.LoginActivity"
-            android:exported="true" />
+            android:exported="true">
+
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="false"
@@ -67,6 +72,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".nhan.ProfileCustomer.orders.UserOrdersActivity"
