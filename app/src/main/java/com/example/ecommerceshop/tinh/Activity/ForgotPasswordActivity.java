@@ -35,7 +35,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void setListener() {
-        buttonBack.setOnClickListener(view -> onBackPressed());
+        buttonBack.setOnClickListener(view -> startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class)));
         textGoToLogin.setOnClickListener(view -> startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class)));
         buttonConfirm.setOnClickListener(view -> {
             if (IsValidEmail())
@@ -92,7 +92,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         {
             editTextEmail.setBackgroundResource(R.drawable.background_input);
             textErrorEmail.setVisibility(View.INVISIBLE);
-
             return true;
         }
     }
