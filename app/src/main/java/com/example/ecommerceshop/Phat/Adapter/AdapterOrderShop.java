@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.Phat.Activity.OrderDetailShopActivity;
 import com.example.ecommerceshop.Phat.Model.OrderShop;
+import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.Phat.Utils.FilterOrder;
 import com.example.ecommerceshop.Phat.Utils.FilterProduct;
 import com.example.ecommerceshop.R;
@@ -48,10 +49,10 @@ public class AdapterOrderShop extends RecyclerView.Adapter<AdapterOrderShop.Orde
         String id = orderShop.getOrderId();
         holder.orderId.setText(orderShop.getOrderId());
         holder.orderDate.setText(orderShop.getOrderedDate());
-        holder.receiverPhone.setText(orderShop.getReceivePhone());
-        holder.receiverName.setText(orderShop.getReceiveName());
+        holder.receiverPhone.setText(orderShop.getReceiveAddress().getPhoneNumber());
+        holder.receiverName.setText(orderShop.getReceiveAddress().getFullName());
         holder.orderStatus.setText(orderShop.getOrderStatus());
-        holder.totalPrice.setText(orderShop.getTotalPrice());
+        holder.totalPrice.setText(Constants.convertToVND(orderShop.getTotalPrice()));
 
         if(orderShop.getOrderStatus().equals("UnProcessed")){
             holder.orderStatus.setTextColor(Color.RED);

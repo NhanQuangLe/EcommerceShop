@@ -25,7 +25,7 @@ public class FilterOrder extends Filter {
             charSequence = charSequence.toString().toUpperCase();
             ArrayList<OrderShop> filterOrders = new ArrayList<>();
             for(int i=0; i<orderShops.size();i++){
-                if(orderShops.get(i).getOrderId().toUpperCase().contains(charSequence)||orderShops.get(i).getReceiveName().toUpperCase().contains(charSequence)){
+                if(orderShops.get(i).getOrderId().toUpperCase().contains(charSequence)||orderShops.get(i).getReceiveAddress().getFullName().toUpperCase().contains(charSequence)){
                     filterOrders.add(orderShops.get(i));
                 }
             }

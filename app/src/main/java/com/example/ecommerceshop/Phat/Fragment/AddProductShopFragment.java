@@ -55,10 +55,10 @@ public class AddProductShopFragment extends Fragment  {
     private TextView CategoryProduct, deletebtn,productBrand;
     private LinearLayout addProductbtn;
     private TextInputEditText productName, productDescription, productQuantity,productOriginalPrice,
-            productCountry,productDiscountPrice,productNoteDiscount;
+            productCountry,productDiscountPrice;
     private SwitchCompat discountSwitch;
     private Button btnAddProduct;
-    private TextInputLayout dispriceLayout,disnotelayout;
+    private TextInputLayout dispriceLayout;
     private List<Photo> photoList = new ArrayList<>();
     private PhotoAdapter photoAdapter;
     private ProgressDialog progressDialog;
@@ -151,15 +151,12 @@ public class AddProductShopFragment extends Fragment  {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b){
                     dispriceLayout.setVisibility(View.VISIBLE);
-                    disnotelayout.setVisibility(View.VISIBLE);
                     productDiscountPrice.setVisibility(View.VISIBLE);
-                    productNoteDiscount.setVisibility(View.VISIBLE);
+
                 }
                 else {
                     dispriceLayout.setVisibility(View.GONE);
-                    disnotelayout.setVisibility(View.GONE);
                     productDiscountPrice.setVisibility(View.GONE);
-                    productNoteDiscount.setVisibility(View.GONE);
                 }
             }
         });
@@ -209,7 +206,7 @@ public class AddProductShopFragment extends Fragment  {
     private void uploadData( String timestamp) {
 
         Product product = new Product(timestamp,ProductName, ProductDescription,productCategory,ProductBrand,ProductSite,ProductDiscountNote
-        ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid(),0 );
+        ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid(),0, true);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(timestamp).setValue(product).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -226,7 +223,6 @@ public class AddProductShopFragment extends Fragment  {
         CategoryProduct.setText("Loại sản phẩm");
         productBrand.setText("Thương hiệu");
         productCountry.setText("");
-        productNoteDiscount.setText("");
         productDiscountPrice.setText("");
         productQuantity.setText("");
         productOriginalPrice.setText("");
@@ -249,9 +245,9 @@ public class AddProductShopFragment extends Fragment  {
                 Toast.makeText(getContext(), "Product Discount Price is required...", Toast.LENGTH_SHORT).show();
                 return;
             } else ProductDiscountPrice= Integer.parseInt(productDiscountPrice.getText().toString().trim());
-            int x = ((Integer.parseInt(productOriginalPrice.getText().toString().trim())- Integer.parseInt(productDiscountPrice.getText().toString().trim()))/
-                    Integer.parseInt(productOriginalPrice.getText().toString().trim()))*100;
-            ProductDiscountNote = productNoteDiscount.getText().toString().trim();
+            int x = (int) (( Float.parseFloat(productDiscountPrice.getText().toString().trim())/
+                                Float.parseFloat(productOriginalPrice.getText().toString().trim()))*100);
+            ProductDiscountNote = "- " + x + "%";
         }
         else{
             ProductDiscountNote="";
@@ -324,10 +320,8 @@ public class AddProductShopFragment extends Fragment  {
         productBrand=mview.findViewById(R.id.productBrand);
         discountSwitch=mview.findViewById(R.id.discountSwitch);
         productDiscountPrice=mview.findViewById(R.id.productDiscountPrice);
-        productNoteDiscount=mview.findViewById(R.id.productNoteDiscount);
         btnAddProduct=mview.findViewById(R.id.btnAddProduct);
         CategoryProduct=mview.findViewById(R.id.CategoryProduct);
         dispriceLayout=mview.findViewById(R.id.dispriceLayout);
-        disnotelayout=mview.findViewById(R.id.disnotelayout);
     }
 }

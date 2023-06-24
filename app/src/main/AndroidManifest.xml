@@ -54,6 +54,15 @@
             android:name=".Phat.Activity.OrderDetailShopActivity"
             android:exported="false" />
         <activity
+            android:name=".Phat.Activity.ReviewShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.ReviewDetailProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.ResponseRVActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainShopActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false"

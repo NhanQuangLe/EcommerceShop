@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:fontFamily="@font/lato_bold"
-            android:text="Setting Account"
+            android:text="Account Settings"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"

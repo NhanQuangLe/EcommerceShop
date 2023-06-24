@@ -10,12 +10,14 @@ import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.Phat.Activity.UpdateProductShopActivity;
 import com.example.ecommerceshop.Phat.Model.Product;
+import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.Phat.Utils.FilterProduct;
 import com.squareup.picasso.Picasso;
@@ -60,13 +62,13 @@ public class AdapterProductShop extends RecyclerView.Adapter<AdapterProductShop.
         holder.pname.setText(name);
         holder.pbrand.setText(brand);
         if(disprice==0){
-            holder.pdisprice.setText(String.valueOf(price));
+            holder.pdisprice.setText(Constants.convertToVND(price));
             holder.pprice.setVisibility(View.GONE);
             holder.discountTag.setVisibility(View.GONE);
         }
         else{
-            holder.pdisprice.setText(String.valueOf(disprice));
-            holder.pprice.setText(String.valueOf(price));
+            holder.pdisprice.setText(Constants.convertToVND((price-disprice)));
+            holder.pprice.setText(Constants.convertToVND(price));
             holder.discountTag.setVisibility(View.VISIBLE);
             holder.pdisnote.setText(disnote);
         }
@@ -79,6 +81,12 @@ public class AdapterProductShop extends RecyclerView.Adapter<AdapterProductShop.
                 context.startActivity(intent);
             }
         });
+        if(product.isSold()){
+            holder.StopSelling.setVisibility(View.GONE);
+        }
+        else {
+            holder.StopSelling.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -98,7 +106,8 @@ public class AdapterProductShop extends RecyclerView.Adapter<AdapterProductShop.
 
         ImageView imgProduct, updatebtn;
         TextView pbrand, pname, pprice, pdisprice, pdisnote;
-        FrameLayout discountTag;
+        FrameLayout discountTag, StopSelling;
+
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             imgProduct=itemView.findViewById(R.id.imgProduct);
@@ -109,7 +118,7 @@ public class AdapterProductShop extends RecyclerView.Adapter<AdapterProductShop.
             pdisprice=itemView.findViewById(R.id.pdisprice);
             pdisnote=itemView.findViewById(R.id.pdisnote);
             discountTag=itemView.findViewById(R.id.discountTag);
-
+            StopSelling=itemView.findViewById(R.id.StopSelling);
         }
     }
 }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Phat.Activity.ImageAdsShopActivity">
+    android:background="@color/primary_gray"
+    xmlns:tools="http://schemas.android.com/tools">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/actionbar"
         android:layout_width="match_parent"
@@ -14,8 +15,9 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/white"
         android:elevation="10dp">
+
         <ImageView
-            android:id="@+id/btnBack"
+            android:id="@+id/backbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back"
@@ -23,14 +25,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:fontFamily="@font/lato_bold"
-            android:text="Image of advertisement"
+            android:text="Reviews of shop"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -38,46 +39,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp"
+        android:background="@color/primary_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/actionbar">
-        <Button
-            android:id="@+id/uploadImg"
-            android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="@+id/actionbar">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="All rated products"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="18dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="90dp"
-            android:layout_marginVertical="10dp"
-            android:text="Update image"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/bg_filter_list_item" />
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/addImg"
-            android:layout_marginHorizontal="90dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add Image"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/uploadImg"
-            android:background="@drawable/bg_btn_order_item"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/imgList"
+
+            android:layout_marginTop="6dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            tools:listitem="@layout/adapter_ads_img_shop"
-            app:layout_constraintTop_toBottomOf="@+id/addImg"
+            android:id="@+id/listReview"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            tools:listitem="@layout/adapter_review_products_shop" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

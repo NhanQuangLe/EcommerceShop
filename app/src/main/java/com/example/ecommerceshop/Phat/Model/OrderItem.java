@@ -3,13 +3,14 @@ package com.example.ecommerceshop.Phat.Model;
 import java.io.Serializable;
 
 public class OrderItem implements Serializable {
-    String pName, pPrice, pid, pAvatar, pBrand;
+    String pName, pid, pAvatar, pBrand;
     int pQuantity;
+    long pPrice;
 
     public OrderItem() {
     }
 
-    public OrderItem(String pName, String pPrice, String pid, String pAvatar, String pBrand, int pQuantity) {
+    public OrderItem(String pName, long pPrice, String pid, String pAvatar, String pBrand, int pQuantity) {
         this.pName = pName;
         this.pPrice = pPrice;
         this.pid = pid;
@@ -42,11 +43,11 @@ public class OrderItem implements Serializable {
         this.pName = pName;
     }
 
-    public String getpPrice() {
+    public long getpPrice() {
         return pPrice;
     }
 
-    public void setpPrice(String pPrice) {
+    public void setpPrice(long pPrice) {
         this.pPrice = pPrice;
     }
 

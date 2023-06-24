@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="225dp"
         android:elevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,7 +18,7 @@
 
         <androidx.viewpager.widget.ViewPager
             android:layout_width="match_parent"
-            android:layout_height="175dp"
+            android:layout_height="200dp"
             android:id="@+id/imgview"
             android:layout_alignParentTop="true"
            android:background="@drawable/bg_edit_text"/>
@@ -83,7 +83,7 @@
                 android:layout_marginVertical="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thông tin sản phẩm: "
+                android:text="Product Information: "
                 android:fontFamily="@font/lato_bold"
                 android:textColor="@color/primary_red"
                 android:textSize="20sp" />
@@ -91,7 +91,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tên sản phẩm"
+                android:hint="Product name"
                 app:placeholderText="Iphone 13 Promax"
                 app:endIconMode="clear_text"
                 android:layout_marginBottom="10dp"
@@ -108,7 +108,7 @@
                 android:id="@+id/DesInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Mô tả sản phẩm"
+                android:hint="Product description"
                 app:placeholderText="Iphone 13 Promax Offical "
                 app:endIconMode="clear_text"
                 android:layout_marginBottom="15dp"
@@ -135,14 +135,14 @@
                 android:drawablePadding="30dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="10dp"
-                android:text="Loại sản phẩm"
+                android:text="Product Type"
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Số lượng"
+                android:hint="Quantity"
                 android:layout_marginBottom="10dp"
                 app:placeholderText="20"
                 app:endIconMode="clear_text"
@@ -158,7 +158,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Giá"
+                android:hint="Product Price"
                 android:layout_marginBottom="10dp"
                 app:placeholderText="22.000.000d"
                 app:endIconMode="clear_text"
@@ -174,7 +174,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nơi sản xuất"
+                android:hint="Place of manufacture"
                 android:layout_marginBottom="10dp"
                 app:placeholderText="America"
                 app:endIconMode="clear_text"
@@ -198,7 +198,7 @@
                 android:drawablePadding="30dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="10dp"
-                android:text="Thương hiệu"
+                android:text="Trademark"
                 android:textSize="16sp" />
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -208,7 +208,7 @@
                     android:layout_marginTop="14dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Có áp dụng khuyến mãi"
+                    android:text="Does the promotion apply?"
                     android:textSize="18sp"
                     android:textColor="@color/primary_red"
                     android:fontFamily="@font/lato_bold"/>
@@ -224,7 +224,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="Giá khuyến mãi"
+                android:hint="Promotion price"
                 android:visibility="gone"
                 app:placeholderText="20.000.000d"
                 app:endIconMode="clear_text"
@@ -238,23 +238,7 @@
                     android:visibility="gone"
                     android:background="@drawable/bg_edit_text" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ghi chú khuyến mãi"
-                app:placeholderText="Sale 10%"
-                app:endIconMode="clear_text"
-                android:visibility="gone"
-                app:helperTextTextColor="@color/primary_red"
-                android:id="@+id/disnotelayout">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/productNoteDiscount"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edit_text" />
-            </com.google.android.material.textfield.TextInputLayout>
+
 
 
             <Button
@@ -263,7 +247,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Thêm sản phẩm"
+                android:text="Add Product"
                 android:layout_marginHorizontal="30dp"
                 android:background="@drawable/bg_filter_list_item"/>
         </LinearLayout>

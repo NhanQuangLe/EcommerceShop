@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -52,12 +54,13 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     private CircleIndicator circleIndicator;
     private TextView CategoryProduct, deletebtn,productBrand;
     private LinearLayout addProductbtn;
+    FrameLayout stopSelling;
     private TextInputEditText productName, productDescription, productQuantity,productOriginalPrice,
-            productCountry,productDiscountPrice,productNoteDiscount;
+            productCountry,productDiscountPrice;
     private SwitchCompat discountSwitch;
     private Button btnUpdateProduct;
     private ImageView backbtn, deleteBtn;
-    private TextInputLayout dispriceLayout,disnotelayout;
+    private TextInputLayout dispriceLayout;
     private List<Photo> photoList ;
     private PhotoAdapter photoAdapter;
     private ProgressDialog progressDialog;
@@ -66,6 +69,7 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     String ProductName, ProductDescription, productCategory, ProductBrand, ProductSite, ProductDiscountNote, Productid;
     int ProductQuantity, productPrice, ProductDiscountPrice, pSoldQuantity;
     boolean isDiscount;
+    boolean isSell;
     String[] categorys, trademarks;
     boolean isdeleted=false;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMultipleMedia = registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), uris -> {
@@ -132,15 +136,11 @@ public class UpdateProductShopActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b){
                     dispriceLayout.setVisibility(View.VISIBLE);
-                    disnotelayout.setVisibility(View.VISIBLE);
                     productDiscountPrice.setVisibility(View.VISIBLE);
-                    productNoteDiscount.setVisibility(View.VISIBLE);
                 }
                 else {
                     dispriceLayout.setVisibility(View.GONE);
-                    disnotelayout.setVisibility(View.GONE);
                     productDiscountPrice.setVisibility(View.GONE);
-                    productNoteDiscount.setVisibility(View.GONE);
                 }
             }
         });
@@ -168,22 +168,44 @@ public class UpdateProductShopActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(UpdateProductShopActivity.this);
-                builder.setTitle("Delete...").setMessage("Are you sure you want to delete product "+ productName.getText().toString()+" ?")
-                        .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                isdeleted=true;
-                                deleteproduct(Productid);
-                            }
-                        })
-                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                return;
-                            }
-                        })
-                        .show();
+                if(isSell){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UpdateProductShopActivity.this);
+                    builder.setTitle("Notification").setMessage("Do you want to stop selling "+ productName.getText().toString()+" ?")
+                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    isSell=false;
+                                    deleteproduct(Productid);
+                                    deleteBtn.setImageResource(R.drawable.ic_active_sell);
+                                }
+                            })
+                            .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    return;
+                                }
+                            })
+                            .show();
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UpdateProductShopActivity.this);
+                    builder.setTitle("Notification").setMessage("Do you want to continue sell "+ productName.getText().toString()+" ?")
+                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    isSell=true;
+                                    deleteproduct(Productid);
+                                    deleteBtn.setImageResource(R.drawable.ic_delete);
+                                }
+                            })
+                            .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    return;
+                                }
+                            })
+                            .show();
+                }
             }
         });
         btnUpdateProduct.setOnClickListener(new View.OnClickListener() {
@@ -229,13 +251,15 @@ public class UpdateProductShopActivity extends AppCompatActivity {
         });
     }
     private void deleteproduct(String productid) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("sold", isSell);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(productid).removeValue()
+        reference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(productid).updateChildren(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        onBackPressed();
-                        Toast.makeText(getApplicationContext(), "Delete product successfully!", Toast.LENGTH_SHORT).show();
+                        loadProductDetail();
+                        Toast.makeText(UpdateProductShopActivity.this, "Update product successfully", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -262,21 +286,25 @@ public class UpdateProductShopActivity extends AppCompatActivity {
                     productBrand.setText(product.getProductBrand());
                     productCountry.setText(product.getProductSite());
                     pSoldQuantity=product.getPsoldQuantity();
+                    isSell = product.isSold();
+                    if(isSell){
+                        stopSelling.setVisibility(View.GONE);
+                        deleteBtn.setImageResource(R.drawable.ic_delete);
+                    }
+                    else {
+                        stopSelling.setVisibility(View.VISIBLE);
+                        deleteBtn.setImageResource(R.drawable.ic_active_sell);
+                    }
                     if(product.getProductDiscountPrice()==0){
                         discountSwitch.setChecked(false);
                         dispriceLayout.setVisibility(View.GONE);
-                        disnotelayout.setVisibility(View.GONE);
                         productDiscountPrice.setVisibility(View.GONE);
-                        productNoteDiscount.setVisibility(View.GONE);
                     }
                     else {
                         discountSwitch.setChecked(true);
                         dispriceLayout.setVisibility(View.VISIBLE);
-                        disnotelayout.setVisibility(View.VISIBLE);
                         productDiscountPrice.setVisibility(View.VISIBLE);
-                        productNoteDiscount.setVisibility(View.VISIBLE);
                         productDiscountPrice.setText(String.valueOf(product.getProductDiscountPrice()));
-                        productNoteDiscount.setText(product.getProductDiscountNote());
                     }
                     photoList = new ArrayList<>();
                     uriList=product.getUriList();
@@ -309,13 +337,12 @@ public class UpdateProductShopActivity extends AppCompatActivity {
         productBrand=findViewById(R.id.productBrand);
         discountSwitch=findViewById(R.id.discountSwitch);
         productDiscountPrice=findViewById(R.id.productDiscountPrice);
-        productNoteDiscount=findViewById(R.id.productNoteDiscount);
         btnUpdateProduct=findViewById(R.id.btnUpdateProduct);
         CategoryProduct=findViewById(R.id.CategoryProduct);
         dispriceLayout=findViewById(R.id.dispriceLayout);
-        disnotelayout=findViewById(R.id.disnotelayout);
         deleteBtn=findViewById(R.id.deleteBtn);
         backbtn=findViewById(R.id.backbtn);
+        stopSelling=findViewById(R.id.stopSelling);
     }
     private void Inputdata(){
         ProductName=productName.getText().toString().trim();
@@ -325,16 +352,14 @@ public class UpdateProductShopActivity extends AppCompatActivity {
         ProductSite = productCountry.getText().toString().trim();
         isDiscount=discountSwitch.isChecked();
         if(isDiscount){
-            ProductDiscountNote = productNoteDiscount.getText().toString().trim();
 
-            if(TextUtils.isEmpty(ProductDiscountNote)){
-                Toast.makeText(UpdateProductShopActivity.this, "Product Discount Note is required...", Toast.LENGTH_SHORT).show();
-                return;
-            }
             if(TextUtils.isEmpty(productDiscountPrice.getText().toString().trim())){
                 Toast.makeText(UpdateProductShopActivity.this, "Product Discount Price is required...", Toast.LENGTH_SHORT).show();
                 return;
             } else ProductDiscountPrice= Integer.parseInt(productDiscountPrice.getText().toString().trim());
+            int x = (int) (( Float.parseFloat(productDiscountPrice.getText().toString().trim())/
+                    Float.parseFloat(productOriginalPrice.getText().toString().trim()))*100);
+            ProductDiscountNote = "- " + x + "%";
         }
         else{
             ProductDiscountNote="";
@@ -407,7 +432,7 @@ public class UpdateProductShopActivity extends AppCompatActivity {
     }
     private void updateProduct(String productid) {
         Product product = new Product(productid,ProductName, ProductDescription,productCategory,ProductBrand,ProductSite,ProductDiscountNote
-                ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid(), pSoldQuantity );
+                ,  ProductQuantity, productPrice, ProductDiscountPrice, uriList,firebaseAuth.getUid(), pSoldQuantity, isSell);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(productid)
                 .setValue(product)

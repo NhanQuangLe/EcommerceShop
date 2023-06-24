@@ -8,8 +8,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.ecommerceshop.Phat.Fragment.ListRegistrationAdminFragment;
+import com.example.ecommerceshop.Phat.Fragment.ProfileAdminFragment;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -18,21 +20,25 @@ import com.google.android.material.navigation.NavigationBarView;
 public class AdminActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
+    TextView textView12;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         ReplaceFragment(new ListRegistrationAdminFragment());
         bottomNavigationView =findViewById(R.id.bottomNavigationView);
+        textView12=findViewById(R.id.textView12);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.ResAdmin:
                         ReplaceFragment(new ListRegistrationAdminFragment());
+                        textView12.setText("REQUESTS");
                         break;
                     case R.id.profileAdmin:
-                        ReplaceFragment(new ListRegistrationAdminFragment());
+                        ReplaceFragment(new ProfileAdminFragment());
+                        textView12.setText("ADMIN PROFILE");
                         break;
                 }
                 return true;
