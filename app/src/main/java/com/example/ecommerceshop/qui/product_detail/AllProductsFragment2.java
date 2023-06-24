@@ -7,11 +7,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ecommerceshop.databinding.FragmentAllProducts2Binding;
+import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
@@ -35,6 +37,7 @@ public class AllProductsFragment2 extends Fragment {
     private View viewFragment;
     private List<Product> mListProduct;
     private ProductAdapter productAdapter;
+    private String shopId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,7 +45,6 @@ public class AllProductsFragment2 extends Fragment {
         viewFragment = mFragmentAllProducts2Binding.getRoot();
 
         mProductDetailActivity = (ProductDetailActivity) getActivity();
-        receiveDataFromDetailFragment();
 
         mListProduct = new ArrayList<>();
         productAdapter = new ProductAdapter(mListProduct, new IClickProductItemListener() {
@@ -65,43 +67,30 @@ public class AllProductsFragment2 extends Fragment {
                 mProductDetailActivity.backToDetail();
             }
         });
+        mFragmentAllProducts2Binding.btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), CartActivity.class);
+                getContext().startActivity(intent);
+            }
+        });
         return viewFragment;
     }
 
     private void setListSearchProductFromFireBase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Users");
-        String res = mFragmentAllProducts2Binding.editTextSearch.getText().toString();
+        DatabaseReference myRef = database.getReference("Users/"+this.shopId+"/Shop/Products");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (mListProduct!=null) mListProduct.clear();
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    DatabaseReference myRef2 = dataSnapshot.child("Shop").child("Products").getRef();
-                    myRef2.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (mListProduct!=null) mListProduct.clear();
-                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                                Product product = dataSnapshot1.getValue(Product.class);
-                                if (product!=null){
-
-                                    if (product.getProductName().toLowerCase(Locale.ROOT).contains(res) || product.getProductBrand().toLowerCase(Locale.ROOT).contains(res)
-                                            || product.getProductCategory().toLowerCase(Locale.ROOT).contains(res)){
-                                        mListProduct.add(product);
-                                    }
-
-                                }
-                            }
-                            productAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
+                    Product product = dataSnapshot.getValue(Product.class);
+                    if (product!=null){
+                        mListProduct.add(product);
+                    }
                 }
+                productAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -111,10 +100,9 @@ public class AllProductsFragment2 extends Fragment {
         });
     }
 
-    public void receiveDataFromDetailFragment(){
-        Bundle bundle = getArguments();
-        String textSearch = bundle.getString("text");
-        mFragmentAllProducts2Binding.editTextSearch.setText(textSearch);
+
+    public void receiveShopIdFromActivity(String shopId){
+        this.shopId = shopId;
     }
     private void onClickGoToProductDetail(Product product) {
         Intent intent = new Intent(getContext(), ProductDetailActivity.class);

@@ -39,12 +39,12 @@
 
                 <EditText
                     android:id="@+id/edit_text_search"
-                    android:layout_width="210dp"
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:paddingStart="20dp"
                     android:hint="Tìm kiếm"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:paddingEnd="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp" />
@@ -58,13 +58,14 @@
                     <android.widget.Button
                         android:id="@+id/btnSearch"
                         android:backgroundTint="@color/white"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:background="@drawable/ic_search"
                         android:layout_gravity="center_vertical"/>
                 </FrameLayout>
             </LinearLayout>
             <RelativeLayout
+                android:id="@+id/btn_cart"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp">
@@ -74,8 +75,8 @@
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/ic_shopping_cart" />
                 <FrameLayout
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:background="@drawable/bg_circle"
                     android:layout_alignParentEnd="true"
                     android:id="@+id/icon_cart_quantity">

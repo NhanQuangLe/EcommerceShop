@@ -6,8 +6,8 @@
     android:fitsSystemWindows="true"
     android:id="@+id/drawer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<!--    tools:openDrawer="start">-->
+    android:layout_height="match_parent"
+    tools:openDrawer="start">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -290,6 +290,6 @@
         android:layout_gravity="start"
         app:menu="@menu/menu_nav"
         app:itemHorizontalPadding="40dp"
-        android:visibility="gone"/>
+      />
 
 </androidx.drawerlayout.widget.DrawerLayout>

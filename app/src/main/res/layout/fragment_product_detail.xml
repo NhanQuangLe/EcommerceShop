@@ -542,7 +542,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Xem tất cả"
-                                        android:id="@+id/category_laptop"
+                                        android:id="@+id/view_all_product_shop"
                                         android:textSize="16sp"
                                         android:textColor="#EA1C00"
                                         android:drawableRight="@drawable/ic_chevron_right"

@@ -271,6 +271,15 @@ public class ProductDetailFragment extends Fragment {
 
             }
         });
+        mFragmentProductDetailBinding.viewAllProductShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AllProductsFragment2 allProductsFragment2 = new AllProductsFragment2();
+                allProductsFragment2.receiveShopIdFromActivity(product.getUid());
+                mProductDetailActivity.replaceFragment(allProductsFragment2);
+
+            }
+        });
 
 
     }
