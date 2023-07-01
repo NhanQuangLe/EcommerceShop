@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.nhan.ProfileCustomer.orders.HistoryOrders;
+package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders;
 
 import android.content.Context;
 import android.net.Uri;

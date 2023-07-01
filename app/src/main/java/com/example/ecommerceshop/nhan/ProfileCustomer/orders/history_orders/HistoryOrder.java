@@ -1,12 +1,13 @@
-package com.example.ecommerceshop.nhan.ProfileCustomer.orders.HistoryOrders;
+package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders;
 
 
 import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.nhan.Model.Product;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class HistoryOrder{
+public class HistoryOrder implements Serializable {
     String orderId, shopId, customerId, orderStatus, orderedDate;
     int discountPrice, shipPrice, totalPrice;
     String shopAvt, shopName;

@@ -1,8 +1,9 @@
 package com.example.ecommerceshop.nhan.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Product {
+public class Product implements Serializable {
     String productAvatar, productBrand, productCategory, productName, productID, productSite, shopID;
     int purchaseQuantity;
     int productDiscountPrice;

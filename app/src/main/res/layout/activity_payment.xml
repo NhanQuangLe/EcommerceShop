@@ -207,7 +207,7 @@
                     android:paddingTop="15dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="15dp"
-                   >
+                    >
 
                     <TextView
                         android:layout_width="wrap_content"

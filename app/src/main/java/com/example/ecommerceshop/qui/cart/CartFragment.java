@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.AdapterItemOnCartBinding;
 import com.example.ecommerceshop.databinding.FragmentCartBinding;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.payment.PaymentActivity;
 import com.example.ecommerceshop.qui.product_detail.Cart;
@@ -45,8 +46,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.checkerframework.checker.units.qual.A;
+
+import java.io.Serializable;
+import java.sql.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,12 +75,19 @@ public class CartFragment extends Fragment {
 
     private List<ProductCart> listSelectedProductCart;
     int numSelectedCart = 0;
+    private HistoryOrder historyOrder;
+    public CartFragment() {}
+
+    public CartFragment(HistoryOrder ho) {
+        historyOrder = ho;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mFragmentCartBinding = FragmentCartBinding.inflate(inflater, container, false);
         mView = mFragmentCartBinding.getRoot();
+
 
         init();
         iListener();
@@ -121,9 +134,10 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.rcvCart.setAdapter(shopProductCartAdapter);
         mShopListProductCarts = new ArrayList<>();
         shopProductCartAdapter.setData(mShopListProductCarts);
+        if(historyOrder != null)
+            loadHistoryOrderToCart(historyOrder);
         setListShopProductCarts();
     }
-
     private void showActivityProductDetail(ProductCart productCart) {
         String shopId = productCart.getShopId();
         String productId = productCart.getProductId();
@@ -145,7 +159,6 @@ public class CartFragment extends Fragment {
             }
         });
     }
-
     private void addSelectedItemCart(ProductCart productCart) {
         listSelectedProductCart.add(productCart);
         checkTotalMoney();
@@ -158,7 +171,6 @@ public class CartFragment extends Fragment {
             showButtonDelete();
         }
     }
-
     private void removeSelectedItemCart(ProductCart productCart) {
         listSelectedProductCart.remove(productCart);
         checkTotalMoney();
@@ -166,7 +178,6 @@ public class CartFragment extends Fragment {
             hideButtonDelete();
         }
     }
-
     private void setListShopProductCarts() {
         List<String> listShopId = new ArrayList<>();
         Map<String, ArrayList<ProductCart>> mapProductCart = new HashMap<>();
@@ -199,10 +210,22 @@ public class CartFragment extends Fragment {
                                             String uri = product.getUriList().get(0);
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(),
                                                     productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand);
-
                                             mapProductCart.get(cart.getShopId()).add(productCart);
-                                            mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId())));
+                                            ShopProductCart shopProductCart = new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId()));
+                                            mShopListProductCarts.add(shopProductCart);
                                             shopProductCartAdapter.notifyDataSetChanged();
+                                            if(historyOrder != null)
+                                            {
+                                                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
+                                                for(int i = 0; i < listProduct.size();i++)
+                                                    if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
+                                                    {
+                                                        productCart.setChecked(true);
+                                                        addSelectedItemCart(productCart);
+                                                        shopProductCartAdapter.notifyDataSetChanged();
+                                                        break;
+                                                    }
+                                            }
                                         }
 
                                     }
@@ -247,16 +270,25 @@ public class CartFragment extends Fragment {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
                                                     Log.e("qui", "Giong");
                                                     shopProductCart.getProductCarts().add(productCart);
+                                                    shopProductCartAdapter.notifyDataSetChanged();
+                                                    if(historyOrder != null)
+                                                    {
+                                                        ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
+                                                        for(int i = 0; i < listProduct.size();i++)
+                                                            if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
+                                                            {
+                                                                productCart.setChecked(true);
+                                                                addSelectedItemCart(productCart);
+                                                                shopProductCartAdapter.notifyDataSetChanged();
+                                                                break;
+                                                            }
+                                                    }
                                                     break;
                                                 }
                                             }
-                                            shopProductCartAdapter.notifyDataSetChanged();
 
                                         }
-
-
                                     }
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -335,8 +367,6 @@ public class CartFragment extends Fragment {
 
 
     }
-
-
     private void iListener() {
 
         mFragmentCartBinding.btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -396,7 +426,6 @@ public class CartFragment extends Fragment {
             }
         });
     }
-
     private void showButtonDelete() {
         mFragmentCartBinding.btnDelete.setVisibility(View.VISIBLE);
         mFragmentCartBinding.btnDelete.startAnimation(AnimationUtils.loadAnimation(
@@ -404,7 +433,6 @@ public class CartFragment extends Fragment {
                 R.anim.move_left
         ));
     }
-
     private void hideButtonDelete() {
         mFragmentCartBinding.btnDelete.startAnimation(AnimationUtils.loadAnimation(
                 getContext(),
@@ -412,7 +440,6 @@ public class CartFragment extends Fragment {
         ));
         mFragmentCartBinding.btnDelete.setVisibility(View.GONE);
     }
-
     private void deleteCart() {
         if (numSelectedCart == listSelectedProductCart.size()){
             hideButtonDelete();
@@ -430,7 +457,6 @@ public class CartFragment extends Fragment {
             }
         });
     }
-
     public String getPrice(long price) {
         long res = price;
         Locale localeVN = new Locale("vi", "VN");
@@ -438,7 +464,6 @@ public class CartFragment extends Fragment {
         String str1 = currencyVN.format(res);
         return str1;
     }
-
     public void checkTotalMoney() {
         totalMoney = 0;
         mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
@@ -457,5 +482,51 @@ public class CartFragment extends Fragment {
             }
         }
 
+    }
+    public void loadHistoryOrderToCart(HistoryOrder ho)
+    {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                ArrayList<String> listProductCartId = new ArrayList<>();
+
+                for(DataSnapshot cartItem : snapshot.getChildren()) {
+                    listProductCartId.add(cartItem.child("productId").getValue(String.class));
+                }
+
+                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = new ArrayList<>();
+                listProduct = ho.getItems();
+                for(int i = 0; i < listProduct.size(); i++)
+                {
+                    boolean isContain = false;
+                    for(int j = 0; j < listProductCartId.size(); j++)
+                    {
+                        if(listProductCartId.get(j).equals(listProduct.get(i).getProductID()))
+                        {
+                               = true;
+                        }
+                    }
+                    if(!isContain)
+                    {
+                        DatabaseReference ref0 = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer");
+                        String key = String.valueOf((int) new Date().getTime());
+                        Cart cart = new Cart(key, listProduct.get(i).getProductID(),1, ho.getShopId());
+                        ref0.child("Cart").child(cart.getCartId()).setValue(cart, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Log.d("Success", "Thêm vào giỏ hàng thành công!");
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

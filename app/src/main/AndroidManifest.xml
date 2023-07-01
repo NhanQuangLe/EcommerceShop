@@ -26,7 +26,13 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".tinh.Activity.ForgotPasswordActivity"
             android:exported="false" />
@@ -62,11 +68,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".nhan.ProfileCustomer.orders.UserOrdersActivity"
@@ -106,6 +108,9 @@
             android:exported="false" />
         <activity
             android:name=".Phat.Activity.StatiscalShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.orders.history_orders.order_detail.OrderDetailActivity"
             android:exported="false" />
     </application>
 

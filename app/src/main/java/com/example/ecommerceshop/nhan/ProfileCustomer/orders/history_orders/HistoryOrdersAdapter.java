@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.nhan.ProfileCustomer.orders.HistoryOrders;
+package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
@@ -21,11 +22,12 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
     private Context context;
     private ArrayList<HistoryOrder> historyOrders;
     private HistoryProductsInOrderAdapter historyProductsInOrderAdapter;
-    public HistoryOrdersAdapter(Context context, ArrayList<HistoryOrder> historyOrders) {
+    private IClickHistoryOrderListener mClickHistoryOrderListener;
+    public HistoryOrdersAdapter(Context context, ArrayList<HistoryOrder> historyOrders, IClickHistoryOrderListener a) {
         this.context = context;
         this.historyOrders = historyOrders;
+        this.mClickHistoryOrderListener = a;
     }
-
     @NonNull
     @Override
     public HistoryOrdersAdapter.OrderViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,6 +43,18 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
         historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, historyOrder.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
         holder.tv_SumMoney.setText(String.valueOf(historyOrder.getTotalPrice()));
+        holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mClickHistoryOrderListener.GoToOrderDetail(historyOrder);
+            }
+        });
+        holder.aBtn_ReBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mClickHistoryOrderListener.GotoRebuy(historyOrder);
+            }
+        });
     }
 
     @Override
@@ -53,6 +67,7 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
         TextView tv_ShopName;
         RecyclerView rv_ProductList;
         TextView tv_SumMoney;
+        AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +75,8 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
             tv_ShopName = itemView.findViewById(R.id.tv_ShopName);
             rv_ProductList = itemView.findViewById(R.id.rv_ProductList);
             tv_SumMoney = itemView.findViewById(R.id.tv_SumMoney);
+            aBtn_DetailOrder = itemView.findViewById(R.id.aBtn_DetailOrder);
+            aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
         }
     }
 }
