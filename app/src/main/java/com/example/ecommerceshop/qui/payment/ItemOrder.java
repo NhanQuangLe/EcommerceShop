@@ -7,17 +7,27 @@ public class ItemOrder {
     private String pName;
     private long pPrice;
     private long pQuantity;
+    private String pCategory;
+
+    public String getpCategory() {
+        return pCategory;
+    }
+
+    public void setpCategory(String pCategory) {
+        this.pCategory = pCategory;
+    }
 
     public ItemOrder() {
     }
 
-    public ItemOrder(String pid, String pAvatar, String pBrand, String pName, long pPrice, long pQuantity) {
+    public ItemOrder(String pid, String pAvatar, String pBrand, String pName, long pPrice, long pQuantity, String pCategory) {
         this.pid = pid;
         this.pAvatar = pAvatar;
         this.pBrand = pBrand;
         this.pName = pName;
         this.pPrice = pPrice;
         this.pQuantity = pQuantity;
+        this.pCategory = pCategory;
     }
 
     public String getPid() {

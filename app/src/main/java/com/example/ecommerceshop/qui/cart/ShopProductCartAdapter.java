@@ -3,6 +3,7 @@ package com.example.ecommerceshop.qui.cart;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
@@ -11,6 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.databinding.AdapterShopListItemOnCartBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -47,6 +51,16 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
         ShopProductCart shopProductCart = mList.get(position);
         if(shopProductCart!=null){
             holder.mBinding.shopName.setText(shopProductCart.getShopName());
+            FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (shopProductCart.getShopId()!=null){
+                if (shopProductCart.getShopId().equals(mCurrentUser.getUid())){
+                    holder.mBinding.yourShop.setVisibility(View.VISIBLE);
+                }
+                else {
+                    holder.mBinding.yourShop.setVisibility(View.GONE);
+                }
+            }
+
              ProductCartAdapter productCartAdapter = new ProductCartAdapter(mContext, new IClickProductCartItemListener() {
                 @Override
                 public void sendParentAdapter(boolean b, ProductCart productCart) {
@@ -107,11 +121,14 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
                             cart.setChecked(false);
                         }
                         productCartAdapter.setData(shopProductCart.getProductCarts());
+
                     }
                 }
             });
         }
     }
+
+
 
     @Override
     public int getItemCount() {

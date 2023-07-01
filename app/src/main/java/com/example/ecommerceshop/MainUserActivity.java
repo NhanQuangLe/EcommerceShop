@@ -25,6 +25,7 @@ public class MainUserActivity extends AppCompatActivity {
     public int ACTION;
     public static final int FRAGMENT_HOME  = 0;
     public static final int FRAGMENT_ALL_PRODUCT  = 1;
+    public static final int FRAGMENT_ALL_SHOP  = 2;
     public int mCurrentFragment = FRAGMENT_HOME;
     private HomeFragmentUser homeFragmentUser;
     public  String textSearch;

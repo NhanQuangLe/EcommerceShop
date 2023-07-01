@@ -21,6 +21,25 @@ public class ProductCart implements Parcelable {
     private String shopId;
     private String shopName;
     private String brand;
+    private String productCategory;
+
+    public boolean isCheckAll() {
+        return isCheckAll;
+    }
+
+    public void setCheckAll(boolean checkAll) {
+        isCheckAll = checkAll;
+    }
+
+    private boolean isCheckAll;
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
+    }
 
     public String getBrand() {
         return brand;
@@ -36,7 +55,7 @@ public class ProductCart implements Parcelable {
     public ProductCart() {
     }
 
-    public ProductCart( String productCardId,String productId, String productName, int productQuantity, int productPrice, int productDiscountPrice, String uri, String shopId, String shopName, String brand) {
+    public ProductCart( String productCardId,String productId, String productName, int productQuantity, int productPrice, int productDiscountPrice, String uri, String shopId, String shopName, String brand, String productCategory) {
         this.productId = productId;
         this.productCardId = productCardId;
         this.productName = productName;
@@ -47,6 +66,8 @@ public class ProductCart implements Parcelable {
         this.shopId = shopId;
         this.shopName = shopName;
         this.brand = brand;
+        this.productCategory  = productCategory;
+        this.isCheckAll = false;
     }
 
     protected ProductCart(Parcel in) {
@@ -60,6 +81,7 @@ public class ProductCart implements Parcelable {
         shopId = in.readString();
         shopName = in.readString();
         brand = in.readString();
+        productCategory = in.readString();
         isChecked = in.readByte() != 0;
     }
 
@@ -183,6 +205,7 @@ public class ProductCart implements Parcelable {
         parcel.writeString(shopId);
         parcel.writeString(shopName);
         parcel.writeString(brand);
+        parcel.writeString(productCategory);
         parcel.writeByte((byte) (isChecked ? 1 : 0));
     }
 }
