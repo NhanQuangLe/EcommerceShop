@@ -82,7 +82,7 @@ public class StatiscalShopActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_statiscal_shop);
         initUi();
         loadData();
-        loadDetailDataByDate(selectedMonth, selectedYear);
+
         spinnerOrdMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -104,6 +104,7 @@ public class StatiscalShopActivity extends AppCompatActivity {
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                orderShops.clear();
                 onBackPressed();
             }
         });
@@ -193,7 +194,8 @@ public class StatiscalShopActivity extends AppCompatActivity {
 
         AdapterTopProducts adapterTopProducts = new AdapterTopProducts(getApplicationContext(), top5);
         top5Bestseller.setAdapter(adapterTopProducts);
-        long total = (long) (t1+t2+t3+t4+t5+t6+t7+t8+t9+t10+t11+t12);
+        long total =0;
+        total = (long) (t1+t2+t3+t4+t5+t6+t7+t8+t9+t10+t11+t12);
         t1/= 1_000_000;
         t2/= 1_000_000;
         t3/= 1_000_000;
@@ -307,9 +309,8 @@ public class StatiscalShopActivity extends AppCompatActivity {
 
     private void loadData() {
         orderShops = new ArrayList<>();
-
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 orderShops.clear();
