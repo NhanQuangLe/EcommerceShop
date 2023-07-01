@@ -35,7 +35,6 @@
                     android:layout_height="wrap_content"
                     android:text="Stop Selling"
                     android:textSize="20sp"
-
                     android:textColor="@color/white"/>
             </FrameLayout>
         </FrameLayout>
