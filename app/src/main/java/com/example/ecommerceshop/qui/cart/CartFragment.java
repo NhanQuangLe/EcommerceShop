@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.payment.PaymentActivity;
 import com.example.ecommerceshop.qui.product_detail.Cart;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -134,8 +136,8 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.rcvCart.setAdapter(shopProductCartAdapter);
         mShopListProductCarts = new ArrayList<>();
         shopProductCartAdapter.setData(mShopListProductCarts);
-        if(historyOrder != null)
-            loadHistoryOrderToCart(historyOrder);
+//        if(historyOrder != null)
+//            loadHistoryOrderToCart(historyOrder);
         setListShopProductCarts();
     }
     private void showActivityProductDetail(ProductCart productCart) {
@@ -210,22 +212,23 @@ public class CartFragment extends Fragment {
                                             String uri = product.getUriList().get(0);
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(),
                                                     productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand);
+
                                             mapProductCart.get(cart.getShopId()).add(productCart);
                                             ShopProductCart shopProductCart = new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId()));
                                             mShopListProductCarts.add(shopProductCart);
                                             shopProductCartAdapter.notifyDataSetChanged();
-                                            if(historyOrder != null)
-                                            {
-                                                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
-                                                for(int i = 0; i < listProduct.size();i++)
-                                                    if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
-                                                    {
-                                                        productCart.setChecked(true);
-                                                        addSelectedItemCart(productCart);
-                                                        shopProductCartAdapter.notifyDataSetChanged();
-                                                        break;
-                                                    }
-                                            }
+//                                            if(historyOrder != null)
+//                                            {
+//                                                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
+//                                                for(int i = 0; i < listProduct.size();i++)
+//                                                    if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
+//                                                    {
+//                                                        productCart.setChecked(true);
+//                                                        addSelectedItemCart(productCart);
+//                                                        shopProductCartAdapter.notifyDataSetChanged();
+//                                                        break;
+//                                                    }
+//                                            }
                                         }
 
                                     }
@@ -271,18 +274,18 @@ public class CartFragment extends Fragment {
                                                     Log.e("qui", "Giong");
                                                     shopProductCart.getProductCarts().add(productCart);
                                                     shopProductCartAdapter.notifyDataSetChanged();
-                                                    if(historyOrder != null)
-                                                    {
-                                                        ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
-                                                        for(int i = 0; i < listProduct.size();i++)
-                                                            if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
-                                                            {
-                                                                productCart.setChecked(true);
-                                                                addSelectedItemCart(productCart);
-                                                                shopProductCartAdapter.notifyDataSetChanged();
-                                                                break;
-                                                            }
-                                                    }
+//                                                    if(historyOrder != null)
+//                                                    {
+//                                                        ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
+//                                                        for(int i = 0; i < listProduct.size();i++)
+//                                                            if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
+//                                                            {
+//                                                                productCart.setChecked(true);
+//                                                                addSelectedItemCart(productCart);
+//                                                                shopProductCartAdapter.notifyDataSetChanged();
+//                                                                break;
+//                                                            }
+//                                                    }
                                                     break;
                                                 }
                                             }
@@ -483,50 +486,5 @@ public class CartFragment extends Fragment {
         }
 
     }
-    public void loadHistoryOrderToCart(HistoryOrder ho)
-    {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                ArrayList<String> listProductCartId = new ArrayList<>();
-
-                for(DataSnapshot cartItem : snapshot.getChildren()) {
-                    listProductCartId.add(cartItem.child("productId").getValue(String.class));
-                }
-
-                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = new ArrayList<>();
-                listProduct = ho.getItems();
-                for(int i = 0; i < listProduct.size(); i++)
-                {
-                    boolean isContain = false;
-                    for(int j = 0; j < listProductCartId.size(); j++)
-                    {
-                        if(listProductCartId.get(j).equals(listProduct.get(i).getProductID()))
-                        {
-                               = true;
-                        }
-                    }
-                    if(!isContain)
-                    {
-                        DatabaseReference ref0 = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer");
-                        String key = String.valueOf((int) new Date().getTime());
-                        Cart cart = new Cart(key, listProduct.get(i).getProductID(),1, ho.getShopId());
-                        ref0.child("Cart").child(cart.getCartId()).setValue(cart, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                Log.d("Success", "Thêm vào giỏ hàng thành công!");
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }
