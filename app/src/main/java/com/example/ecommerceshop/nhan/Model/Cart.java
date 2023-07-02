@@ -1,32 +1,41 @@
 package com.example.ecommerceshop.nhan.Model;
 
 public class Cart{
-    String productID, shopID;
+    String cartId, productId, shopId;
     int productQuantity;
 
     public Cart() {
     }
 
-    public Cart(String productID, String shopID, int productQuantity) {
-        this.productID = productID;
-        this.shopID = shopID;
+    public Cart(String cartId, String productId, String shopId, int productQuantity) {
+        this.cartId = cartId;
+        this.productId = productId;
+        this.shopId = shopId;
         this.productQuantity = productQuantity;
     }
 
-    public String getProductID() {
-        return productID;
+    public String getCartId() {
+        return cartId;
     }
 
-    public void setProductID(String productID) {
-        this.productID = productID;
+    public void setCartId(String cartId) {
+        this.cartId = cartId;
     }
 
-    public String getShopID() {
-        return shopID;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setShopID(String shopID) {
-        this.shopID = shopID;
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 
     public int getProductQuantity() {

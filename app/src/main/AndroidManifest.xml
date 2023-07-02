@@ -127,6 +127,13 @@
         <activity
             android:name=".Phat.Activity.ResponseRVActivity"
             android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.orders.history_orders.order_detail.OrderDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="66dp"
+    android:layout_height="66dp"
+    android:padding="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/iv_mainImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/iphone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        >
+
+    </ImageView>
+    <LinearLayout
+        android:id="@+id/btn_Remove"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:background="@drawable/icon_close_background"
+        android:layout_gravity="right"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+        <ImageView
+            android:layout_width="7dp"
+            android:layout_height="7dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_close">
+
+        </ImageView>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -219,8 +219,6 @@ public class ProductDetailFragment extends Fragment {
                 showNavCarDetail();
                 path="";
                 cur_quantity_firebase=0;
-
-
             }
         });
         mFragmentProductDetailBinding.layoutParent.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,339 @@
+[33mcommit 5bcd7e3c12a3b9285774907414a39fbb9bb34655[m[33m ([m[1;36mHEAD -> [m[1;32mNhan[m[33m, [m[1;31morigin/Nhan[m[33m)[m
+Author: Lê Quang Nhân <21522402@gm.uit.edu.vn>
+Date:   Sat Jul 1 09:51:52 2023 +0700
+
+    order detail
+
+[33mcommit bc58d84b82fbdb44ca502c79b7e83505bce8f384[m
+Merge: d98dfff c8ca1cc
+Author: 21522402 <109327054+21522402@users.noreply.github.com>
+Date:   Wed Jun 21 10:24:28 2023 +0700
+
+    Merge remote-tracking branch 'origin/QuiPayment' into Nhan
+
+[33mcommit c8ca1cc09dfa8c99cc36ea1303b494272900b204[m[33m ([m[1;31morigin/QuiPayment[m[33m)[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Wed Jun 21 10:20:53 2023 +0700
+
+    .
+
+[33mcommit d98dffff1d7e604afb794d265428663dab4228d4[m
+Author: 21522402 <109327054+21522402@users.noreply.github.com>
+Date:   Wed Jun 21 10:16:12 2023 +0700
+
+    Nhan commit
+
+[33mcommit 1dc3bcca9bb6e4ac2851ef3752c6cef046dffacc[m[33m ([m[1;31morigin/QuiVoucher[m[33m)[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon Jun 19 12:50:14 2023 +0700
+
+    qui add
+
+[33mcommit c47d47c305054df9df5966bdc710dc92e4bb22d5[m[33m ([m[1;31morigin/Merge1106[m[33m)[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Sun Jun 11 20:35:01 2023 +0700
+
+    .
+
+[33mcommit 2f62e4b402480118e32c0df29096ec607d371512[m
+Merge: 39244ce 815ceb0
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Sun Jun 11 20:11:33 2023 +0700
+
+    merge Phat
+
+[33mcommit 815ceb05f27356313575589e95b4f43b34996a1d[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Sun Jun 11 20:05:39 2023 +0700
+
+    add ..
+
+[33mcommit 9c0a32cec21b6be88db60f51f7d9c9c77265560d[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Sun Jun 11 20:04:35 2023 +0700
+
+    Nhan push
+
+[33mcommit 39244ce33c4b41f577e8c731e8bc0568f8f4f09d[m
+Merge: cdc245e 9c0a32c
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Sun Jun 11 20:03:29 2023 +0700
+
+    merge Nhan
+
+[33mcommit cdc245e689b42db06877710ef32804467c601d6d[m[33m ([m[1;31morigin/QuiChua[m[33m)[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Sun Jun 11 19:56:55 2023 +0700
+
+    push
+
+[33mcommit 059806cddf5e5f3ced224b134d8fb9fa693b7fe0[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon Jun 5 17:07:26 2023 +0700
+
+    .
+
+[33mcommit 832bc0fee32bcd51c836b205778eef3f3b05d855[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Wed May 31 00:35:49 2023 +0700
+
+    fix favourite
+
+[33mcommit 31f21fe989bc649acd45d04b46073d7900445884[m[33m ([m[1;31morigin/MergeMerge[m[33m, [m[1;32mMergeMerge[m[33m)[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 17:08:00 2023 +0700
+
+    mergeee
+
+[33mcommit 1c2f830524f6da162f49dd5a616bf2175af6e658[m
+Merge: 9e890f4 2186788
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 16:12:20 2023 +0700
+
+    merge
+
+[33mcommit 9e890f41bb9046740c83666097c156239ba292bf[m
+Merge: c572ca7 02ca27d
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 15:51:34 2023 +0700
+
+    merge Phat
+
+[33mcommit c572ca72d3fa8658c5d22fbd35ab3181a44785c6[m
+Merge: 6926ba0 e4b2911
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 15:34:35 2023 +0700
+
+    Merge Nhan Qui
+
+[33mcommit 21867883b3d64e377b9c9c929dfeb4ea0bd7047a[m
+Author: 21522683 <21522683@gm.uit.edu.vn>
+Date:   Mon May 29 15:28:36 2023 +0700
+
+    Tinh push
+
+[33mcommit 02ca27d695b2c0b799939e773397aa99c76fe05c[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Mon May 29 15:23:52 2023 +0700
+
+    >>
+
+[33mcommit e4b29116611874763d0b8f2f8c871829b8aa1a13[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Mon May 29 15:22:43 2023 +0700
+
+    Nhan add load setting
+
+[33mcommit 6926ba0629fdbef1a632d625a776609a31fecbe8[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 15:17:31 2023 +0700
+
+    qui
+
+[33mcommit 32df926a9228f16db41f8fdd8c000f4aace40b72[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Mon May 29 15:12:29 2023 +0700
+
+    ...
+
+[33mcommit ee9f64b3cc7f51039cb4ce9ccfa62ac901bd2cac[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 15:10:21 2023 +0700
+
+    .
+
+[33mcommit e5cb3accf1ade7a49ae477485e35d001421f8dc5[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 15:01:49 2023 +0700
+
+    .
+
+[33mcommit deef803f7b1a563efdae4ecc3744bb2df8293da5[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 10:27:13 2023 +0700
+
+    add
+
+[33mcommit c1ffe91df22917fa76372c1d261b03c8aa4a75cb[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Mon May 29 00:39:15 2023 +0700
+
+    add nav
+
+[33mcommit 35da5e77e09ab883057c9c0d5446762a04c373be[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Sun May 28 23:50:39 2023 +0700
+
+    add view
+
+[33mcommit 054baee7a41c4b454bae409fd19cea0bc3f96758[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Sun May 28 22:39:23 2023 +0700
+
+    add nhe nhe
+
+[33mcommit d5ed539d786b5452e625018a673c2305d69fdd9a[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Sun May 28 22:38:34 2023 +0700
+
+    Nhan push
+
+[33mcommit 777864b2703d2f12a24a96ce0a77e742b6f49373[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Sun May 28 21:37:17 2023 +0700
+
+    add nav
+
+[33mcommit 093b417b19120923cad8d17688ea709e3285daa0[m
+Author: 21522683 <21522683@gm.uit.edu.vn>
+Date:   Sun May 28 21:01:43 2023 +0700
+
+    Tinh up Login Signup
+
+[33mcommit 2593c6449b1d53004d3827ded70a51e5cd0e908d[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Sat May 27 21:30:20 2023 +0700
+
+    vouchers
+
+[33mcommit dcf870f232016388ebd95dbb016d82c845549e94[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Sat May 27 17:32:49 2023 +0700
+
+    Add view home
+
+[33mcommit 881cd518d7ba049afdfc991e69c1eb8960243256[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Fri May 26 16:11:20 2023 +0700
+
+    .
+
+[33mcommit 69be13a762b3e14d12ce74e740877058dd623bb4[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Thu May 25 15:47:17 2023 +0700
+
+    add+show products
+
+[33mcommit a83ba4c62ee9025e4260f3223f8a034f583bb249[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Sat May 20 09:19:20 2023 +0700
+
+    add
+
+[33mcommit 53c17f68b9965a800770549e9867ee8a3390e5e1[m
+Author: 21522683 <21522683@gm.uit.edu.vn>
+Date:   Wed May 17 15:35:30 2023 +0700
+
+    Tinh up giao dien Login SignUp
+
+[33mcommit adc9653c78d35f4534e58728455390296f77999b[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Sat May 13 15:49:25 2023 +0700
+
+    add nav bottom + fragment
+
+[33mcommit 4e9e87bde4d9805b53d5fd44f2d296dff4374f79[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Fri May 12 10:07:19 2023 +0700
+
+    giao dien
+
+[33mcommit 96168d88526a08e7ec2271d4e7dd26d95d27b5f4[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Fri May 12 09:21:35 2023 +0700
+
+    change
+
+[33mcommit a1f051004ce73d8b47a0f84039c2e5e3bf3d1bf0[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Fri May 12 09:19:43 2023 +0700
+
+    them mot ti
+
+[33mcommit 170b0c246c30c470d322afb87765a18da8a08bbb[m[33m ([m[1;31morigin/NhanCache[m[33m)[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Fri May 12 09:14:01 2023 +0700
+
+    them mot ti
+
+[33mcommit 280f724014d29bbc39560d108b9edbdbbed8b463[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Mon May 8 22:25:57 2023 +0700
+
+    add cache  layout
+
+[33mcommit 68fff3a79bd012c8ccc6382e39f177daf49a6f61[m[33m ([m[1;31morigin/MergeAdapter[m[33m)[m
+Author: 21522683 <21522683@gm.uit.edu.vn>
+Date:   Thu May 4 15:40:30 2023 +0700
+
+    merge Tinh
+
+[33mcommit 414d7b753d050e918941c07a7068309f0f30a182[m
+Merge: c06e931 117cf4f
+Author: 21522683 <21522683@gm.uit.edu.vn>
+Date:   Thu May 4 15:31:50 2023 +0700
+
+    merge adapter Tinh
+
+[33mcommit 117cf4f3ad20991d149dd84aa03c825be45916f9[m
+Author: 21522683 <21522683@gm.uit.edu.vn>
+Date:   Thu May 4 15:18:13 2023 +0700
+
+    Tinh push adapter item
+
+[33mcommit c06e931a9a2275ffd0f7f00e60713a552c79183d[m
+Merge: 98f330c 46cb1e1
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Thu May 4 10:53:21 2023 +0700
+
+    Merge Nhan Qui Phat
+
+[33mcommit 46cb1e106e1acd6ad974727d171233e5d4135ee4[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Thu May 4 10:17:57 2023 +0700
+
+    Adapter Nhan
+
+[33mcommit 98f330c7ade9d6842fc257c96fcf4288e2ad623f[m
+Merge: 8f33cb2 a050c9e
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Thu May 4 10:13:13 2023 +0700
+
+    Merge remote-tracking branch 'origin/Phat' into MergeAdapter
+
+[33mcommit a050c9ee7eebc38ff226e9f4b90dbfb557bd74e1[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Thu May 4 10:00:02 2023 +0700
+
+    add
+
+[33mcommit 8f33cb23d4f4c53361478b6d0eebc4a4d45b3514[m[33m ([m[1;31morigin/Qui[m[33m)[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Thu May 4 08:43:34 2023 +0700
+
+    add layout item
+
+[33mcommit f3fb14b1e61abeef53842b1e70aa7744509c6f4a[m
+Merge: f978c8c abca7ef
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Wed May 3 21:38:14 2023 +0700
+
+    Merge branch 'Phat' into Qui2
+
+[33mcommit f978c8cb56a7133dee9f060d68a3bf845d594253[m
+Author: Huynh Ngoc Qui <quichua333@gmail.com>
+Date:   Wed May 3 21:38:10 2023 +0700
+
+    .
+
+[33mcommit abca7ef4303e111070ae645f69c97a11eecf03a5[m
+Author: Fatitboo <21522448@gm.uit.edu.vn>
+Date:   Tue May 2 19:04:52 2023 +0700
+
+    add bottom nav
+
+[33mcommit 985142b83b8f42c823ce5c5cd06b9096879cf505[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: 21522402 <21522402@gm.uit.edu.vn>
+Date:   Tue May 2 10:44:15 2023 +0700
+
+    Initial commit

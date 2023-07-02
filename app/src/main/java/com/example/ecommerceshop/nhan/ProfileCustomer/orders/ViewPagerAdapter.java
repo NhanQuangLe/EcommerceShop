@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.HistoryOrders.HistoryOrdersFragment;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

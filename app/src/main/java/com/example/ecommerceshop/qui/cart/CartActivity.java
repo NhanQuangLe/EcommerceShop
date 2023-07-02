@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityCartBinding;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
 
 import java.util.ArrayList;
 
@@ -20,12 +23,6 @@ public class CartActivity extends AppCompatActivity {
     public static final int FRAGMENT_CART  = 0;
     public static final int FRAGMENT_ALL_PRODUCT2  = 1;
     public int mCurrentFragment = FRAGMENT_CART;
-
-    public CartFragment getCartFragment() {
-        return cartFragment;
-    }
-
-    CartFragment cartFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +30,12 @@ public class CartActivity extends AppCompatActivity {
         mView = mActivityCartBinding.getRoot();
         setContentView(mView);
 
-        cartFragment = new CartFragment();
-        replaceFragment(cartFragment);
+        Intent intent = getIntent();
+
+        if(intent.getIntExtra("Key", 0) == HistoryOrdersFragment.HISTORY_ORDER)
+            replaceFragment(new CartFragment((HistoryOrder) intent.getSerializableExtra("HistoryOrder")));
+        else
+            replaceFragment(new CartFragment());
     }
 
     public void replaceFragment(Fragment fragment){
