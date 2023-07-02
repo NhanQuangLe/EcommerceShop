@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.Phat.Activity.UpdateVoucherShopActivity;
 import com.example.ecommerceshop.Phat.Model.Voucher;
+import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.Phat.Utils.FilterVoucher;
 
@@ -56,7 +57,7 @@ public class AdapterVoucherShop extends RecyclerView.Adapter<AdapterVoucherShop.
 
         //set data into viewholder
         holder.vouchercode.setText(code);
-        holder.discountprice.setText(String.valueOf(disprice));
+        holder.discountprice.setText(Constants.convertToVND(disprice));
         holder.expireddate.setText(expireddate);
         holder.quantity.setText(String.valueOf(quant));
         holder.startdate.setText(getDate(Long.parseLong(id)));

@@ -44,6 +44,8 @@
                     android:background="@android:color/transparent"
                     android:paddingStart="20dp"
                     android:hint="Tìm kiếm"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textSize="14sp"
                     android:paddingEnd="10dp"
                     android:paddingTop="10dp"

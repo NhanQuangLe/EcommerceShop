@@ -104,9 +104,9 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                             if(snapshot.exists()){
                                 OrderShop orderShop = snapshot.getValue(OrderShop.class);
                                 orderId.setText(orderShop.getOrderId());
-                                ReceiverName.setText(orderShop.getReceiveName());
+                                ReceiverName.setText(orderShop.getReceiveAddress().getFullName());
                                 orderedDate.setText(orderShop.getOrderedDate());
-                                phonenum_order.setText(orderShop.getReceivePhone());
+                                phonenum_order.setText(orderShop.getReceiveAddress().getPhoneNumber());
                                 orderStatus.setText(orderShop.getOrderStatus());
                                 if(orderShop.getOrderStatus().equals("UnProcessed")){
                                     orderStatus.setTextColor(Color.RED);
@@ -120,10 +120,10 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                 if(orderShop.getOrderStatus().equals("Cancelled")){
                                     orderStatus.setTextColor(Color.GRAY);
                                 }
-                                addressBuyer.setText(orderShop.getReceiveAddress());
-                                orderDiscount.setText(orderShop.getDiscountPrice());
-                                deliveryPrice.setText(orderShop.getShipPrice());
-                                orderTotalPrice.setText(orderShop.getTotalPrice());
+                                addressBuyer.setText(orderShop.getReceiveAddress().getAddress());
+                                orderDiscount.setText(String.valueOf(orderShop.getDiscountPrice()));
+                                deliveryPrice.setText(String.valueOf(orderShop.getShipPrice()));
+                                orderTotalPrice.setText(String.valueOf(orderShop.getTotalPrice()));
                             }
                         }
                         @Override
@@ -136,7 +136,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
     private void loadOrderItems(){
         orderItems=new ArrayList<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(customerid).child("Customer").child("Orders").child(orderid).child("Items")
+        databaseReference.child(customerid).child("Customer").child("Orders").child(orderid).child("items")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

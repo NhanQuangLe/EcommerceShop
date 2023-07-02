@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.Phat.Model.OrderItem;
+import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class AdapterListItemOrderDetail extends RecyclerView.Adapter<AdapterList
         holder.ordItemName.setText(orderItem.getpName());
         holder.ordItemBrand.setText(orderItem.getpBrand());
         holder.orderItemQuantity.setText(String.valueOf(orderItem.getpQuantity()));
-        holder.ordItemPrice.setText(orderItem.getpPrice());
+        holder.ordItemPrice.setText(Constants.convertToVND(orderItem.getpPrice()));
     }
 
     @Override

@@ -26,21 +26,20 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
-            android:exported="false" />
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".tinh.Activity.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SignUpActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".tinh.Activity.LoginActivity"
             android:exported="true">
 
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="false"
@@ -55,12 +54,15 @@
             android:name=".MainShopActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Phat.Activity.AddVoucherActivity"
             android:exported="false" />
         <activity
             android:name=".qui.product_detail.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".qui.shop.ShopActivityCustomer"
             android:exported="false" />
         <activity
             android:name=".MainUserActivity"
@@ -72,7 +74,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".nhan.ProfileCustomer.orders.UserOrdersActivity"
@@ -112,6 +113,19 @@
             android:exported="false" />
         <activity
             android:name=".Phat.Activity.StatiscalShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.UpdateProductShopActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Phat.Activity.ReviewShopActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.ReviewDetailProductActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Phat.Activity.ResponseRVActivity"
             android:exported="false" />
     </application>
 

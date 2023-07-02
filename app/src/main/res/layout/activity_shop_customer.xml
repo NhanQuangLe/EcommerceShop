@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/menuBottom"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="190dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/image_cover"
+                android:scaleType="centerCrop">
+
+            </ImageView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#777070"
+                android:alpha="0.5"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="15dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+                    <android.widget.Button
+                        android:id="@+id/btnBackward"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:background="@drawable/ic_backward"
+                        android:backgroundTint="#FFFFFF"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_search_home"
+                        android:layout_marginStart="20dp"
+                        >
+
+                        <EditText
+                            android:id="@+id/edit_text_search"
+                            android:layout_width="260dp"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:paddingStart="30dp"
+                            android:hint="Tìm kiếm sản phẩm trong shop"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:textSize="14sp"
+                            android:textColorHint="#B7B2B2"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp" />
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:background="@drawable/bg_search_home_sub">
+                            <android.widget.Button
+                                android:id="@+id/btnSearch"
+                                android:backgroundTint="@color/white"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:background="@drawable/ic_search"
+                                android:layout_gravity="center_vertical"/>
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="10dp"
+
+                    android:paddingEnd="15dp"
+                    android:gravity="center_vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/shopAvatar"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            app:civ_border_width="1dp"
+                            app:civ_border_color="#ccc"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/image_avatar"
+
+                            />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_toRightOf="@+id/shopAvatar"
+
+                            android:layout_marginTop="2dp"
+                            android:layout_marginStart="20dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CellphoneS"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="5dp"
+
+                                android:textColor="#FFFFFF"
+                                android:id="@+id/shopName"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:text="TP. Hồ Chí Minh"
+                                android:layout_marginTop="7dp"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp"
+                                android:id="@+id/shopAddress"
+                                android:drawableLeft="@drawable/ic_map"
+                                android:drawableTint="#FFFFFF"
+                                android:drawablePadding="5dp"/>
+
+                        </LinearLayout>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="100dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:backgroundTint="#FD521B"
+                            app:cardElevation="0dp"
+                            app:cardCornerRadius="5dp"
+                            android:id="@+id/btn_follow"
+                            android:layout_marginTop="35dp"
+                            android:layout_marginEnd="10dp"
+
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingStart="15dp"
+                                android:paddingBottom="3dp"
+                                android:paddingTop="3dp"
+                                android:paddingEnd="15dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Theo dõi"
+                                    android:drawablePadding="2dp"
+                                    android:drawableLeft="@drawable/ic_follow_shop"
+                                    android:textSize="14sp"
+                                    android:textColor="#FFFFFF"
+                                    />
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="113dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:backgroundTint="#F1A8A3"
+                            app:cardElevation="0dp"
+                            app:cardCornerRadius="5dp"
+                            android:id="@+id/btn_unfollow"
+                            android:layout_marginTop="35dp"
+                            android:layout_marginEnd="10dp"
+                            android:visibility="gone"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+
+                                android:paddingBottom="3dp"
+                                android:paddingTop="3dp"
+                                android:paddingEnd="5dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Hủy theo dõi"
+                                    android:drawablePadding="2dp"
+                                    android:drawableLeft="@drawable/ic_close_mini"
+                                    android:textSize="14sp"
+                                    android:textColor="#FFFFFF"
+                                    />
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <FrameLayout
+                            android:layout_width="90dp"
+                            android:layout_height="30dp"
+                            android:layout_marginStart="90dp">
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:backgroundTint="#D9D9D9"
+                                android:alpha="0.7"
+                                android:elevation="1dp"
+                                app:cardCornerRadius="25dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="5dp"
+                                android:elevation="2dp"
+
+                                >
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_star" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:id="@+id/tv_ShopRating"
+                                    android:textColor="#FFFFFF"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="/"
+                                    android:textColor="#FFFFFF"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="5.0"
+                                    android:textColor="#FFFFFF"/>
+
+                            </LinearLayout>
+
+                        </FrameLayout>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="|"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginBottom="2dp"
+                            android:textColor="#CEC6C6"
+                            android:textStyle="bold"
+                            android:textSize="23sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:id="@+id/tv_NumberFollower"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginBottom="2dp"
+                            android:textColor="#FFFFFF"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Người theo dõi"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginBottom="2dp"
+                            android:textColor="#FFFFFF"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabSelectedTextColor="#EA1C00"/>
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/menuBottom"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:weightSum="4"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/nav_home"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_detail" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="Home"
+                android:layout_marginTop="5dp"
+                android:textColor="#9B9B9B" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:id="@+id/nav_cart">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cart_detail" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="Giỏ hàng"
+
+                android:layout_marginTop="5dp"
+                android:textColor="#9B9B9B" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:id="@+id/nav_chat">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_chat_detail" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="Chat với shop"
+                android:layout_marginTop="5dp"
+                android:textColor="#9B9B9B" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/nav_buy"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_profile" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="Tôi"
+                android:layout_marginTop="5dp"
+                android:textColor="#9B9B9B" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

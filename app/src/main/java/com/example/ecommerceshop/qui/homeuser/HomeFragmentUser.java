@@ -256,12 +256,14 @@ public class HomeFragmentUser extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (mListLaptop!=null) mListLaptop.clear();
+                if (mListAccessories!=null) mListAccessories.clear();
+                if (mListPhone!=null) mListPhone.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     DatabaseReference myRef2 = dataSnapshot.child("Shop").child("Products").getRef();
                     myRef2.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (mListLaptop != null) mListLaptop.clear();
                             for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                 Product product = dataSnapshot1.getValue(Product.class);
                                 if (product.getProductCategory().equals("Laptop")) {

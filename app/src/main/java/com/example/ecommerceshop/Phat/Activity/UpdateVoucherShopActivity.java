@@ -29,7 +29,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class UpdateVoucherShopActivity extends AppCompatActivity {
 
@@ -42,6 +46,10 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
     boolean isdelete = false;
     String voucherid, vouchercode, voucherdes, exprieddate;
     int quantity, disprice, miniprice;
+    Voucher voucher;
+    private AlertDialog alertDialog;
+    private int t=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +83,14 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
                         .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                isdelete=true;
-                                deleteVoucher(voucherid);
+
+                                if(checkexpired(voucher.getExpiredDate(), voucher.getQuantity())){
+                                    isdelete=true;
+                                    deleteVoucher(voucherid);
+                                }
+                                else{
+                                    checkExistInCus(voucherid);
+                                }
                             }
                         })
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -90,14 +104,98 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
         });
     }
 
+    private void checkExistInCus(String voucherid) {
+        final boolean[] flat = {false};
+        t = 1;
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int num = (int) snapshot.getChildrenCount();
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    if (flat[0] ) break;
+                    String uid = ""+ds.getRef().getKey();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                    ref.child(uid).child("Customer").child("Vouchers").child(voucherid)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        flat[0] =true;
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(UpdateVoucherShopActivity.this);
+                                        builder.setTitle("Notification").setMessage("The voucher has been saved by the customer! Can not be deleted!")
+                                                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        return;
+                                                    }
+                                                });
+                                        alertDialog = builder.create();
+                                        alertDialog.show();
+                                    }
+                                    if (t==num){
+                                        isdelete=true;
+                                        deleteVoucher(voucherid);
+                                    }
+                                    t++;
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(UpdateVoucherShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private boolean checkexpired(String expireddate, int quant){
+        boolean checkdate=false;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH)+1;
+        int year = calendar.get(Calendar.YEAR);
+        String today = day+"/"+month+"/"+year;
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date mtoday = simpleDateFormat.parse(today);
+            Date expiredDate = simpleDateFormat.parse(expireddate);
+            if(expiredDate.compareTo(mtoday)<0){
+                checkdate=true;
+            }
+        }catch (Exception e){
+
+        }
+        return checkdate || quant==0;
+    }
     private void deleteVoucher(String voucherid) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(firebaseAuth.getUid()).child("Shop").child("Vouchers").child(voucherid).removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        onBackPressed();
-                        Toast.makeText(getApplicationContext(), "Delete voucher successfully!", Toast.LENGTH_SHORT).show();
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                        ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                for(DataSnapshot ds: snapshot.getChildren()){
+                                    String uid = ""+ds.getRef().getKey();
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                                    ref.child(uid).child("Customer").child("Vouchers").child(voucherid).removeValue();
+                                }
+                                onBackPressed();
+                                Toast.makeText(UpdateVoucherShopActivity.this, "Delete voucher successfully!", Toast.LENGTH_SHORT).show();
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(getApplicationContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -114,7 +212,7 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Voucher voucher = new Voucher();
+                         voucher = new Voucher();
                         voucher=snapshot.getValue(Voucher.class);
                         if(voucher != null ){
                             voucherCode.setText(voucher.getVouchercode());
@@ -215,5 +313,13 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(UpdateVoucherShopActivity.this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
     }
 }

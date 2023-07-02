@@ -30,6 +30,7 @@ import com.example.ecommerceshop.databinding.FragmentProductDetailBinding;
 import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -64,6 +65,7 @@ public class ProductDetailFragment extends Fragment {
     private FirebaseUser mCurrentUser;
     private String keyHeart;
     private boolean isChecked;
+    private float rate;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -106,8 +108,49 @@ public class ProductDetailFragment extends Fragment {
         mFragmentProductDetailBinding.rcvProduct.setLayoutManager(linearLayoutManager);
         mFragmentProductDetailBinding.rcvProduct.setAdapter(productAdapter);
 
+        setRate();
 
 
+
+    }
+
+    private void setRate() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final int[] temp = {0};
+                final int[] i = {0};
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    DatabaseReference ref2 = dataSnapshot.getRef().child("Customer/Reviews");
+                    ref2.orderByChild("productId").equalTo(product.getProductId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                                if (dataSnapshot1.exists()){
+                                    int rating = dataSnapshot1.child("rating").getValue(Integer.class);
+                                    temp[0] +=rating;
+                                    i[0]++;
+                                    rate = (float)temp[0]/i[0];
+                                    mFragmentProductDetailBinding.ratingBar.setRating(rate);
+                                    mFragmentProductDetailBinding.productRate.setText(rate+"");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void iListener() {
@@ -278,6 +321,15 @@ public class ProductDetailFragment extends Fragment {
                 allProductsFragment2.receiveShopIdFromActivity(product.getUid());
                 mProductDetailActivity.replaceFragment(allProductsFragment2);
 
+            }
+        });
+        mFragmentProductDetailBinding.btnViewShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ShopActivityCustomer.class);
+                String shopId = product.getUid();
+                intent.putExtra("shopId",shopId);
+                getContext().startActivity(intent);
             }
         });
 

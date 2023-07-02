@@ -385,6 +385,36 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (listSelectedProductCart==null || listSelectedProductCart.size()==0){
+                    final Dialog dialog = new Dialog(getContext());
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.layout_dialog_ok_cancel);
+                    Window window = dialog.getWindow();
+                    if (window == null) return;
+                    window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                    window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    WindowManager.LayoutParams windowAttributes = window.getAttributes();
+                    windowAttributes.gravity = Gravity.CENTER;
+
+                    window.setAttributes(windowAttributes);
+                    dialog.setCancelable(true);
+                    TextView tvContent = dialog.findViewById(R.id.tv_content);
+                    tvContent.setText("Vui lòng chọn sản phẩm!");
+                    TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
+                    tvCancel.setVisibility(View.GONE);
+                    TextView tvOk = dialog.findViewById(R.id.tv_ok);
+
+                    tvOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+
+                        }
+                    });
+                    dialog.show();
+                    return;
+                }
                 for (ProductCart productCart:listSelectedProductCart){
                     if (productCart.getShopId().equals(mCurrentUser.getUid())){
                         final Dialog dialog = new Dialog(getContext());
