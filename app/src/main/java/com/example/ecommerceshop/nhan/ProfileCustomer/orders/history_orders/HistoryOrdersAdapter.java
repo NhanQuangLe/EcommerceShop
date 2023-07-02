@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,6 +56,12 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
                 mClickHistoryOrderListener.GotoRebuy(historyOrder);
             }
         });
+        holder.btn_RatingProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    mClickHistoryOrderListener.GoToReview(historyOrder);
+            }
+        });
     }
 
     @Override
@@ -68,6 +75,7 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
         RecyclerView rv_ProductList;
         TextView tv_SumMoney;
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
+        LinearLayout btn_RatingProduct;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +85,7 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
             tv_SumMoney = itemView.findViewById(R.id.tv_SumMoney);
             aBtn_DetailOrder = itemView.findViewById(R.id.aBtn_DetailOrder);
             aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
+            btn_RatingProduct = itemView.findViewById(R.id.btn_RatingProduct);
         }
     }
 }

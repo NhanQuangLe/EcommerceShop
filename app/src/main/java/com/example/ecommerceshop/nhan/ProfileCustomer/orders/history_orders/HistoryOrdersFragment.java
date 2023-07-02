@@ -23,6 +23,7 @@ import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.order_detail.OrderDetailActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -73,6 +74,11 @@ public class HistoryOrdersFragment extends Fragment {
             @Override
             public void GotoRebuy(HistoryOrder historyOrder){
                 ToRebuy(historyOrder);
+            }
+
+            @Override
+            public void GoToReview(HistoryOrder historyOrder) {
+                ToReview(historyOrder);
             }
         });
         mHistoryAdapterView.setAdapter(mHistoryAdapter);
@@ -165,5 +171,17 @@ public class HistoryOrdersFragment extends Fragment {
         {
             Log.d("Nhanle", e + "");
         }
+    }
+    public void ToReview(HistoryOrder historyOrder){
+        try{
+            Intent intent = new Intent(getContext(), ReviewActivity.class);
+            intent.putExtra("HistoryOrder", historyOrder);
+            mActivityLauncher.launch(intent);
+        }
+        catch (Exception e)
+        {
+            Log.d("Nhanle", e + "");
+        }
+
     }
 }

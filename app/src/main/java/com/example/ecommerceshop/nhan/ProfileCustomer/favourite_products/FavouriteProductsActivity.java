@@ -218,7 +218,7 @@ public class FavouriteProductsActivity extends AppCompatActivity {
         float rate = 0;
         for(int i = 0; i < rvList.size();i++)
         {
-            rate += rvList.get(i).getStarRate();
+            rate += rvList.get(i).getRating();
         }
         return rate / rvList.size();
     }
