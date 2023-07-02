@@ -1,24 +1,36 @@
 package com.example.ecommerceshop.Phat.Model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class OrderShop implements Serializable {
     String customerId, orderId, orderStatus, orderedDate, shopId;
     long shipPrice, discountPrice, totalPrice;
     receiveAddress receiveAddress;
+    List<OrderItem> items;
     public OrderShop() {
     }
 
-    public OrderShop(String customerId, long discountPrice, String orderId, String orderStatus, String orderedDate, long shipPrice, String shopId, long totalPrice, com.example.ecommerceshop.Phat.Model.receiveAddress receiveAddress) {
+    public OrderShop(String customerId, String orderId, String orderStatus, String orderedDate, String shopId, long shipPrice, long discountPrice,
+                     long totalPrice, com.example.ecommerceshop.Phat.Model.receiveAddress receiveAddress, List<OrderItem> items) {
         this.customerId = customerId;
-        this.discountPrice = discountPrice;
         this.orderId = orderId;
         this.orderStatus = orderStatus;
         this.orderedDate = orderedDate;
-        this.shipPrice = shipPrice;
         this.shopId = shopId;
+        this.shipPrice = shipPrice;
+        this.discountPrice = discountPrice;
         this.totalPrice = totalPrice;
         this.receiveAddress = receiveAddress;
+        this.items = items;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 
     public com.example.ecommerceshop.Phat.Model.receiveAddress getReceiveAddress() {

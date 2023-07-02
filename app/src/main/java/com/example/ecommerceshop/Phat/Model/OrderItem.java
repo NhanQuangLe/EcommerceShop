@@ -3,20 +3,29 @@ package com.example.ecommerceshop.Phat.Model;
 import java.io.Serializable;
 
 public class OrderItem implements Serializable {
-    String pName, pid, pAvatar, pBrand;
+    String pName, pid, pAvatar, pBrand, pCategory;
     int pQuantity;
     long pPrice;
 
     public OrderItem() {
     }
 
-    public OrderItem(String pName, long pPrice, String pid, String pAvatar, String pBrand, int pQuantity) {
+    public OrderItem(String pName, String pid, String pAvatar, String pBrand, String pCategory, int pQuantity, long pPrice) {
         this.pName = pName;
-        this.pPrice = pPrice;
         this.pid = pid;
         this.pAvatar = pAvatar;
         this.pBrand = pBrand;
+        this.pCategory = pCategory;
         this.pQuantity = pQuantity;
+        this.pPrice = pPrice;
+    }
+
+    public String getpCategory() {
+        return pCategory;
+    }
+
+    public void setpCategory(String pCategory) {
+        this.pCategory = pCategory;
     }
 
     public String getpAvatar() {
