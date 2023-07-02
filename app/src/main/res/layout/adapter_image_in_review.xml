@@ -16,6 +16,7 @@
 
     </ImageView>
     <LinearLayout
+        android:id="@+id/btn_Remove"
         android:layout_width="14dp"
         android:layout_height="14dp"
         android:background="@drawable/icon_close_background"

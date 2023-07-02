@@ -1,6 +1,7 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
@@ -26,16 +28,17 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReviewAdapter.ReviewViewholder> {
 
     private Context context;
-    private ArrayList<Product> productList;
-    private ArrayList<String> uriList;
+    private ArrayList<Review> reviewList;
     private IClickProductInReviewListener mClickProductInReviewListener;
-    public ProductInReviewAdapter(Context context, ArrayList<Product> productList, IClickProductInReviewListener clickListener) {
+    public ProductInReviewAdapter(Context context, ArrayList<Review> reviewList, IClickProductInReviewListener clickListener) {
         this.context = context;
-        this.productList = productList;
+        this.reviewList = reviewList;
         this.mClickProductInReviewListener = clickListener;
     }
     @NonNull
@@ -47,19 +50,39 @@ public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReview
 
     @Override
     public void onBindViewHolder(@NonNull ProductInReviewAdapter.ReviewViewholder holder, int position) {
-        Product product = productList.get(position);
-        Picasso.get().load(Uri.parse(product.getProductAvatar())).into(holder.iv_ProductAvatar);
-        holder.tv_ProductName.setText(product.getProductName());
+        Review review = reviewList.get(position);
+        Picasso.get().load(Uri.parse(review.getProductAvatar())).into(holder.iv_ProductAvatar);
+        holder.tv_ProductName.setText(review.getProductName());
+        ArrayList<Uri> uriList = review.getUriList();
+        ImageReviewAdapter imageReviewAdapter = new ImageReviewAdapter(context, uriList, new ImageReviewAdapter.IClickImageReview() {
+            @Override
+            public void RemoveImage(Uri uri) {
+                uriList.remove(uri);
+                notifyDataSetChanged();
+            }
+        });
+        holder.rv_ListImage.setAdapter(imageReviewAdapter);
         holder.btn_Close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mClickProductInReviewListener.RemoveReview(product);
+                mClickProductInReviewListener.RemoveReview(review);
             }
         });
         holder.rb_Rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                mClickProductInReviewListener.RatingBarChange(ratingBar, v, b, product);
+                mClickProductInReviewListener.RatingBarChange(ratingBar, v, b, review);
+            }
+        });
+        holder.btn_AddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(review.getUriList().size() == 5)
+                {
+                    Toast.makeText(context, "Chỉ được chọn tối đa 5 ảnh", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mClickProductInReviewListener.AddImage(imageReviewAdapter, review);
             }
         });
     }
@@ -67,7 +90,7 @@ public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReview
 
     @Override
     public int getItemCount() {
-        return productList.size();
+        return reviewList.size();
     }
 
     public static class ReviewViewholder extends RecyclerView.ViewHolder{
