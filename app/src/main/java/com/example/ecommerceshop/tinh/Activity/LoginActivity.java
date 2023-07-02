@@ -1,4 +1,5 @@
 package com.example.ecommerceshop.tinh.Activity;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import android.content.Intent;
@@ -6,23 +7,36 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ecommerceshop.MainShopActivity;
+import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.Phat.Activity.AdminActivity;
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.MainUserActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Objects;
+
 
 public class LoginActivity extends AppCompatActivity {
-
     private FirebaseAuth auth;
     private AppCompatImageView buttonBack;
     private EditText loginEmail, loginPass;
@@ -30,18 +44,57 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private ProgressBar loginProgressBar;
     private ImageView eyeImagePass;
+    private LinearLayout googleButton;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         auth = FirebaseAuth.getInstance();
         InitUI();
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if(acct!=null){
+            navigateToSecondActivity();
+        }
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser!=null)
+        {
+            if (currentUser.getEmail().equals("admin@gmail.com"))
+            {
+                finish();
+                Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+            else
+            {
+                finish();
+                Intent intent = new Intent(LoginActivity.this, MainShopActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }
         setListener();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        gsc = GoogleSignIn.getClient(this,gso);
     }
+
+    void navigateToSecondActivity(){
+        finish();
+        Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     private void setListener() {
         textSignUp.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
         textForgotPass.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class)));
-        buttonBack.setOnClickListener(view -> onBackPressed());
+        buttonBack.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> {
             HandleEyePassword();
@@ -54,17 +107,58 @@ public class LoginActivity extends AppCompatActivity {
                 Login();
             }
         });
+        googleButton.setOnClickListener(v -> LoginWithGoogle());
+    }
+
+    private void LoginWithGoogle() {
+        Intent signInIntent = gsc.getSignInIntent();
+        startActivityForResult(signInIntent,100);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 100){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account.getIdToken());
+            } catch (ApiException e) {
+                Log.e("e", Objects.requireNonNull(e.getMessage()).trim());
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        auth.signInWithCredential(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful())
+            {
+                Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
+                startActivity(intent);
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Failed...........", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void Login() {
-        loading(true);
         String email = loginEmail.getText().toString().trim();
         String pass = loginPass.getText().toString().trim();
+        loading(true);
         if(email.equals("admin@gmail.com")&&pass.equals("16032003")){
-            loading(false);
-            Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(LoginActivity.this, AdminActivity.class));
-            finish();
+            auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(authResult -> {
+                loading(false);
+                Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                finish();
+            }).addOnFailureListener(e -> {
+                loading(false);
+                Toast.makeText(LoginActivity.this, "Login Failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
         }
         else {
             auth.signInWithEmailAndPassword(email,pass).addOnSuccessListener(authResult -> {
@@ -77,9 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Login Failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
         }
-
     }
-
     private void InitUI()
     {
         loginEmail= findViewById(R.id.editTextEmail);
@@ -92,6 +184,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.buttonLogin);
         eyeImagePass = findViewById(R.id.eyePassword);
         loginProgressBar = findViewById(R.id.progressBar);
+        googleButton = findViewById(R.id.buttonGoogle);
     }
     private void HandleEyePassword()
     {
@@ -110,7 +203,6 @@ public class LoginActivity extends AppCompatActivity {
     {
         if (loginEmail.getText().toString().trim().isEmpty())
         {
-            showToast("Please enter email to login!");
             loginEmail.setBackgroundResource(R.drawable.background_input_error);
             textErrorEmail.setText("Please enter email to login!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
@@ -119,7 +211,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(loginEmail.getText().toString()).matches())
         {
-            showToast("Please enter valid email!");
             loginEmail.setBackgroundResource(R.drawable.background_input_error);
             textErrorEmail.setText("Please enter valid email!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
@@ -137,7 +228,6 @@ public class LoginActivity extends AppCompatActivity {
     {
         if (loginPass.getText().toString().trim().isEmpty())
         {
-            showToast("Please enter password to login!");
             loginPass.setBackgroundResource(R.drawable.background_input_error);
             textErrorPassword.setText("Please enter password to login!");
             textErrorPassword.setTextColor(Color.parseColor("#E10000"));
@@ -148,7 +238,6 @@ public class LoginActivity extends AppCompatActivity {
         {
             if (!loginPass.getText().toString().trim().isEmpty() && loginPass.getText().toString().trim().length() < 8)
             {
-                showToast("A password longer than 8 characters!");
                 loginPass.setBackgroundResource(R.drawable.background_input_error);
                 textErrorPassword.setText("A password longer than 8 characters!");
                 textErrorPassword.setTextColor(Color.parseColor("#E10000"));

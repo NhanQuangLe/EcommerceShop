@@ -21,6 +21,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.UserAddressActiv
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
+import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +47,6 @@ public class UserProfileFragment extends Fragment {
     }
     public static UserProfileFragment newInstance() {
         UserProfileFragment fragment = new UserProfileFragment();
-
         return fragment;
     }
 
@@ -117,6 +117,14 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), FavouriteProductsActivity.class);
+                mActivityLauncher.launch(intent);
+            }
+        });
+
+        mFragmentUserProfileBinding.llUserPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), HelpActivity.class);
                 mActivityLauncher.launch(intent);
             }
         });
