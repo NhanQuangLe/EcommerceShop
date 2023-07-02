@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             else
             {
                 finish();
-                Intent intent = new Intent(LoginActivity.this, MainShopActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }

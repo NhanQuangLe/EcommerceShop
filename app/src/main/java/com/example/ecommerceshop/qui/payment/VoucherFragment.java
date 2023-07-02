@@ -90,7 +90,9 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
                     if (voucher != null) {
 
                         //check minimum
-                        if (voucher.getMinimumPrice() <= money && voucher.getShopId().equals(shopId) && !voucher.getShopId().equals(mCurrentUser.getUid()))
+                        if (voucher.getMinimumPrice() <= money
+                                && voucher.getShopId().equals(shopId)
+                                && !voucher.getShopId().equals(mCurrentUser.getUid()))
                             voucher.setCanUse(true);
                         else voucher.setCanUse(false);
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
