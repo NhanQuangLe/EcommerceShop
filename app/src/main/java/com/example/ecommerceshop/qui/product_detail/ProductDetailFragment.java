@@ -373,7 +373,6 @@ public class ProductDetailFragment extends Fragment {
                             DecimalFormat df = new DecimalFormat();
                             df.setMaximumFractionDigits(1);
                             String followersStr;
-                            Log.e("follow",""+followers);
                             if (followers<1000) followersStr = String.valueOf(followers);
                             else followersStr= df.format(followers*1.0/1000);
 

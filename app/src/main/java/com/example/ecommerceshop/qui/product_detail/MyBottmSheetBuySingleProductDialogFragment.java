@@ -114,7 +114,7 @@ public class MyBottmSheetBuySingleProductDialogFragment extends BottomSheetDialo
                 bundle.putSerializable("product",mProduct);
                 intent.putExtras(bundle);
                 mActivity.startActivity(intent);
-
+                bottomSheetDialog.dismiss();
 
 
 

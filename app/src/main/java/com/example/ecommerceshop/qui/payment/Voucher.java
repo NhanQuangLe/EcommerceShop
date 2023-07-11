@@ -8,14 +8,14 @@ public class Voucher {
     private int minimumPrice;
     private int discountPrice;
     private String expiredDate;
-    private boolean isUsed;
+    private boolean used;
 
     public boolean isUsed() {
-        return isUsed;
+        return used;
     }
 
     public void setUsed(boolean used) {
-        isUsed = used;
+        used = used;
     }
 
     public String getShopId() {
@@ -54,7 +54,7 @@ public class Voucher {
         this.minimumPrice = minimumPrice;
         this.discountPrice = discountPrice;
         this.expiredDate = expiredDate;
-        this.isUsed = false;
+        this.used = false;
     }
 
     public String getVoucherid() {

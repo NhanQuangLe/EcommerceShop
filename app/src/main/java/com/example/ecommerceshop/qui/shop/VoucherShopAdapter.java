@@ -24,6 +24,16 @@ public class VoucherShopAdapter extends RecyclerView.Adapter<VoucherShopAdapter.
 
     private List<Voucher> mList;
 
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    private String shopId;
+
     public void setData(List<Voucher> list) {
         this.mList = list;
         notifyDataSetChanged();
@@ -63,15 +73,23 @@ public class VoucherShopAdapter extends RecyclerView.Adapter<VoucherShopAdapter.
                         Voucher voucher1 = dataSnapshot.getValue(Voucher.class);
                         String voucherId = voucher1.getVoucherid();
 
-                        if (voucher.getVoucherid().equals(voucherId) && voucher1.isUsed()==false) {
-                            holder.mBinding.btnSave.setVisibility(View.GONE);
-                            holder.mBinding.tvFollowed.setVisibility(View.VISIBLE);
-                        }
-                        else {
-                            holder.mBinding.tvFollowed.setVisibility(View.GONE);
-                            holder.mBinding.btnSave.setVisibility(View.VISIBLE);
+                            if (shopId.equals(mCurrentUser.getUid())){
+                                holder.mBinding.btnSave.setVisibility(View.GONE);
+                                holder.mBinding.tvFollowed.setVisibility(View.GONE);
+                            }
+                            else {
+                                if (voucher.getVoucherid().equals(voucherId)) {
+                                    holder.mBinding.btnSave.setVisibility(View.GONE);
+                                    holder.mBinding.tvFollowed.setVisibility(View.VISIBLE);
+                                }
+                                else {
+                                    holder.mBinding.tvFollowed.setVisibility(View.GONE);
+                                    holder.mBinding.btnSave.setVisibility(View.VISIBLE);
 
-                        }
+                                }
+                            }
+
+
                     }
 
 
