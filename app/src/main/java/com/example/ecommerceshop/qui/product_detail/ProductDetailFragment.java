@@ -342,7 +342,7 @@ public class ProductDetailFragment extends Fragment {
                 String address = snapshot.child("ShopInfos").child("shopAddress").getValue(String.class);
                 mFragmentProductDetailBinding.shopAddress.setText(address);
                 String uri = snapshot.child("ShopInfos").child("shopAvt").getValue(String.class);
-                Glide.with(getActivity()).load(uri).into((ImageView) mFragmentProductDetailBinding.shopAvatar);
+                Glide.with(getContext()).load(uri).into((ImageView) mFragmentProductDetailBinding.shopAvatar);
                 mFragmentProductDetailBinding.shopProductQuantity.setText(String.valueOf(snapshot.child("Products").getChildrenCount()));
             }
 

@@ -10,6 +10,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,14 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.Favouri
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
+import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,8 +40,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
 public class UserProfileFragment extends Fragment {
     public static final int ORDER_HISTORY = 3;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -62,6 +76,8 @@ public class UserProfileFragment extends Fragment {
         mFragmentUserProfileBinding = FragmentUserProfileBinding.inflate(inflater,container,false);
         mView = mFragmentUserProfileBinding.getRoot();
         firebaseAuth = FirebaseAuth.getInstance();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(getContext(), gso);
         LoadData();
         setEventInteract();
         return mView;
@@ -126,6 +142,20 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), HelpActivity.class);
                 mActivityLauncher.launch(intent);
+            }
+        });
+        mFragmentUserProfileBinding.llLogOut.setOnClickListener(v -> {
+            gsc.signOut();
+            firebaseAuth.signOut();
+
+            if (firebaseAuth.getCurrentUser() == null)
+            {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                mActivityLauncher.launch(intent);
+            }
+            else
+            {
+                Toast.makeText(getContext(), "LogOut failed!", Toast.LENGTH_SHORT).show();
             }
         });
     }
