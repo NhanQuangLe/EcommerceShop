@@ -315,6 +315,7 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
     public void clickSaveVoucher(Voucher voucher) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Vouchers");
         long id = Calendar.getInstance().getTimeInMillis();
+        voucher.setShopId(shopId);
         ref.child(id+"").setValue(voucher, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {

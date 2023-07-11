@@ -313,6 +313,7 @@ public class CartFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                mFragmentCartBinding.btnDelete.setVisibility(View.GONE);
                 listSelectedProductCart.clear();
                 mFragmentCartBinding.tvTotalMoney.setText(getPrice(0));
                 Cart cart = snapshot.getValue(Cart.class);
@@ -485,6 +486,7 @@ public class CartFragment extends Fragment {
                 }
                 Intent intent = new Intent(getContext(), PaymentActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putString("clickType","fromCart");
                 bundle.putParcelableArrayList("listSelectedCart", (ArrayList<? extends Parcelable>) listSelectedProductCart);
                 intent.putExtras(bundle);
                 getContext().startActivity(intent);

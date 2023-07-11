@@ -36,6 +36,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.UserAddressActiv
 import com.example.ecommerceshop.qui.cart.CartFragment;
 import com.example.ecommerceshop.qui.cart.ProductCart;
 import com.example.ecommerceshop.qui.cart.ShopProductCart;
+import com.example.ecommerceshop.qui.homeuser.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -77,6 +78,8 @@ public class PaymentActivity extends AppCompatActivity {
     public Fragment paymentFragment;
 
     private ArrayList<ProductCart> listSelectedCart;
+    private Product mProduct;
+    private int mQuantity;
     private ItemPaymentAdapter itemPaymentAdapter;
     private List<ItemPayment> mListItemPayment;
     private List<Voucher> listSelectedVoucher;
@@ -99,10 +102,20 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(mView);
 
         Bundle bundle = getIntent().getExtras();
-        listSelectedCart = bundle.getParcelableArrayList("listSelectedCart");
+        String clickType = bundle.getString("clickType");
+        if (clickType.equals("fromCart")){
+            listSelectedCart = bundle.getParcelableArrayList("listSelectedCart");
+            initIfCart();
+        }
+        else if (clickType.equals("fromProductDetail")){
+            mProduct = (Product) bundle.get("product");
+            mQuantity = bundle.getInt("quantity");
+            initIfProductDetail();
+        }
 
 
-        init();
+
+
         iListener();
     }
 
@@ -176,7 +189,7 @@ public class PaymentActivity extends AppCompatActivity {
         transaction.commitAllowingStateLoss();
     }
 
-    private void init() {
+    private void initIfCart() {
         calendar = Calendar.getInstance();
         TempDialog = new ProgressDialog(PaymentActivity.this);
         TempDialog.setMessage("Đơn hàng của bạn đang được tạo");
@@ -232,6 +245,55 @@ public class PaymentActivity extends AppCompatActivity {
 
         setAddressDefault();
         setInitTotalPayment();
+    }
+    private  void initIfProductDetail(){
+        calendar = Calendar.getInstance();
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        mActivityPaymentBinding.rcvItemPayment.setLayoutManager(linearLayoutManager);
+        itemPaymentAdapter = new ItemPaymentAdapter(this);
+        itemPaymentAdapter.setiSendData(new ISenData() {
+            @Override
+            public void senDataToAdapter(Voucher voucher) {
+
+            }
+
+            @Override
+            public void senDataToPaymentActivity(List<ItemPayment> itemPaymentList) {
+                setTotalPayment(itemPaymentList);
+
+            }
+        });
+        mListItemPayment = new ArrayList<>();
+        itemPaymentAdapter.setData(mListItemPayment);
+        mActivityPaymentBinding.rcvItemPayment.setAdapter(itemPaymentAdapter);
+        setAddressDefault();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mProduct.getUid()+"/Shop/ShopInfos/shopName");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String name = snapshot.getValue(String.class);
+                ProductCart productCart = new ProductCart("null", mProduct.getProductId(),mProduct.getProductName(),
+                        mQuantity,mProduct.getProductPrice(),mProduct.getProductDiscountPrice(),mProduct.getUriList().get(0),mProduct.getUid(),
+                        name,mProduct.getProductBrand(),mProduct.getProductCategory());
+                String shopId = mProduct.getUid();
+                ItemPayment itemPayment = new ItemPayment();
+                itemPayment.setShopId(shopId);
+                itemPayment.setListProductCart(new ArrayList<>());
+                itemPayment.setShopName(name);
+                itemPayment.getListProductCart().add(productCart);
+                mListItemPayment.add(itemPayment);
+                itemPaymentAdapter.notifyDataSetChanged();
+                setInitTotalPayment();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private void setInitTotalPayment() {
