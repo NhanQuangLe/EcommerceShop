@@ -3,7 +3,9 @@ package com.example.ecommerceshop.qui.shop;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -34,6 +36,10 @@ public class ShopActivityCustomer extends AppCompatActivity {
     private ViewPager mViewPager;
     private ViewPagerShopAdapter mViewPagerAdapter;
     private String shopId;
+
+
+
+    private String tag;
     private FirebaseUser mCurrentUser;
 
     @Override
@@ -56,7 +62,7 @@ public class ShopActivityCustomer extends AppCompatActivity {
         mActivityShopCustomerBinding.tabLayout.setupWithViewPager(mActivityShopCustomerBinding.viewPager);
         Intent intent = getIntent();
         this.shopId = intent.getStringExtra("shopId");
-
+        tag="Laptop";
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         setInfoShop();
@@ -111,6 +117,17 @@ public class ShopActivityCustomer extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        mActivityShopCustomerBinding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String text = mActivityShopCustomerBinding.editTextSearch.getText().toString().trim();
+                Intent intent = new Intent(getApplicationContext(),AllFilterProductActivity.class);
+                intent.putExtra("clickType",0);
+                intent.putExtra("textSearch",text);
+                intent.putExtra("shopId",shopId);
+                startActivity(intent);
             }
         });
     }
@@ -262,5 +279,13 @@ public class ShopActivityCustomer extends AppCompatActivity {
 
     public String getShopId() {
         return shopId;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

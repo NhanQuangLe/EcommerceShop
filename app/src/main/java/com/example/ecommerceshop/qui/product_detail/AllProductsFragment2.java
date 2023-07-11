@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +74,23 @@ public class AllProductsFragment2 extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), CartActivity.class);
                 getContext().startActivity(intent);
+            }
+        });
+        mFragmentAllProducts2Binding.editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try{
+                    productAdapter.getFilter().filter(charSequence);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
             }
         });
         return viewFragment;
