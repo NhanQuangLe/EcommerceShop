@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.ecommerceshop.MainShopActivity;
+import com.example.ecommerceshop.Phat.Activity.RegistrationToShopInAdminActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentUserProfileBinding;
 import com.example.ecommerceshop.nhan.Model.Customer;
@@ -147,7 +148,7 @@ public class UserProfileFragment extends Fragment {
                 if(ref.child(firebaseAuth.getUid())
                         .child("Shop").get() == null)
                 {
-                    Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+                    Intent intent = new Intent(getContext(), RegistrationToShopInAdminActivity.class);
                     mActivityLauncher.launch(intent);
                 }
                 else
@@ -162,4 +163,4 @@ public class UserProfileFragment extends Fragment {
             }
         });
     }
-}""
+}
