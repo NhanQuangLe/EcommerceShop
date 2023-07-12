@@ -42,6 +42,7 @@
                 android:src="@drawable/ic_message"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/btn_EditInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -326,6 +327,71 @@
             android:layout_marginTop="37dp"
             android:orientation="vertical"
             android:background="@color/white">
+            <LinearLayout
+                android:id="@+id/ll_convertToShop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:paddingLeft="13dp"
+                android:background="#fff4f3"
+                android:layout_marginBottom="15dp"
+                >
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_shop"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_BeginSale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:fontFamily="@font/lato_regular"
+                    android:text="Bắt đầu bán"
+                    android:textColor="@color/primary_red"
+                    android:textSize="12dp"></TextView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        >
+                        <TextView
+                            android:id="@+id/tv_RegisFree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:fontFamily="@font/lato_regular"
+                            android:text="Đăng kí miễn phí"
+                            android:textColor="@color/black"
+                            android:textSize="11dp"></TextView>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="9dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_arrow_right"
+                            android:layout_marginRight="10dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/secondary_gray"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

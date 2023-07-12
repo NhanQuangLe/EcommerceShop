@@ -32,8 +32,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -43,6 +45,8 @@ import org.checkerframework.checker.units.qual.A;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReviewActivity extends AppCompatActivity {
 
@@ -89,6 +93,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         firebaseAuth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
         HistoryOrder ho = (HistoryOrder) intent.getSerializableExtra("HistoryOrder");
         ArrayList<Product> productList = ho.getItems();
         productViewList = new ArrayList<>();
@@ -151,23 +156,26 @@ public class ReviewActivity extends AppCompatActivity {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
                 .child(firebaseAuth.getUid()).child("Customer");
-        ref.child("CustomerInfos").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        ref.child("CustomerInfos").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Date currentTime = Calendar.getInstance().getTime();
                 for (int i = 0; i < productViewList.size(); i++) {
                     ProductInReviewAdapter.ReviewViewholder holder = (ProductInReviewAdapter.ReviewViewholder) rv_listProductInReview.findViewHolderForAdapterPosition(i);
                     productViewList.get(i).setContent(holder.et_Comment.getText() + "");
-                    productViewList.get(i).setAvatarCus(task.getResult().child("avatar").getValue(String.class));
-                    productViewList.get(i).setCustomerName(task.getResult().child("name").getValue(String.class));
-                    ref.child("Reviews");
+                    productViewList.get(i).setAvatarCus(snapshot.child("avatar").getValue(String.class));
+                    productViewList.get(i).setCustomerId(firebaseAuth.getUid());
+                    productViewList.get(i).setCustomerName(snapshot.child("name").getValue(String.class));
                     String key = String.valueOf((int) new Date().getTime());
                     productViewList.get(i).setReviewDate(currentTime + "");
                     productViewList.get(i).setReviewId(key);
-                    storageReference = FirebaseStorage.getInstance().getReference();
-                    pushUriList(productViewList.get(i).getUriList(), key, 0);
                 }
                 pushData(0);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ReviewActivity.this, "Fail", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -185,15 +193,16 @@ public class ReviewActivity extends AppCompatActivity {
         }
         return false;
     }
-    private void pushUriList(ArrayList<Uri> uriList, String key, int n){
-        if(n >= uriList.size()) return;
+    private void pushUriList(String key, ArrayList<Uri> uriList, int n, int currentReviewIndex){
+        if(n == uriList.size())
+            pushData(currentReviewIndex + 1);
         storageReference.child("ImageReview")
-                .child(key + "")
+                //.child(key)
                 .putFile(uriList.get(n))
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        pushUriList(uriList, key, n + 1);
+                        pushUriList(key, uriList, n + 1, currentReviewIndex);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -206,22 +215,18 @@ public class ReviewActivity extends AppCompatActivity {
     }
     private void pushData(int n)
     {
-        if(n >= productViewList.size()) return;
+        //if(n >= productViewList.size()) return;
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
-                .child(firebaseAuth.getUid()).child("Customer")
-                .child("Reviews")
-                .child(productViewList.get(n).getReviewId());
-        ref.setValue(productViewList.get(n))
-        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .child(firebaseAuth.getUid())
+                .child("Customer")
+                .child("Reviews");
+        Review a = productViewList.get(n);
+        String b = productViewList.get(n).getReviewId();
+        ref.child(b).setValue(a, new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                pushData(n + 1);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ReviewActivity.this, "Không đánh giá được, thử lại sau", Toast.LENGTH_SHORT).show();
-                finish();
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Toast.makeText(ReviewActivity.this, "oke dc r", Toast.LENGTH_SHORT).show();
+                //pushData(n + 1);
             }
         });
     }

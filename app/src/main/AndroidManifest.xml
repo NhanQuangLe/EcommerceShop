@@ -115,6 +115,9 @@
         <activity
             android:name=".nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity"
             android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.edit_user_info.EditUserInfoActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

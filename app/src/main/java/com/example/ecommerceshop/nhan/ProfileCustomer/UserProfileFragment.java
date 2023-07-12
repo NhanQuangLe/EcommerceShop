@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.ecommerceshop.MainShopActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentUserProfileBinding;
+import com.example.ecommerceshop.nhan.Model.Customer;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.UserAddressActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.edit_user_info.EditUserInfoActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
@@ -41,6 +44,7 @@ public class UserProfileFragment extends Fragment {
     private View mView;
     FragmentUserProfileBinding mFragmentUserProfileBinding;
     private FirebaseAuth firebaseAuth;
+    private Customer currentCustomer;
     public UserProfileFragment() {
         // Required empty public constructor
     }
@@ -62,6 +66,7 @@ public class UserProfileFragment extends Fragment {
         mFragmentUserProfileBinding = FragmentUserProfileBinding.inflate(inflater,container,false);
         mView = mFragmentUserProfileBinding.getRoot();
         firebaseAuth = FirebaseAuth.getInstance();
+        currentCustomer = new Customer();
         LoadData();
         setEventInteract();
         return mView;
@@ -72,10 +77,17 @@ public class UserProfileFragment extends Fragment {
                 .child("Customer").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        mFragmentUserProfileBinding.tvCustomerName.setText(snapshot.child("CustomerInfos/name").getValue(String.class));
-                        mFragmentUserProfileBinding.tvCustomerEmail.setText(snapshot.child("CustomerInfos/email").getValue(String.class));
+                        currentCustomer.setName(snapshot.child("CustomerInfos/name").getValue(String.class));
+                        currentCustomer.setAvatar(snapshot.child("CustomerInfos/avatar").getValue(String.class));
+                        currentCustomer.setEmail(snapshot.child("CustomerInfos/email").getValue(String.class));
+                        currentCustomer.setPhoneNumber(snapshot.child("CustomerInfos/phoneNumber").getValue(String.class));
+                        currentCustomer.setDateOfBirth(snapshot.child("CustomerInfos/dateOfBirth").getValue(String.class));
+                        currentCustomer.setGender(snapshot.child("CustomerInfos/gender").getValue(String.class));
+
+                        mFragmentUserProfileBinding.tvCustomerName.setText(currentCustomer.getName());
+                        mFragmentUserProfileBinding.tvCustomerEmail.setText(currentCustomer.getEmail());
                         mFragmentUserProfileBinding.tvCustomerNumberFollowers.setText(Long.toString(snapshot.child("Followers").getChildrenCount()));
-                        Picasso.get().load(snapshot.child("CustomerInfos/avatar").getValue(String.class)).into(mFragmentUserProfileBinding.ivCustomerAvatar);
+                        Picasso.get().load(currentCustomer.getAvatar()).into(mFragmentUserProfileBinding.ivCustomerAvatar);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -120,5 +132,34 @@ public class UserProfileFragment extends Fragment {
                 mActivityLauncher.launch(intent);
             }
         });
+        mFragmentUserProfileBinding.btnEditInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+                intent.putExtra("currentUser", currentCustomer);
+                mActivityLauncher.launch(intent);
+            }
+        });
+        mFragmentUserProfileBinding.llConvertToShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                if(ref.child(firebaseAuth.getUid())
+                        .child("Shop").get() == null)
+                {
+                    Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+                    mActivityLauncher.launch(intent);
+                }
+                else
+                {
+                    Intent intent = new Intent(getContext(), MainShopActivity.class);
+                    mActivityLauncher.launch(intent);
+                }
+
+                Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+                intent.putExtra("currentUser", currentCustomer);
+                mActivityLauncher.launch(intent);
+            }
+        });
     }
-}
+}""

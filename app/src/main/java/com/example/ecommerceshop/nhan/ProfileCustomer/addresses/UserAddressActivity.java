@@ -220,11 +220,11 @@ public class UserAddressActivity extends AppCompatActivity {
                 .child("Customer")
                 .child("Addresses");
         dbRef.child(address.getAddressId()).setValue(address, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        Toast.makeText(UserAddressActivity.this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Toast.makeText(UserAddressActivity.this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
+            }
+        });
         if(address.isDefault()){
             dbRef.child(deFaultId).child("default").setValue(false);
             deFaultId = address.getAddressId();
