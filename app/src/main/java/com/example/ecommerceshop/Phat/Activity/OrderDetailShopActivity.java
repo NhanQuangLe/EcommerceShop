@@ -40,7 +40,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
     RecyclerView r4;
     FirebaseAuth firebaseAuth;
     ProgressDialog progressDialog;
-    String orderid, customerid;
+    String orderid, customerid, ordStatus;
     ArrayList<OrderItem> orderItems;
     AdapterListItemOrderDetail adapterListItemOrderDetail;
     ImageView backbtn, editbtn;
@@ -63,14 +63,26 @@ public class OrderDetailShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(OrderDetailShopActivity.this);
-                builder.setTitle("Edit Order Status")
-                        .setItems(Constants.orderStatus, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                String selectOpt = Constants.orderStatus[i];
-                                editOrdStatus(selectOpt);
-                            }
-                        }).show();
+                if(ordStatus.equals("UnProcessed")){
+                    builder.setTitle("Edit Order Status")
+                            .setItems(Constants.orderStatus, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String selectOpt = Constants.orderStatus[i];
+                                    editOrdStatus(selectOpt);
+                                }
+                            }).show();
+                } else if (ordStatus.equals("Processing")){
+                    builder.setTitle("Edit Order Status")
+                            .setItems(Constants.orderStatus1, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String selectOpt = Constants.orderStatus1[i];
+                                    editOrdStatus(selectOpt);
+                                }
+                            }).show();
+                }
+
             }
         });
     }
@@ -83,6 +95,32 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                 .updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        if(selectOpt.equals("Completed")){
+                            for (OrderItem orderItem : orderItems){
+                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                                databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products")
+                                        .child(orderItem.getPid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                int psold = 0;
+                                                psold=snapshot.child("psoldQuantity").getValue(Integer.class);
+                                                int pQuantity = 0;
+                                                pQuantity =snapshot.child("productQuantity").getValue(Integer.class);
+                                                HashMap<String, Object> hashMap1 = new HashMap<>();
+                                                hashMap1.clear();
+                                                hashMap1.put("psoldQuantity", psold+orderItem.getpQuantity());
+                                                hashMap1.put("productQuantity", pQuantity-orderItem.getpQuantity());
+                                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
+                                                reference1.child(firebaseAuth.getUid()).child("Shop").child("Products")
+                                                        .child(orderItem.getPid()).updateChildren(hashMap1);
+                                            }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
                         Toast.makeText(OrderDetailShopActivity.this, "Order is now "+selectOpt, Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -104,10 +142,11 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                             if(snapshot.exists()){
                                 OrderShop orderShop = snapshot.getValue(OrderShop.class);
                                 orderId.setText(orderShop.getOrderId());
-                                ReceiverName.setText(orderShop.getReceiveName());
+                                ReceiverName.setText(orderShop.getReceiveAddress().getFullName());
                                 orderedDate.setText(orderShop.getOrderedDate());
-                                phonenum_order.setText(orderShop.getReceivePhone());
+                                phonenum_order.setText(orderShop.getReceiveAddress().getPhoneNumber());
                                 orderStatus.setText(orderShop.getOrderStatus());
+                                ordStatus= orderShop.getOrderStatus();
                                 if(orderShop.getOrderStatus().equals("UnProcessed")){
                                     orderStatus.setTextColor(Color.RED);
                                 }
@@ -116,14 +155,16 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                 }
                                 if(orderShop.getOrderStatus().equals("Completed")){
                                     orderStatus.setTextColor(getColor(R.color.green1));
+                                    editbtn.setVisibility(View.GONE);
                                 }
                                 if(orderShop.getOrderStatus().equals("Cancelled")){
                                     orderStatus.setTextColor(Color.GRAY);
+                                    editbtn.setVisibility(View.GONE);
                                 }
-                                addressBuyer.setText(orderShop.getReceiveAddress());
-                                orderDiscount.setText(orderShop.getDiscountPrice());
-                                deliveryPrice.setText(orderShop.getShipPrice());
-                                orderTotalPrice.setText(orderShop.getTotalPrice());
+                                addressBuyer.setText(orderShop.getReceiveAddress().getAddress());
+                                orderDiscount.setText(String.valueOf(orderShop.getDiscountPrice()));
+                                deliveryPrice.setText(String.valueOf(orderShop.getShipPrice()));
+                                orderTotalPrice.setText(String.valueOf(orderShop.getTotalPrice()));
                             }
                         }
                         @Override
@@ -136,7 +177,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
     private void loadOrderItems(){
         orderItems=new ArrayList<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(customerid).child("Customer").child("Orders").child(orderid).child("Items")
+        databaseReference.child(customerid).child("Customer").child("Orders").child(orderid).child("items")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

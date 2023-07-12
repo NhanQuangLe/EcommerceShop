@@ -51,6 +51,7 @@ public class ProductDetailActivity extends AppCompatActivity implements ProductD
         replaceFragment(allProductsFragment2);
     }
 
+
     public String getTextSearch(){
         return this.textSearch;
     }

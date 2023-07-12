@@ -84,13 +84,15 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (mListVoucher != null) mListVoucher.clear();
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Voucher voucher = dataSnapshot.getValue(Voucher.class);
                     if (voucher != null) {
-
+                        Log.e("shopId",shopId);
                         //check minimum
-                        if (voucher.getMinimumPrice() <= money && voucher.getShopId().equals(shopId) && !voucher.getShopId().equals(mCurrentUser.getUid()))
+                        if (voucher.getMinimumPrice() <= money
+                                && voucher.getShopId().equals(shopId)
+                                && !voucher.getShopId().equals(mCurrentUser.getUid())
+                                && voucher.isUsed()==false)
                             voucher.setCanUse(true);
                         else voucher.setCanUse(false);
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

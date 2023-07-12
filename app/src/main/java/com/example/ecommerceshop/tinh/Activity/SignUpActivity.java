@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
     private ProgressBar signupProgressBar;
     private AppCompatImageView buttonBack;
     private ImageView eyeImagePass;
-    private ImageButton googleButton;
+    private LinearLayout googleButton;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     @Override
@@ -53,10 +54,6 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         auth = FirebaseAuth.getInstance();
         InitUI();
-//        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-//        if(acct!=null){
-//            navigateToSecondActivity();
-//        }
         setListeners();
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -79,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
         googleButton = findViewById(R.id.buttonGoogle);
     }
     private void setListeners() {
-        buttonBack.setOnClickListener(view -> onBackPressed());
+        buttonBack.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         loginTextView.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> HandleEyePassword());
@@ -91,7 +88,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
         googleButton.setOnClickListener(v -> LoginWithGoogle());
     }
-
     private void LoginWithGoogle() {
         Intent signInIntent = gsc.getSignInIntent();
         startActivityForResult(signInIntent,100);
@@ -141,7 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
             else
             {
                 loading(false);
-                Toast.makeText(SignUpActivity.this, "SignUp Failed! " + Objects.requireNonNull(task.getException()).getMessage() + ". Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -162,7 +158,6 @@ public class SignUpActivity extends AppCompatActivity {
     {
         if (signupEmail.getText().toString().trim().isEmpty())
         {
-            showToast("Please enter email!");
             signupEmail.setBackgroundResource(R.drawable.background_input_error);
             textErrorEmail.setText("Please enter email!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
@@ -171,7 +166,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(signupEmail.getText().toString()).matches())
         {
-            showToast("Please enter valid email!");
             signupEmail.setBackgroundResource(R.drawable.background_input_error);
             textErrorEmail.setText("Please enter valid email!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
@@ -192,7 +186,6 @@ public class SignUpActivity extends AppCompatActivity {
     {
         if (signupPassword.getText().toString().trim().isEmpty())
         {
-            showToast("Please enter password!");
             signupPassword.setBackgroundResource(R.drawable.background_input_error);
             textErrorPassword.setText("Please enter password!");
             textErrorPassword.setTextColor(Color.parseColor("#E10000"));
@@ -203,7 +196,6 @@ public class SignUpActivity extends AppCompatActivity {
         {
             if (signupPassword.getText().toString().trim().length() < 8)
             {
-                showToast("Please enter a password longer than 8 characters!");
                 signupPassword.setBackgroundResource(R.drawable.background_input_error);
                 textErrorPassword.setText("Please enter a password longer than 8 characters!");
                 textErrorPassword.setTextColor(Color.parseColor("#E10000"));
@@ -237,11 +229,5 @@ public class SignUpActivity extends AppCompatActivity {
             buttonSignUp.setVisibility(View.VISIBLE);
             signupProgressBar.setVisibility(View.INVISIBLE);
         }
-    }
-    void navigateToSecondActivity(){
-        finish();
-        Intent intent = new Intent(SignUpActivity.this, MainUserActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 }

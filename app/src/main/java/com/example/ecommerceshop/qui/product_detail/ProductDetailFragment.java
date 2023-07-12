@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
@@ -30,6 +31,7 @@ import com.example.ecommerceshop.databinding.FragmentProductDetailBinding;
 import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -64,6 +66,7 @@ public class ProductDetailFragment extends Fragment {
     private FirebaseUser mCurrentUser;
     private String keyHeart;
     private boolean isChecked;
+    private float rate;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -106,8 +109,49 @@ public class ProductDetailFragment extends Fragment {
         mFragmentProductDetailBinding.rcvProduct.setLayoutManager(linearLayoutManager);
         mFragmentProductDetailBinding.rcvProduct.setAdapter(productAdapter);
 
+        setRate();
 
 
+
+    }
+
+    private void setRate() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final int[] temp = {0};
+                final int[] i = {0};
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    DatabaseReference ref2 = dataSnapshot.getRef().child("Customer/Reviews");
+                    ref2.orderByChild("productId").equalTo(product.getProductId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                                if (dataSnapshot1.exists()){
+                                    int rating = dataSnapshot1.child("rating").getValue(Integer.class);
+                                    temp[0] +=rating;
+                                    i[0]++;
+                                    rate = (float)temp[0]/i[0];
+                                    mFragmentProductDetailBinding.ratingBar.setRating(rate);
+                                    mFragmentProductDetailBinding.productRate.setText(rate+"");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void iListener() {
@@ -174,99 +218,31 @@ public class ProductDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 showNavCarDetail();
-                path="";
-                cur_quantity_firebase=0;
             }
         });
-        mFragmentProductDetailBinding.layoutParent.setOnClickListener(new View.OnClickListener() {
+        mFragmentProductDetailBinding.navBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFragmentProductDetailBinding.navCartDetail.setVisibility(View.INVISIBLE);
+                showNavBuyDetail();
             }
         });
-        mFragmentProductDetailBinding.icClose.setOnClickListener(new View.OnClickListener() {
+
+        mFragmentProductDetailBinding.viewAllProductShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HideNavCarDetail();
+                AllProductsFragment2 allProductsFragment2 = new AllProductsFragment2();
+                allProductsFragment2.receiveShopIdFromActivity(product.getUid());
+                mProductDetailActivity.replaceFragment(allProductsFragment2);
+
             }
         });
-        mFragmentProductDetailBinding.btnMinus.setOnClickListener(new View.OnClickListener() {
+        mFragmentProductDetailBinding.btnViewShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String quantityStr = mFragmentProductDetailBinding.cardQuantity.getText().toString();
-                int quantity = Integer.parseInt(quantityStr);
-                if (quantity==1) return;
-                quantity--;
-                mFragmentProductDetailBinding.cardQuantity.setText(String.valueOf(quantity));
-            }
-        });
-        mFragmentProductDetailBinding.btnPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String quantityStr = mFragmentProductDetailBinding.cardQuantity.getText().toString();
-                int quantity = Integer.parseInt(quantityStr);
-                if (quantity==product.getProductQuantity()){
-                    Toast.makeText(mProductDetailActivity, "Số lượng có sẵn không đủ đáp ứng!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                quantity++;
-                mFragmentProductDetailBinding.cardQuantity.setText(String.valueOf(quantity));
-            }
-        });
-        mFragmentProductDetailBinding.btnAddCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                path = "";
-                cur_quantity_firebase=0;
-                String quantityStr = mFragmentProductDetailBinding.cardQuantity.getText().toString();
-                int quantity = Integer.parseInt(quantityStr);
-                String key = String.valueOf((int) new Date().getTime());
-                Cart cart = new Cart(key,product.getProductId(),quantity,product.getUid());
-                DatabaseReference ref0 = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Cart");
-                ref0.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                            if (product.getProductId().equals(dataSnapshot.child("productId").getValue(String.class))){
-                                path = dataSnapshot.getKey();
-                                 cur_quantity_firebase = dataSnapshot.child("productQuantity").getValue(Long.class);
-                                break;
-                            }
-                        }
-                        if (!path.equals("")){
-                            long newQuantity = quantity+cur_quantity_firebase;
-                            ref0.child(path).child("productQuantity").setValue(newQuantity, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
-                                    HideNavCarDetail();
-                                }
-                            });
-                            return;
-                        }
-                        else {
-
-                            ref0.child(cart.getCartId()).setValue(cart, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
-                                    HideNavCarDetail();
-                                }
-                            });
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-
-
-
+                Intent intent = new Intent(getContext(), ShopActivityCustomer.class);
+                String shopId = product.getUid();
+                intent.putExtra("shopId",shopId);
+                getContext().startActivity(intent);
             }
         });
 
@@ -274,17 +250,12 @@ public class ProductDetailFragment extends Fragment {
     }
 
     private void showNavCarDetail() {
-        Glide.with(getContext()).load(product.getUriList().get(0)).into(mFragmentProductDetailBinding.imgProductAddCart);
-        mFragmentProductDetailBinding.subLayout.setVisibility(View.VISIBLE);
-        isShowNavCart=true;
-        mFragmentProductDetailBinding.cardQuantity.setText("1");
-        mFragmentProductDetailBinding.navCartDetail.startAnimation(AnimationUtils.loadAnimation(
-                getContext(),
-                R.anim.move_up
-        ));
-
-
-        mFragmentProductDetailBinding.subLayout.setClickable(true);
+        MyBottomSheetCartDialogFragment myBottomSheetCartDialogFragment =  MyBottomSheetCartDialogFragment.newInstance(product);
+        myBottomSheetCartDialogFragment.show(getParentFragmentManager(),myBottomSheetCartDialogFragment.getTag());
+    }
+    private void showNavBuyDetail() {
+        MyBottmSheetBuySingleProductDialogFragment myBottmSheetBuySingleProductDialogFragment =  MyBottmSheetBuySingleProductDialogFragment.newInstance(product);
+        myBottmSheetBuySingleProductDialogFragment.show(getParentFragmentManager(),myBottmSheetBuySingleProductDialogFragment.getTag());
     }
     public void HideNavCarDetail() {
         mFragmentProductDetailBinding.navCartDetail.startAnimation(AnimationUtils.loadAnimation(
@@ -371,7 +342,7 @@ public class ProductDetailFragment extends Fragment {
                 String address = snapshot.child("ShopInfos").child("shopAddress").getValue(String.class);
                 mFragmentProductDetailBinding.shopAddress.setText(address);
                 String uri = snapshot.child("ShopInfos").child("shopAvt").getValue(String.class);
-                Glide.with(getActivity()).load(uri).into((ImageView) mFragmentProductDetailBinding.shopAvatar);
+                Glide.with(getContext()).load(uri).into((ImageView) mFragmentProductDetailBinding.shopAvatar);
                 mFragmentProductDetailBinding.shopProductQuantity.setText(String.valueOf(snapshot.child("Products").getChildrenCount()));
             }
 

@@ -1,27 +1,44 @@
 package com.example.ecommerceshop.Phat.Model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class OrderShop implements Serializable {
-    String customerId, discountPrice, orderId, orderStatus, orderedDate, receiveAddress, receiveName, receivePhone,
-    shipPrice, shopId, totalPrice;
-
+    String customerId, orderId, orderStatus, orderedDate, shopId;
+    long shipPrice, discountPrice, totalPrice;
+    receiveAddress receiveAddress;
+    List<OrderItem> items;
     public OrderShop() {
     }
 
-    public OrderShop(String customerId, String discountPrice, String orderId, String orderStatus, String orderedDate, String receiveAddress,
-                     String receiveName, String receivePhone, String shipPrice, String shopId, String totalPrice) {
+    public OrderShop(String customerId, String orderId, String orderStatus, String orderedDate, String shopId, long shipPrice, long discountPrice,
+                     long totalPrice, com.example.ecommerceshop.Phat.Model.receiveAddress receiveAddress, List<OrderItem> items) {
         this.customerId = customerId;
-        this.discountPrice = discountPrice;
         this.orderId = orderId;
         this.orderStatus = orderStatus;
         this.orderedDate = orderedDate;
-        this.receiveAddress = receiveAddress;
-        this.receiveName = receiveName;
-        this.receivePhone = receivePhone;
-        this.shipPrice = shipPrice;
         this.shopId = shopId;
+        this.shipPrice = shipPrice;
+        this.discountPrice = discountPrice;
         this.totalPrice = totalPrice;
+        this.receiveAddress = receiveAddress;
+        this.items = items;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
+
+    public com.example.ecommerceshop.Phat.Model.receiveAddress getReceiveAddress() {
+        return receiveAddress;
+    }
+
+    public void setReceiveAddress(com.example.ecommerceshop.Phat.Model.receiveAddress receiveAddress) {
+        this.receiveAddress = receiveAddress;
     }
 
     public String getCustomerId() {
@@ -32,11 +49,11 @@ public class OrderShop implements Serializable {
         this.customerId = customerId;
     }
 
-    public String getDiscountPrice() {
+    public long getDiscountPrice() {
         return discountPrice;
     }
 
-    public void setDiscountPrice(String discountPrice) {
+    public void setDiscountPrice(long discountPrice) {
         this.discountPrice = discountPrice;
     }
 
@@ -64,35 +81,11 @@ public class OrderShop implements Serializable {
         this.orderedDate = orderedDate;
     }
 
-    public String getReceiveAddress() {
-        return receiveAddress;
-    }
-
-    public void setReceiveAddress(String receiveAddress) {
-        this.receiveAddress = receiveAddress;
-    }
-
-    public String getReceiveName() {
-        return receiveName;
-    }
-
-    public void setReceiveName(String receiveName) {
-        this.receiveName = receiveName;
-    }
-
-    public String getReceivePhone() {
-        return receivePhone;
-    }
-
-    public void setReceivePhone(String receivePhone) {
-        this.receivePhone = receivePhone;
-    }
-
-    public String getShipPrice() {
+    public long getShipPrice() {
         return shipPrice;
     }
 
-    public void setShipPrice(String shipPrice) {
+    public void setShipPrice(long shipPrice) {
         this.shipPrice = shipPrice;
     }
 
@@ -104,11 +97,11 @@ public class OrderShop implements Serializable {
         this.shopId = shopId;
     }
 
-    public String getTotalPrice() {
+    public long getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(String totalPrice) {
+    public void setTotalPrice(long totalPrice) {
         this.totalPrice = totalPrice;
     }
 }

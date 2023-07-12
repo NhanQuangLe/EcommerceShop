@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.Phat.Activity.ImageAdsShopActivity;
 import com.example.ecommerceshop.Phat.Activity.ProfileSettingShopActivity;
+import com.example.ecommerceshop.Phat.Activity.ReviewShopActivity;
 import com.example.ecommerceshop.Phat.Activity.StatiscalShopActivity;
 import com.example.ecommerceshop.Phat.Model.RequestShop;
 import com.example.ecommerceshop.R;
@@ -51,14 +52,13 @@ public class ProfileShopFragment extends Fragment {
         reviewNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(getContext(), ReviewShopActivity.class));
             }
         });
         statisticalNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getContext(), StatiscalShopActivity.class));
-
             }
         });
         settingNav.setOnClickListener(new View.OnClickListener() {

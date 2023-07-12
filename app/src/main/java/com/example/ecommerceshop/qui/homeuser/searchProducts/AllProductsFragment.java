@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentAllProductsBinding;
+import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
 import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
 import com.example.ecommerceshop.qui.homeuser.Product;
@@ -106,6 +107,13 @@ public class AllProductsFragment extends Fragment {
             }
             @Override
             public void afterTextChanged(Editable editable) {
+            }
+        });
+        mFragmentAllProductsBinding.btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), CartActivity.class);
+                getContext().startActivity(intent);
             }
         });
         return viewFragment;

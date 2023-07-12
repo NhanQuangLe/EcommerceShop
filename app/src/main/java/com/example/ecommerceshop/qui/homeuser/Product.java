@@ -178,6 +178,9 @@ public class Product implements Serializable {
         String str1 = currencyVN.format(res);
         return str1;
     }
+    public int getPrice(){
+        return  this.productPrice - this.productDiscountPrice;
+    }
 
     public String getPercentDiscountStr(){
         NumberFormat numEN = NumberFormat.getPercentInstance();

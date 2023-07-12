@@ -83,7 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:hint="Mã khuyến mãi"
+                    android:hint="Promo code"
                     app:endIconMode="clear_text"
                     app:helperTextTextColor="@color/primary_red"
                     app:placeholderText="NGAYGP3004">
@@ -99,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:hint="Mô tả khuyến mãi"
+                    android:hint="Promotion Description"
                     app:endIconMode="clear_text"
                     app:helperTextTextColor="@color/primary_red"
                     app:placeholderText="Giảm 10% nhân dịp ngày giải phóng">
@@ -115,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:hint="Số tiền giảm"
+                    android:hint="Promotion Price"
                     app:endIconMode="clear_text"
                     app:helperTextTextColor="@color/primary_red"
                     app:placeholderText="2000000">
@@ -131,7 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:hint="Giá trị tối thiểu"
+                    android:hint="Minimum value"
                     app:endIconMode="clear_text"
                     app:helperTextTextColor="@color/primary_red"
                     app:placeholderText="20000000">
@@ -147,7 +147,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:hint="Số lượng"
+                    android:hint="Quantity"
                     app:endIconMode="clear_text"
                     app:helperTextTextColor="@color/primary_red"
                     app:placeholderText="100">
@@ -172,7 +172,7 @@
                     android:drawablePadding="30dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="10dp"
-                    android:text="Ngày hết hạn"
+                    android:text="Expiration date"
                     android:textSize="16sp" />
                 <Button
                     android:id="@+id/btnAddVoucher"
