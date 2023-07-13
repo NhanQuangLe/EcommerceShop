@@ -47,17 +47,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         editTextEmail.setOnClickListener(v -> {
             if (editTextEmail.getText().toString().trim().isEmpty())
             {
-                showToast("Please enter email to reset password!");
                 editTextEmail.setBackgroundResource(R.drawable.background_input_error);
-                textErrorEmail.setText("Please enter email to reset password!");
+                textErrorEmail.setText("Vui lòng nhập email để đặt lại mật khẩu!");
                 textErrorEmail.setTextColor(Color.parseColor("#E10000"));
                 textErrorEmail.setVisibility(View.VISIBLE);
             }
             else if (!Patterns.EMAIL_ADDRESS.matcher(editTextEmail.getText().toString()).matches())
             {
-                showToast("Please enter valid email!");
                 editTextEmail.setBackgroundResource(R.drawable.background_input_error);
-                textErrorEmail.setText("Please enter valid email!");
+                textErrorEmail.setText("Vui lòng nhập email hợp lệ!");
                 textErrorEmail.setTextColor(Color.parseColor("#E10000"));
                 textErrorEmail.setVisibility(View.VISIBLE);
             }
@@ -77,7 +75,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 loading(false);
                 buttonConfirm.setVisibility(View.INVISIBLE);
                 textGoToLogin.setVisibility(View.VISIBLE);
-                textErrorEmail.setText("Email valid. Please check your email to reset password!");
+                textErrorEmail.setText("Email hợp lệ. Vui lòng kiểm tra email của bạn để đặt lại mật khẩu!");
                 textErrorEmail.setTextColor(Color.parseColor("#08FF00"));
                 textErrorEmail.setVisibility(View.VISIBLE);
                 Toast.makeText(ForgotPasswordActivity.this, "Email sent!", Toast.LENGTH_SHORT).show();
@@ -86,8 +84,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             {
                 loading(false);
                 buttonConfirm.setVisibility(View.VISIBLE);
-                Toast.makeText(ForgotPasswordActivity.this, "Email sent failed or Email may not be registered!", Toast.LENGTH_SHORT).show();
-                textErrorEmail.setText("Email sent failed or Email may not be registered!");
+                textErrorEmail.setText("Gửi email không thành công hoặc Email có thể chưa được đăng ký!");
                 textErrorEmail.setTextColor(Color.parseColor("#E10000"));
                 textErrorEmail.setVisibility(View.VISIBLE);
             }
@@ -96,18 +93,16 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private boolean IsValidEmail() {
         if (editTextEmail.getText().toString().trim().isEmpty())
         {
-            showToast("Please enter email to reset password!");
             editTextEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Please enter email to reset password!");
+            textErrorEmail.setText("Vui lòng nhập email để đặt lại mật khẩu!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(editTextEmail.getText().toString()).matches())
         {
-            showToast("Please enter valid email!");
             editTextEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Please enter valid email!");
+            textErrorEmail.setText("Vui lòng nhập email hợp lệ!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -127,10 +122,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         textGoToLogin = findViewById(R.id.textGoToLogin);
         progress = findViewById(R.id.progressBar);
         buttonConfirm = findViewById(R.id.buttonResetPassword);
-    }
-    private void showToast(String message)
-    {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
     private void loading(Boolean isLoading)
     {

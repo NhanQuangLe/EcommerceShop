@@ -91,7 +91,6 @@ public class InputInfoActivity extends AppCompatActivity {
                 cbNu.setChecked(false);
             }
         });
-
         edittextName.setOnClickListener(v -> {
             if (!edittextName.getText().toString().trim().isEmpty())
             {
@@ -278,6 +277,8 @@ public class InputInfoActivity extends AppCompatActivity {
         loading(true);
 
         // thực hiện lưu thông tin trên csdl
+
+        // đăng ký
 
         startActivity(new Intent(InputInfoActivity.this, LoginActivity.class));
         loading(false);

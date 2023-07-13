@@ -47,9 +47,9 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private PreferenceManagement preferenceManagement;
-    private EditText signupEmail, signupPassword;
+    private EditText signupEmail, signupPassword, signupConfirmPass;
     private Button buttonSignUp;
-    private TextView loginTextView, textErrorEmail, textErrorPassword;
+    private TextView loginTextView, textErrorEmail, textErrorPassword, textErrorConfirmPassword;
     private ProgressBar signupProgressBar;
     private AppCompatImageView buttonBack;
     private ImageView eyeImagePass;
@@ -83,6 +83,8 @@ public class SignUpActivity extends AppCompatActivity {
         signupProgressBar = findViewById(R.id.progressBar);
         buttonSignUp = findViewById(R.id.buttonSignup);
         googleButton = findViewById(R.id.buttonGoogle);
+        signupConfirmPass = findViewById(R.id.editTextConfirmPass);
+        textErrorConfirmPassword = findViewById(R.id.textErrorConfirmPass);
     }
     private void setListeners() {
         buttonBack.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
@@ -92,7 +94,8 @@ public class SignUpActivity extends AppCompatActivity {
         buttonSignUp.setOnClickListener(view -> {
             Boolean checkEmail = IsValidSignUpEmail();
             Boolean checkPassword = IsValidSignUpPassword();
-            if (checkEmail && checkPassword)
+            Boolean checkConfirmPass = IsValidSignUpConfirmPassword();
+            if (checkEmail && checkPassword && checkConfirmPass)
                 signUp();
         });
         googleButton.setOnClickListener(v -> LoginWithGoogle());
@@ -115,7 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
             else
             {
                 signupEmail.setBackgroundResource(R.drawable.background_input);
-                textErrorEmail.setVisibility(View.VISIBLE);
+                textErrorEmail.setVisibility(View.INVISIBLE);
             }
         });
         signupPassword.setOnClickListener(v -> {
@@ -138,12 +141,68 @@ public class SignUpActivity extends AppCompatActivity {
                 else
                 {
                     signupPassword.setBackgroundResource(R.drawable.background_input);
-                    textErrorPassword.setVisibility(View.VISIBLE);
+                    textErrorPassword.setVisibility(View.INVISIBLE);
                 }
             }
         });
-
+        signupConfirmPass.setOnClickListener(v -> {
+            if (signupConfirmPass.getText().toString().trim().isEmpty())
+            {
+                signupConfirmPass.setBackgroundResource(R.drawable.background_input_error);
+                textErrorConfirmPassword.setText("Vui lòng nhập lại mật khẩu!");
+                textErrorConfirmPassword.setTextColor(Color.parseColor("#E10000"));
+                textErrorConfirmPassword.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                String pass = signupPassword.getText().toString().trim();
+                String Confirm_pass = signupConfirmPass.getText().toString().trim();
+                if (!pass.equals(Confirm_pass))
+                {
+                    signupConfirmPass.setBackgroundResource(R.drawable.background_input_error);
+                    textErrorConfirmPassword.setText("Không chính xác với mật khẩu bên trên. Vui lòng nhập lại!");
+                    textErrorConfirmPassword.setTextColor(Color.parseColor("#E10000"));
+                    textErrorConfirmPassword.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    signupConfirmPass.setBackgroundResource(R.drawable.background_input);
+                    textErrorConfirmPassword.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
+
+    private Boolean IsValidSignUpConfirmPassword() {
+        if (signupConfirmPass.getText().toString().trim().isEmpty())
+        {
+            signupConfirmPass.setBackgroundResource(R.drawable.background_input_error);
+            textErrorConfirmPassword.setText("Vui lòng nhập lại mật khẩu!");
+            textErrorConfirmPassword.setTextColor(Color.parseColor("#E10000"));
+            textErrorConfirmPassword.setVisibility(View.VISIBLE);
+            return false;
+        }
+        else
+        {
+            String pass = signupPassword.getText().toString().trim();
+            String Confirm_pass = signupConfirmPass.getText().toString().trim();
+            if (!pass.equals(Confirm_pass))
+            {
+                signupConfirmPass.setBackgroundResource(R.drawable.background_input_error);
+                textErrorConfirmPassword.setText("Không chính xác với mật khẩu bên trên. Vui lòng nhập lại!");
+                textErrorConfirmPassword.setTextColor(Color.parseColor("#E10000"));
+                textErrorConfirmPassword.setVisibility(View.VISIBLE);
+                return false;
+            }
+            else
+            {
+                signupConfirmPass.setBackgroundResource(R.drawable.background_input);
+                textErrorConfirmPassword.setVisibility(View.INVISIBLE);
+                return true;
+            }
+        }
+    }
+
     private void LoginWithGoogle() {
         Intent signInIntent = gsc.getSignInIntent();
         startActivityForResult(signInIntent,100);
@@ -181,22 +240,25 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp() {
         loading(true);
-        String email = signupEmail.getText().toString().trim();
-        String pass = signupPassword.getText().toString().trim();
-        auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(task -> {
-            if (task.isSuccessful())
-            {
-                loading(false);
-                Toast.makeText(SignUpActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-//                CreateAccountChat(email, pass);
-                startActivity(new Intent(SignUpActivity.this, InputInfoActivity.class));
-            }
-            else
-            {
-                loading(false);
-                Toast.makeText(SignUpActivity.this, "Tài khoản với địa chỉ email này đã tồn tại rồi. Hãy thử đăng ký với một địa chỉ email khác!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        startActivity(new Intent(SignUpActivity.this, InputInfoActivity.class));
+        loading(false);
+//        loading(true);
+//        String email = signupEmail.getText().toString().trim();
+//        String pass = signupPassword.getText().toString().trim();
+//        auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(task -> {
+//            if (task.isSuccessful())
+//            {
+//                loading(false);
+//                Toast.makeText(SignUpActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+////                CreateAccountChat(email, pass);
+//                startActivity(new Intent(SignUpActivity.this, InputInfoActivity.class));
+//            }
+//            else
+//            {
+//                loading(false);
+//                Toast.makeText(SignUpActivity.this, "Tài khoản với địa chỉ email này đã tồn tại rồi. Hãy thử đăng ký với một địa chỉ email khác!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
     private void CreateAccountChat(String email, String pass) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -249,7 +311,7 @@ public class SignUpActivity extends AppCompatActivity {
         else
         {
             signupEmail.setBackgroundResource(R.drawable.background_input);
-            textErrorEmail.setVisibility(View.VISIBLE);
+            textErrorEmail.setVisibility(View.INVISIBLE);
             return true;
         }
     }
@@ -277,7 +339,7 @@ public class SignUpActivity extends AppCompatActivity {
             else
             {
                 signupPassword.setBackgroundResource(R.drawable.background_input);
-                textErrorPassword.setVisibility(View.VISIBLE);
+                textErrorPassword.setVisibility(View.INVISIBLE);
                 return true;
             }
         }
