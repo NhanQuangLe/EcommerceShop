@@ -114,12 +114,15 @@ public class FavouriteShopsActivity extends AppCompatActivity {
                     @Override
                     public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                         for(int i = 0; i < listFavouriteShop.size(); i++)
-                            if(listFavouriteShop.get(i).getShopID().equals(snapshot.child("shopId").getValue(String.class)))
+                        {
+                            if(listFavouriteShop.get(i).getShopID().equals(snapshot.getValue(String.class)))
                             {
                                 listFavouriteShop.remove(i);
                                 favouriteShopsAdapter.notifyDataSetChanged();
-                                return;
+                                Toast.makeText(getApplicationContext(), favouriteShopsAdapter.getItemCount() + "", Toast.LENGTH_SHORT).show();
+                                break;
                             }
+                        }
                     }
 
                     @Override
@@ -139,24 +142,40 @@ public class FavouriteShopsActivity extends AppCompatActivity {
                 .child(firebaseAuth.getUid())
                 .child("Customer")
                 .child("Followers");
-
-        dbRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot ds : snapshot.getChildren())
-                            if(ds.getValue(String.class).equals(favouriteShop.getShopID()))
-                                dbRef.child(ds.getKey()).removeValue(new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                        Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+        String key;
+        dbRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for(DataSnapshot ds : task.getResult().getChildren())
+                    if(ds.getValue(String.class).equals(favouriteShop.getShopID()))
+                    {
+                        dbRef.child(ds.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        break;
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(FavouriteShopsActivity.this, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            }
+        });
+//        dbRef.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for(DataSnapshot ds : snapshot.getChildren())
+//                            if(ds.getValue(String.class).equals(favouriteShop.getShopID()))
+//                                dbRef.child(ds.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+//                                    @Override
+//                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+//                                        Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                });
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Toast.makeText(FavouriteShopsActivity.this, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
     }
  }

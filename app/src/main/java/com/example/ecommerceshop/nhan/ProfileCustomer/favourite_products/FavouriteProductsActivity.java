@@ -207,7 +207,7 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                 .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(FavouriteProductsActivity.this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FavouriteProductsActivity.this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

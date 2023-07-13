@@ -189,6 +189,8 @@ public class LoginActivity extends AppCompatActivity {
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(!snapshot.exists())
+                            return;
                         String idChat = snapshot.getValue(String.class);
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         Query query = db.collection(Constants.KEY_COLLECTION_USER).whereEqualTo(FieldPath.documentId(),idChat);

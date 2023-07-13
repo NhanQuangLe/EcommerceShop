@@ -19,8 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class FavouriteShopsAdapter  extends RecyclerView.Adapter<FavouriteShopsAdapter.FavouriteShopsViewholder> {
-
+public class FavouriteShopsAdapter extends RecyclerView.Adapter<FavouriteShopsAdapter.FavouriteShopsViewholder> {
     private Context context;
     private ArrayList<Shop> favouriteShops;
     public IClickFavouriteShopListener mClickFavouriteShopListener;

@@ -101,7 +101,7 @@
         <ImageButton
             android:contentDescription="null"
             android:id="@+id/ib_DeleteVoucher"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#ECE8E8"

@@ -36,14 +36,17 @@ public class VoucherCustomerActivity extends AppCompatActivity {
         GetData();
     }
     private void GetData(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(firebaseAuth.getUid())
                 .child("Customer")
-                .child("Voucher")
+                .child("Vouchers")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        listVoucher.clear();
                         for(DataSnapshot vc : snapshot.getChildren()){
+//                            if(vc.child("used").getValue(Boolean.class) == true)
+//                                continue;
                             ref.child(vc.child("shopId").getValue(String.class))
                                     .child("Shop")
                                     .child("Vouchers")
@@ -52,10 +55,12 @@ public class VoucherCustomerActivity extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             Voucher voucher = new Voucher();
+                                            voucher.setUsed(vc.child("used").getValue(Boolean.class));
                                             voucher.setVoucherid(vc.child("voucherid").getValue(String.class));
                                             voucher.setVouchercode(snapshot.child("vouchercode").getValue(String.class));
-                                            voucher.setVouchercode(snapshot.child("voucherdes").getValue(String.class));
-                                            voucher.setVouchercode(snapshot.child("expiredDate").getValue(String.class));
+                                            voucher.setVoucherdes(snapshot.child("voucherdes").getValue(String.class));
+                                            voucher.setDiscountPrice(snapshot.child("discountPrice").getValue(int.class));
+                                            voucher.setExpiredDate(snapshot.child("expiredDate").getValue(String.class));
                                             listVoucher.add(voucher);
                                             voucherCustomerAdapter.notifyDataSetChanged();
                                         }

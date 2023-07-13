@@ -173,6 +173,13 @@ public class UserProfileFragment extends Fragment {
                 });
             }
         });
+        mFragmentUserProfileBinding.llVouchers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), VoucherCustomerActivity.class);
+                mActivityLauncher.launch(intent);
+            }
+        });
         mFragmentUserProfileBinding.llLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -212,8 +212,9 @@ public class ProductDetailFragment extends Fragment {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/FavouriteProducts");
                 if (isChecked == false) {
                     ((CompoundButton) view).setChecked(true);
-                    String key = String.valueOf((int) new Date().getTime());
-                    ref.child(key).setValue(product.getProductId());
+                    String key = product.getProductId();
+                    ref.child(key).child("productId").setValue(product.getProductId());
+                    ref.child(key).child("shopId").setValue(product.getUid());
                 } else {
                     String keytemp = keyHeart;
                     keyHeart = null;
@@ -319,9 +320,9 @@ public class ProductDetailFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String productId = dataSnapshot.getValue(String.class);
-                    if (productId == null) continue;
-                    if (productId.equals(product.getProductId())) {
+                    String key = dataSnapshot.getKey();
+                    if (key == null) continue;
+                    if (key.equals(product.getProductId())) {
                         keyHeart = dataSnapshot.getKey();
                         break;
                     }

@@ -15,8 +15,10 @@ import com.example.ecommerceshop.databinding.ActivityHomeUserBinding;
 import com.example.ecommerceshop.nhan.ProfileCustomer.UserProfileFragment;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
+import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainUserActivity extends AppCompatActivity {
 
@@ -53,10 +55,14 @@ public class MainUserActivity extends AppCompatActivity {
                         Intent i = new Intent(getApplicationContext(), CartActivity.class);
                         startActivity(i);
                         break;
-//                    case R.id.notification:
+                    case R.id.notification:
 //                        ReplaceFragment(new VoucherShopFragment());
 //                        textView.setText("VOUCHERS");
-//                        break;
+                        FirebaseAuth firebaseAuth  = FirebaseAuth.getInstance();
+                        firebaseAuth.signOut();
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        finish();
+                        break;
                     case R.id.profile_user:
                         replaceFragment(new UserProfileFragment());
                         break;
