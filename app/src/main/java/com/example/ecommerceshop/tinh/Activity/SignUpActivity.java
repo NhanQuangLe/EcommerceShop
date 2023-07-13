@@ -6,10 +6,13 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -24,6 +27,8 @@ import android.widget.Toast;
 
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,12 +38,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
+    private PreferenceManagement preferenceManagement;
     private EditText signupEmail, signupPassword;
     private Button buttonSignUp;
     private TextView loginTextView, textErrorEmail, textErrorPassword;
@@ -51,6 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferenceManagement = new PreferenceManagement(getApplicationContext());
         setContentView(R.layout.activity_sign_up);
         auth = FirebaseAuth.getInstance();
         InitUI();
@@ -113,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity {
         auth.signInWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful())
             {
-                Intent intent = new Intent(SignUpActivity.this, MainUserActivity.class);
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
             else
@@ -131,8 +143,11 @@ public class SignUpActivity extends AppCompatActivity {
             if (task.isSuccessful())
             {
                 loading(false);
-                Toast.makeText(SignUpActivity.this, "SignUp Successful !", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                CreateAccountChat(email, pass);
+                Toast.makeText(SignUpActivity.this, "SignUp Successful!", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+                i.putExtra("signUp",true);
+                startActivity(i);
             }
             else
             {
@@ -140,6 +155,41 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void CreateAccountChat(String email, String pass) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        HashMap<String, Object> userChat = new HashMap<>();
+        userChat.put(Constants.KEY_NAME, "Newbie");
+        userChat.put(Constants.KEY_EMAIL, email);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_avatar);
+        String encodedImage = encodeImage(bitmap);
+        userChat.put(Constants.KEY_IMAGE, encodedImage);
+        db.collection(Constants.KEY_COLLECTION_USER).add(userChat)
+                .addOnSuccessListener(documentReference -> {
+                    loading(false);
+                    preferenceManagement.putString(Constants.KEY_USER_ID, documentReference.getId());
+                    preferenceManagement.putString(Constants.KEY_NAME, "Newbie");
+                    preferenceManagement.putString(Constants.KEY_IMAGE, encodedImage);
+                    String accountChatId = preferenceManagement.getString(Constants.KEY_USER_ID);
+                    String idCurrentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+idCurrentUser+"/Customer/accountChatId");
+                    ref.setValue(accountChatId);
+                }).addOnFailureListener(exception -> {
+                    loading(false);
+                    showToast(exception.getMessage());
+                });
+    }
+
+    private String encodeImage(Bitmap bitmap)
+    {
+        int previewWidth = 150;
+        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
+        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
     private void HandleEyePassword()
     {

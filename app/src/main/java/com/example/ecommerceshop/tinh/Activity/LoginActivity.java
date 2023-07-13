@@ -1,4 +1,5 @@
 package com.example.ecommerceshop.tinh.Activity;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -18,20 +19,32 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ecommerceshop.MainShopActivity;
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.Phat.Activity.AdminActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
@@ -47,11 +60,13 @@ public class LoginActivity extends AppCompatActivity {
     private LinearLayout googleButton;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+    private PreferenceManagement preferenceManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        preferenceManagement = new PreferenceManagement(getApplicationContext());
         auth = FirebaseAuth.getInstance();
         InitUI();
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
@@ -70,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
             }
             else
             {
+                Intent i = getIntent();
+                if (i.getBooleanExtra("signUp",false)==true) return;
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -166,7 +183,33 @@ public class LoginActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(email,pass).addOnSuccessListener(authResult -> {
                 loading(false);
                 Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this, MainShopActivity.class));
+                preferenceManagement.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+currentUser.getUid()+"/Customer/accountChatId");
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String idChat = snapshot.getValue(String.class);
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        Query query = db.collection(Constants.KEY_COLLECTION_USER).whereEqualTo(FieldPath.documentId(),idChat);
+                        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                                preferenceManagement.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                                preferenceManagement.putString(Constants.KEY_USER_ID, documentSnapshot.getId());;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+                startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
                 finish();
             }).addOnFailureListener(e -> {
                 loading(false);

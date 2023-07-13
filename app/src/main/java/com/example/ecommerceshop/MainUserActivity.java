@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.ecommerceshop.chat.MainChatActivity;
 import com.example.ecommerceshop.databinding.ActivityHomeUserBinding;
 import com.example.ecommerceshop.nhan.ProfileCustomer.UserProfileFragment;
 import com.example.ecommerceshop.qui.cart.CartActivity;
@@ -59,10 +60,12 @@ public class MainUserActivity extends AppCompatActivity {
                     case R.id.profile_user:
                         replaceFragment(new UserProfileFragment());
                         break;
-//                    case R.id.chat:
-//                        ReplaceFragment(new AddProductShopFragment());
-//                        textView.setText("ADD PRODUCT");
-//                        break;
+                    case R.id.chat:
+                    {
+                        Intent i2 = new Intent(getApplicationContext(), MainChatActivity.class);
+                        startActivity(i2);
+                        break;
+                    }
                 }
                 return true;
             }
