@@ -165,6 +165,7 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
     public void receiveDataFromAdapter(long money, String shopId, Voucher voucher) {
         this.voucherFromItemPayment = voucher;
         this.voucherPrevious = voucher;
+        this.voucherSelected=voucherPrevious;
         this.money = money;
         this.shopId = shopId;
 
