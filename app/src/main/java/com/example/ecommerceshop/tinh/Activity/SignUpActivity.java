@@ -6,13 +6,10 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -27,8 +24,6 @@ import android.widget.Toast;
 
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.utilities.Constants;
-import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -38,18 +33,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
-    private PreferenceManagement preferenceManagement;
     private EditText signupEmail, signupPassword;
     private Button buttonSignUp;
     private TextView loginTextView, textErrorEmail, textErrorPassword;
@@ -62,7 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferenceManagement = new PreferenceManagement(getApplicationContext());
         setContentView(R.layout.activity_sign_up);
         auth = FirebaseAuth.getInstance();
         InitUI();
@@ -99,6 +87,53 @@ public class SignUpActivity extends AppCompatActivity {
                 signUp();
         });
         googleButton.setOnClickListener(v -> LoginWithGoogle());
+
+        signupEmail.setOnClickListener(v -> {
+            if (signupEmail.getText().toString().trim().isEmpty())
+            {
+                signupEmail.setBackgroundResource(R.drawable.background_input_error);
+                textErrorEmail.setText("Vui lòng nhập email để đăng ký!");
+                textErrorEmail.setTextColor(Color.parseColor("#E10000"));
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            else if (!Patterns.EMAIL_ADDRESS.matcher(signupEmail.getText().toString()).matches())
+            {
+                signupEmail.setBackgroundResource(R.drawable.background_input_error);
+                textErrorEmail.setText("Vui lòng nhập email hợp lệ!");
+                textErrorEmail.setTextColor(Color.parseColor("#E10000"));
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                signupEmail.setBackgroundResource(R.drawable.background_input);
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+        });
+        signupPassword.setOnClickListener(v -> {
+            if (signupPassword.getText().toString().trim().isEmpty())
+            {
+                signupPassword.setBackgroundResource(R.drawable.background_input_error);
+                textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng ký!");
+                textErrorPassword.setTextColor(Color.parseColor("#E10000"));
+                textErrorPassword.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                if (signupPassword.getText().toString().trim().length() < 8)
+                {
+                    signupPassword.setBackgroundResource(R.drawable.background_input_error);
+                    textErrorPassword.setText("Mật khẩu phải có độ dài từ 8 ký tự!");
+                    textErrorPassword.setTextColor(Color.parseColor("#E10000"));
+                    textErrorPassword.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    signupPassword.setBackgroundResource(R.drawable.background_input);
+                    textErrorPassword.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
     }
     private void LoginWithGoogle() {
         Intent signInIntent = gsc.getSignInIntent();
@@ -115,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Log.e("e", Objects.requireNonNull(e.getMessage()).trim());
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Một vài điều gì đó đang không đúng", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -125,12 +160,12 @@ public class SignUpActivity extends AppCompatActivity {
         auth.signInWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful())
             {
-                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SignUpActivity.this, MainUserActivity.class);
                 startActivity(intent);
             }
             else
             {
-                Toast.makeText(getApplicationContext(), "Failed...........", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Thất bại", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -143,53 +178,15 @@ public class SignUpActivity extends AppCompatActivity {
             if (task.isSuccessful())
             {
                 loading(false);
-                CreateAccountChat(email, pass);
-                Toast.makeText(SignUpActivity.this, "SignUp Successful!", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(),LoginActivity.class);
-                i.putExtra("signUp",true);
-                startActivity(i);
+                Toast.makeText(SignUpActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(SignUpActivity.this, activity_input_info.class));
             }
             else
             {
                 loading(false);
-                Toast.makeText(SignUpActivity.this, Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "Tài khoản với địa chỉ email này đã tồn tại rồi. Hãy thử đăng ký với một địa chỉ email khác!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void CreateAccountChat(String email, String pass) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        HashMap<String, Object> userChat = new HashMap<>();
-        userChat.put(Constants.KEY_NAME, "Newbie");
-        userChat.put(Constants.KEY_EMAIL, email);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_avatar);
-        String encodedImage = encodeImage(bitmap);
-        userChat.put(Constants.KEY_IMAGE, encodedImage);
-        db.collection(Constants.KEY_COLLECTION_USER).add(userChat)
-                .addOnSuccessListener(documentReference -> {
-                    loading(false);
-                    preferenceManagement.putString(Constants.KEY_USER_ID, documentReference.getId());
-                    preferenceManagement.putString(Constants.KEY_NAME, "Newbie");
-                    preferenceManagement.putString(Constants.KEY_IMAGE, encodedImage);
-                    String accountChatId = preferenceManagement.getString(Constants.KEY_USER_ID);
-                    String idCurrentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+idCurrentUser+"/Customer/accountChatId");
-                    ref.setValue(accountChatId);
-                }).addOnFailureListener(exception -> {
-                    loading(false);
-                    showToast(exception.getMessage());
-                });
-    }
-
-    private String encodeImage(Bitmap bitmap)
-    {
-        int previewWidth = 150;
-        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
     private void HandleEyePassword()
     {
@@ -209,7 +206,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (signupEmail.getText().toString().trim().isEmpty())
         {
             signupEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Please enter email!");
+            textErrorEmail.setText("Vui lòng email để đăng ký!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -217,7 +214,7 @@ public class SignUpActivity extends AppCompatActivity {
         else if (!Patterns.EMAIL_ADDRESS.matcher(signupEmail.getText().toString()).matches())
         {
             signupEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Please enter valid email!");
+            textErrorEmail.setText("Vui lòng nhập email hợp lệ!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -225,8 +222,6 @@ public class SignUpActivity extends AppCompatActivity {
         else
         {
             signupEmail.setBackgroundResource(R.drawable.background_input);
-            textErrorEmail.setText("Valid email account");
-            textErrorEmail.setTextColor(Color.parseColor("#08FF00"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return true;
         }
@@ -237,7 +232,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (signupPassword.getText().toString().trim().isEmpty())
         {
             signupPassword.setBackgroundResource(R.drawable.background_input_error);
-            textErrorPassword.setText("Please enter password!");
+            textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng ký!");
             textErrorPassword.setTextColor(Color.parseColor("#E10000"));
             textErrorPassword.setVisibility(View.VISIBLE);
             return false;
@@ -247,7 +242,7 @@ public class SignUpActivity extends AppCompatActivity {
             if (signupPassword.getText().toString().trim().length() < 8)
             {
                 signupPassword.setBackgroundResource(R.drawable.background_input_error);
-                textErrorPassword.setText("Please enter a password longer than 8 characters!");
+                textErrorPassword.setText("Mật khẩu phải có độ dài từ 8 ký tự!");
                 textErrorPassword.setTextColor(Color.parseColor("#E10000"));
                 textErrorPassword.setVisibility(View.VISIBLE);
                 return false;
@@ -255,14 +250,11 @@ public class SignUpActivity extends AppCompatActivity {
             else
             {
                 signupPassword.setBackgroundResource(R.drawable.background_input);
-                textErrorPassword.setText("Valid password");
-                textErrorPassword.setTextColor(Color.parseColor("#08FF00"));
                 textErrorPassword.setVisibility(View.VISIBLE);
                 return true;
             }
         }
     }
-
     private void showToast(String message)
     {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();

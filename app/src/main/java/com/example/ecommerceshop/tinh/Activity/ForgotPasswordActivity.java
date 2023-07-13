@@ -43,6 +43,30 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 OnClickConfirmReset();
             }
         });
+
+        editTextEmail.setOnClickListener(v -> {
+            if (editTextEmail.getText().toString().trim().isEmpty())
+            {
+                showToast("Please enter email to reset password!");
+                editTextEmail.setBackgroundResource(R.drawable.background_input_error);
+                textErrorEmail.setText("Please enter email to reset password!");
+                textErrorEmail.setTextColor(Color.parseColor("#E10000"));
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            else if (!Patterns.EMAIL_ADDRESS.matcher(editTextEmail.getText().toString()).matches())
+            {
+                showToast("Please enter valid email!");
+                editTextEmail.setBackgroundResource(R.drawable.background_input_error);
+                textErrorEmail.setText("Please enter valid email!");
+                textErrorEmail.setTextColor(Color.parseColor("#E10000"));
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                editTextEmail.setBackgroundResource(R.drawable.background_input);
+                textErrorEmail.setVisibility(View.INVISIBLE);
+            }
+        });
     }
     private void OnClickConfirmReset() {
         String email = editTextEmail.getText().toString().trim();
