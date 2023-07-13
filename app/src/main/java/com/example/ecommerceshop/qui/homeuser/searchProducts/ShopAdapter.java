@@ -29,7 +29,15 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
     public List<RequestShop> mList, filterList;
     private FilterShop filterShop;
 
+    public interface IClickShopItemListener{
+         void sendDataShop(RequestShop shop);
+    }
 
+    public void setiClickShopItemListener(IClickShopItemListener iClickShopItemListener) {
+        this.iClickShopItemListener = iClickShopItemListener;
+    }
+
+    private IClickShopItemListener iClickShopItemListener;
 
     public void setData(List<RequestShop> mList){
         this.mList=mList;
@@ -127,6 +135,12 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
+                }
+            });
+            holder.mBinding.mainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    iClickShopItemListener.sendDataShop(shop);
                 }
             });
 

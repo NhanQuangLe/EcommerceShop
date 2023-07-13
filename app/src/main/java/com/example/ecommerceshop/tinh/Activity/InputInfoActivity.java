@@ -4,7 +4,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -16,12 +15,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -36,12 +32,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class activity_input_info extends AppCompatActivity {
+public class InputInfoActivity extends AppCompatActivity {
 
     private RoundedImageView avatar;
     private FrameLayout layoutImage;
@@ -117,7 +112,7 @@ public class activity_input_info extends AppCompatActivity {
             myCalendar.set(Calendar.DAY_OF_MONTH,day);
             updateLabel();
         };
-        buttonShowDatePicker.setOnClickListener(v -> new DatePickerDialog(activity_input_info.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+        buttonShowDatePicker.setOnClickListener(v -> new DatePickerDialog(InputInfoActivity.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         layoutImage.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -284,7 +279,7 @@ public class activity_input_info extends AppCompatActivity {
 
         // thực hiện lưu thông tin trên csdl
 
-        startActivity(new Intent(activity_input_info.this, LoginActivity.class));
+        startActivity(new Intent(InputInfoActivity.this, LoginActivity.class));
         loading(false);
     }
     private void InitUI() {

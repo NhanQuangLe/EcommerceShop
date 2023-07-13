@@ -1,46 +1,43 @@
-package com.example.ecommerceshop.Phat.Adapter;
+package com.example.ecommerceshop.qui.product_detail;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.ecommerceshop.Phat.Activity.OrderDetailShopActivity;
-import com.example.ecommerceshop.Phat.Activity.ResponseRVActivity;
+import com.example.ecommerceshop.Phat.Adapter.AdapterImgReviews;
 import com.example.ecommerceshop.Phat.Model.Review;
 import com.example.ecommerceshop.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.ReviewViewHolder>{
+public class AdapterReviewCustomer extends RecyclerView.Adapter<AdapterReviewCustomer.ReviewViewHolder>{
     private Context context;
     private ArrayList<Review> reviews;
 
-    public AdapterReviews(Context context, ArrayList<Review> reviews) {
+    public AdapterReviewCustomer(Context context, ArrayList<Review> reviews) {
         this.context = context;
         this.reviews = reviews;
     }
@@ -48,12 +45,13 @@ public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.ReviewVi
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.adapter_review_shop, parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.adapter_review_cus, parent,false);
         return new ReviewViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
+        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         Review review = reviews.get(position);
         Glide.with(context).load(Uri.parse(review.getAvatarCus())).into(holder.avtCus);
         holder.cusName.setText(review.getCustomerName());
@@ -64,23 +62,45 @@ public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.ReviewVi
         holder.rvContent.setText(review.getContent());
         if(review.getRvResponse() != null){
             holder.rvResponse.setText(review.getRvResponse());
-            holder.btnResponse.setVisibility(View.GONE);
         }
         else {
             holder.rvResponse.setVisibility(View.GONE);
-            holder.btnResponse.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, ResponseRVActivity.class);
-                    intent.putExtra("cusId", review.getCustomerId());
-                    intent.putExtra("rvId", review.getReviewId());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
-            });
         }
         AdapterImgReviews adapterImgReviews = new AdapterImgReviews(context,review.getUriList());
         holder.listImgRv.setAdapter(adapterImgReviews);
+        final boolean[] flat = {false};
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+review.getCustomerId()+"/Customer/Reviews/"+review.getReviewId()+"/likeCommentUser");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    long likeQuantity = snapshot.getChildrenCount();
+                    holder.likeQuantity.setText(likeQuantity+"");
+                    if (snapshot.child(mCurrentUser.getUid()).exists()){
+                        holder.checkBoxLike.setChecked(true);
+                    }
+                    else {
+                         holder.checkBoxLike.setChecked(false);
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        holder.checkBoxLike.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    ref.child(mCurrentUser.getUid()).setValue(mCurrentUser.getUid());
+                }
+                else {
+                   ref.child(mCurrentUser.getUid()).removeValue();
+                }
+            }
+        });
+
+
 
     }
 
@@ -96,6 +116,8 @@ public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.ReviewVi
         AppCompatButton btnResponse;
         RatingBar RatingBar;
         RecyclerView listImgRv;
+        TextView likeQuantity;
+        CheckBox checkBoxLike;
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
             avtCus=itemView.findViewById(R.id.avtCus);
@@ -106,7 +128,8 @@ public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.ReviewVi
             btnResponse=itemView.findViewById(R.id.btnResponse);
             RatingBar=itemView.findViewById(R.id.RatingBar);
             listImgRv=itemView.findViewById(R.id.listImgRv);
-
+            likeQuantity = itemView.findViewById(R.id.likeQuantity);
+            checkBoxLike = itemView.findViewById(R.id.checkBoxLike);
         }
     }
 }

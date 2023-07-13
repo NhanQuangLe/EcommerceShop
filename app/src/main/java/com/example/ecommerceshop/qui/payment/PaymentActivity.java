@@ -406,7 +406,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void updateVoucherOfItemOrder(String voucherUsedId, long id) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Vouchers");
-        ref.child(voucherUsedId).child("isUsed").setValue(true, new DatabaseReference.CompletionListener() {
+        ref.child(voucherUsedId).child("used").setValue(true, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 numItemPayment++;

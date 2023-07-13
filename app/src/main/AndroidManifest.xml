@@ -16,12 +16,6 @@
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
         <activity
-            android:name=".tinh.Activity.activity_input_info"
-            android:exported="true">
-
-        </activity>
-
-        <activity
             android:name=".qui.shop.AllFilterProductActivity"
             android:exported="false" />
         <activity
@@ -35,13 +29,17 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
-            android:exported="true" />
+            android:exported="true"></activity>
         <activity
             android:name=".tinh.Activity.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SignUpActivity"
+            android:exported="true" />
+        <activity
+            android:name=".tinh.Activity.InputInfoActivity"
             android:exported="true">
+
         </activity>
         <activity
             android:name=".tinh.Activity.LoginActivity"
@@ -83,7 +81,7 @@
             android:name=".MainUserActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".nhan.ProfileCustomer.orders.UserOrdersActivity"
             android:exported="false" />

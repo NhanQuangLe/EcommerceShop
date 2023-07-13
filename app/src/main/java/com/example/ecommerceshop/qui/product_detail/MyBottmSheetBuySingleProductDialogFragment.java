@@ -2,10 +2,15 @@ package com.example.ecommerceshop.qui.product_detail;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -103,26 +108,26 @@ public class MyBottmSheetBuySingleProductDialogFragment extends BottomSheetDialo
         btnPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                path = "";
-                cur_quantity_firebase=0;
-                String quantityStr = tvQuantity.getText().toString();
-                int quantity = Integer.parseInt(quantityStr);
-                Intent intent = new Intent(mActivity, PaymentActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("clickType","fromProductDetail");
-                bundle.putInt("quantity",quantity);
-                bundle.putSerializable("product",mProduct);
-                intent.putExtras(bundle);
-                mActivity.startActivity(intent);
 
+                    path = "";
+                    cur_quantity_firebase=0;
+                    String quantityStr = tvQuantity.getText().toString();
+                    int quantity = Integer.parseInt(quantityStr);
+                    Intent intent = new Intent(mActivity, PaymentActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("clickType","fromProductDetail");
+                    bundle.putInt("quantity",quantity);
+                    bundle.putSerializable("product",mProduct);
+                    intent.putExtras(bundle);
+                    mActivity.startActivity(intent);
+                    bottomSheetDialog.dismiss();
+                }
 
-
-
-            }
         });
 
         return bottomSheetDialog;
     }
+
 
 
 
