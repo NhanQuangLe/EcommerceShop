@@ -137,6 +137,9 @@
         <activity
             android:name=".nhan.ProfileCustomer.edit_user_info.EditUserInfoActivity"
             android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.vouchers.VoucherCustomerActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

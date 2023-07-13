@@ -10,6 +10,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.ecommerceshop.MainShopActivity;
 import com.example.ecommerceshop.Phat.Activity.RegistrationToShopInAdminActivity;
+import com.example.ecommerceshop.Phat.Activity.RequestToShopActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.FragmentUserProfileBinding;
 import com.example.ecommerceshop.nhan.Model.Customer;
@@ -25,7 +28,10 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.edit_user_info.EditUserInf
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
+import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,7 +69,7 @@ public class UserProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        //mView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         mFragmentUserProfileBinding = FragmentUserProfileBinding.inflate(inflater,container,false);
         mView = mFragmentUserProfileBinding.getRoot();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -145,22 +151,41 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-                if(ref.child(firebaseAuth.getUid())
-                        .child("Shop").get() == null)
-                {
-                    Intent intent = new Intent(getContext(), RegistrationToShopInAdminActivity.class);
-                    mActivityLauncher.launch(intent);
-                }
-                else
-                {
-                    Intent intent = new Intent(getContext(), MainShopActivity.class);
-                    mActivityLauncher.launch(intent);
-                }
+                ref.child(firebaseAuth.getUid()).child("Shop").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists())
+                        {
+                            Intent intent = new Intent(getContext(), MainShopActivity.class);
+                            mActivityLauncher.launch(intent);
+                        }
+                        else{
+                            Intent intent = new Intent(getContext(), RequestToShopActivity.class);
+                            intent.putExtra("id", firebaseAuth.getUid());
+                            mActivityLauncher.launch(intent);
+                        }
+                    }
 
-                Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
-                intent.putExtra("currentUser", currentCustomer);
-                mActivityLauncher.launch(intent);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
+        mFragmentUserProfileBinding.llLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firebaseAuth.signOut();
+                checkUser();
+            }
+        });
+    }
+    private void checkUser() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user==null){
+            startActivity(new Intent(getContext(), LoginActivity.class));
+            getActivity().finish();
+        }
     }
 }
