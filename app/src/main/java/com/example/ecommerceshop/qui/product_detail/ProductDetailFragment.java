@@ -55,8 +55,10 @@ import com.example.ecommerceshop.Phat.Model.Review;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class ProductDetailFragment extends Fragment {
@@ -206,22 +208,19 @@ public class ProductDetailFragment extends Fragment {
             }
         });
 
-        mFragmentProductDetailBinding.checkBoxHeart.setOnClickListener(new View.OnClickListener() {
+        mFragmentProductDetailBinding.checkBoxHeart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/FavouriteProducts");
-                if (isChecked == false) {
-                    ((CompoundButton) view).setChecked(true);
-                    String key = product.getProductId();
-                    ref.child(key).child("productId").setValue(product.getProductId());
-                    ref.child(key).child("shopId").setValue(product.getUid());
-                } else {
-                    String keytemp = keyHeart;
-                    keyHeart = null;
-                    ((CompoundButton) view).setChecked(false);
-                    ref.child(keytemp).removeValue();
+                if (b){
+                    Map<String,String> map = new HashMap<>();
+                    map.put("productId",product.getProductId());
+                    map.put("shopId",product.getUid());
+                    ref.child(product.getProductId()).setValue(map);
                 }
-                isChecked = !isChecked;
+                else {
+                    ref.child(product.getProductId()).removeValue();
+                }
             }
         });
         mFragmentProductDetailBinding.navHome.setOnClickListener(new View.OnClickListener() {
@@ -319,21 +318,11 @@ public class ProductDetailFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String key = dataSnapshot.getKey();
-                    if (key == null) continue;
-                    if (key.equals(product.getProductId())) {
-                        keyHeart = dataSnapshot.getKey();
-                        break;
-                    }
-                }
-                if (keyHeart != null) {
+                if (snapshot.child(product.getProductId()).exists()){
                     mFragmentProductDetailBinding.checkBoxHeart.setChecked(true);
-                    isChecked = true;
-                } else {
-
+                }
+                else {
                     mFragmentProductDetailBinding.checkBoxHeart.setChecked(false);
-                    isChecked = false;
                 }
             }
 

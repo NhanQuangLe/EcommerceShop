@@ -74,45 +74,17 @@ public class ShopActivityCustomer extends AppCompatActivity {
         mActivityShopCustomerBinding.btnFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long followId = Calendar.getInstance().getTimeInMillis();
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Followers");
-                ref.child(followId+"").setValue(shopId, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
-                        mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.VISIBLE);
-                    }
-                });
+                ref.child(shopId).setValue(shopId);
+//                mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
+//                mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.VISIBLE);
             }
         });
         mActivityShopCustomerBinding.btnUnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Followers");
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                            String value =dataSnapshot.getValue(String.class);
-                            if (value.equals(shopId)){
-                                dataSnapshot.getRef().removeValue(new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                        mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.GONE);
-                                        mActivityShopCustomerBinding.btnFollow.setVisibility(View.VISIBLE);
-
-                                    }
-                                });
-                                break;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                ref.child(shopId).removeValue();
             }
         });
         mActivityShopCustomerBinding.btnBackward.setOnClickListener(new View.OnClickListener() {
@@ -267,24 +239,17 @@ public class ShopActivityCustomer extends AppCompatActivity {
             return;
         }
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Followers");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean flat = false;
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    String value = dataSnapshot.getValue(String.class);
-                    if (value.equals(shopId)){
-                        mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.VISIBLE);
-                        mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
-                        flat=true;
-                        break;
-                    }
+                if (snapshot.child(shopId).exists()){
+                    mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.VISIBLE);
+                    mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
                 }
-                if (flat==false){
+                else {
                     mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.GONE);
                     mActivityShopCustomerBinding.btnFollow.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override
