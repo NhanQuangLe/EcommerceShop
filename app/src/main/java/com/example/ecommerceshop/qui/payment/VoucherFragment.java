@@ -81,7 +81,7 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
 
     private void setListVoucher() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Vouchers");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (mListVoucher != null) mListVoucher.clear();
@@ -97,9 +97,11 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
 
                                     if (voucher2!=null){
                                         if (voucher2.getVoucherid().equals(voucher.getVoucherid())){
+
                                             if (voucher2.getMinimumPrice() <= money
                                                     && voucher.getShopId().equals(shopId)
-                                                    && voucher.isUsed()==false)
+                                                    && !voucher.isUsed()
+                                                    )
                                                 voucher.setCanUse(true);
                                             else voucher.setCanUse(false);
                                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -127,6 +129,7 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
 
 
                                             }
+                                            break;
                                         }
 
                                     }
@@ -147,8 +150,6 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
 
                             }
                         });
-                        //check minimum
-
                     }
                 }
 
@@ -170,10 +171,6 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
 
     }
 
-    private void setCheckBox(List<Voucher> vouchers) {
-
-
-    }
 
     @Override
     public void sendStatus(boolean b, Voucher voucher) {

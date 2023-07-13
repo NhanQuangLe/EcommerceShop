@@ -314,21 +314,15 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
 
     @Override
     public void clickSaveVoucher(Voucher voucher) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Vouchers");
-//        long id = Calendar.getInstance().getTimeInMillis();
-        voucher.setShopId(shopId);
-        ref.child(voucher.getVoucherid()).child("voucherid").setValue(voucher.getVoucherid(), new DatabaseReference.CompletionListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Vouchers/"+voucher.getVoucherid());
+        Voucher tmp = new Voucher(voucher.getVoucherid(),false,shopId);
+        ref.setValue(tmp, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                ref.child(voucher.getVoucherid()).child("shopId").setValue(shopId, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        Toast.makeText(mActivity, "Lưu voucher thành công", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+                Toast.makeText(getContext(), "Lưu voucher thành công", Toast.LENGTH_SHORT).show();
             }
         });
+
 
 
     }

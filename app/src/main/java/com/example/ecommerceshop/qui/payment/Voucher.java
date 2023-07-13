@@ -8,27 +8,48 @@ public class Voucher {
     private int minimumPrice;
     private int discountPrice;
     private String expiredDate;
-    private boolean used;
 
     public boolean isUsed() {
         return used;
     }
 
     public void setUsed(boolean used) {
-        used = used;
+        this.used = used;
     }
 
-    public String getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
-    }
+    private boolean used;
 
     private String shopId;
 
     private boolean isCanUse;
+
+
+
+    private boolean isCheck;
+
+
+
+    public Voucher() {
+    }
+
+    public Voucher(String voucherid, boolean used, String shopId) {
+        this.voucherid = voucherid;
+        this.used = used;
+        this.shopId = shopId;
+    }
+
+    public Voucher(String voucherid, String vouchercode, String voucherdes, int quantity, int minimumPrice
+            , int discountPrice, String expiredDate, boolean used, String shopId) {
+        this.voucherid = voucherid;
+        this.vouchercode = vouchercode;
+        this.voucherdes = voucherdes;
+        this.quantity = quantity;
+        this.minimumPrice = minimumPrice;
+        this.discountPrice = discountPrice;
+        this.expiredDate = expiredDate;
+        this.used = used;
+        this.shopId = shopId;
+    }
 
     public boolean isCheck() {
         return isCheck;
@@ -38,23 +59,12 @@ public class Voucher {
         isCheck = check;
     }
 
-    private boolean isCheck;
-
-
-
-    public Voucher() {
+    public String getShopId() {
+        return shopId;
     }
 
-    public Voucher(String voucherid, String vouchercode, String voucherdes, int quantity, int minimumPrice,
-                   int discountPrice, String expiredDate) {
-        this.voucherid = voucherid;
-        this.vouchercode = vouchercode;
-        this.voucherdes = voucherdes;
-        this.quantity = quantity;
-        this.minimumPrice = minimumPrice;
-        this.discountPrice = discountPrice;
-        this.expiredDate = expiredDate;
-        this.used = false;
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 
     public String getVoucherid() {
