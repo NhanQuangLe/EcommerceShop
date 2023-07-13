@@ -172,7 +172,36 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
     }
 
     private void iListener() {
-
+        mFragmentShopCustomerBinding.categoryLaptop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity,AllFilterProductActivity.class);
+                intent.putExtra("clickType",1);
+                intent.putExtra("category","Laptop");
+                intent.putExtra("shopId",shopId);
+                mActivity.startActivity(intent);
+            }
+        });
+        mFragmentShopCustomerBinding.categoryPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity,AllFilterProductActivity.class);
+                intent.putExtra("clickType",1);
+                intent.putExtra("category","Smartphone");
+                intent.putExtra("shopId",shopId);
+                mActivity.startActivity(intent);
+            }
+        });
+        mFragmentShopCustomerBinding.categoryAccessories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity,AllFilterProductActivity.class);
+                intent.putExtra("clickType",1);
+                intent.putExtra("category","Accessory");
+                intent.putExtra("shopId",shopId);
+                mActivity.startActivity(intent);
+            }
+        });
     }
 
     private void setListVoucher() {
@@ -286,6 +315,7 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
     public void clickSaveVoucher(Voucher voucher) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Vouchers");
         long id = Calendar.getInstance().getTimeInMillis();
+        voucher.setShopId(shopId);
         ref.child(id+"").setValue(voucher, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
