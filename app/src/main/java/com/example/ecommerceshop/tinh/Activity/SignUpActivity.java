@@ -6,6 +6,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -15,7 +17,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -24,6 +25,8 @@ import android.widget.Toast;
 
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,12 +36,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
+    private PreferenceManagement preferenceManagement;
     private EditText signupEmail, signupPassword;
     private Button buttonSignUp;
     private TextView loginTextView, textErrorEmail, textErrorPassword;
@@ -52,6 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        preferenceManagement = new PreferenceManagement(getApplicationContext());
         auth = FirebaseAuth.getInstance();
         InitUI();
         setListeners();
@@ -179,7 +188,8 @@ public class SignUpActivity extends AppCompatActivity {
             {
                 loading(false);
                 Toast.makeText(SignUpActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(SignUpActivity.this, activity_input_info.class));
+//                CreateAccountChat(email, pass);
+                startActivity(new Intent(SignUpActivity.this, InputInfoActivity.class));
             }
             else
             {
@@ -187,6 +197,23 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "Tài khoản với địa chỉ email này đã tồn tại rồi. Hãy thử đăng ký với một địa chỉ email khác!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void CreateAccountChat(String email, String pass) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        HashMap<String, Object> userChat = new HashMap<>();
+        userChat.put(Constants.KEY_EMAIL, email);
+        db.collection(Constants.KEY_COLLECTION_USER).add(userChat)
+                .addOnSuccessListener(documentReference -> {
+                    loading(false);
+                    preferenceManagement.putString(Constants.KEY_USER_ID, documentReference.getId());
+                    String accountChatId = preferenceManagement.getString(Constants.KEY_USER_ID);
+                    String idCurrentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+idCurrentUser+"/Customer/accountChatId");
+                    ref.setValue(accountChatId);
+                }).addOnFailureListener(exception -> {
+                    loading(false);
+                    showToast(exception.getMessage());
+                });
     }
     private void HandleEyePassword()
     {

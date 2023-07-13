@@ -37,7 +37,7 @@
             android:name=".tinh.Activity.SignUpActivity"
             android:exported="true" />
         <activity
-            android:name=".tinh.Activity.activity_input_info"
+            android:name=".tinh.Activity.InputInfoActivity"
             android:exported="true">
 
         </activity>

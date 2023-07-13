@@ -8,7 +8,7 @@
     android:overScrollMode="never"
     android:scrollbars="none"
     android:padding="24dp"
-    tools:context=".tinh.Activity.activity_input_info">
+    tools:context=".tinh.Activity.InputInfoActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
