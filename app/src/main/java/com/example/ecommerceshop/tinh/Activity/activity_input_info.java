@@ -282,13 +282,11 @@ public class activity_input_info extends AppCompatActivity {
     private void Started() {
         loading(true);
 
-        // thực hiện lưu thông tin
+        // thực hiện lưu thông tin trên csdl
 
         startActivity(new Intent(activity_input_info.this, LoginActivity.class));
         loading(false);
     }
-
-
     private void InitUI() {
         avatar = findViewById(R.id.imageProfile);
         textAddImage = findViewById(R.id.textAddImage);
