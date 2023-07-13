@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.ecommerceshop.Phat.Fragment.NotificationFragment;
 import com.example.ecommerceshop.databinding.ActivityHomeUserBinding;
 import com.example.ecommerceshop.nhan.ProfileCustomer.UserProfileFragment;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
@@ -50,10 +51,9 @@ public class MainUserActivity extends AppCompatActivity {
 //                        ReplaceFragment(new OrderListShopFragment());
 //                        textView.setText("ORDERS");
 //                        break;
-//                    case R.id.notification:
-//                        ReplaceFragment(new VoucherShopFragment());
-//                        textView.setText("VOUCHERS");
-//                        break;
+                    case R.id.notification:
+                        replaceFragment(new NotificationFragment());
+                        break;
                     case R.id.profile_user:
                         replaceFragment(new UserProfileFragment());
                         break;
