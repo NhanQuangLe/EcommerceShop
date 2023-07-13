@@ -142,23 +142,30 @@ public class FavouriteShopsActivity extends AppCompatActivity {
                 .child(firebaseAuth.getUid())
                 .child("Customer")
                 .child("Followers");
-        String key;
-        dbRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                for(DataSnapshot ds : task.getResult().getChildren())
-                    if(ds.getValue(String.class).equals(favouriteShop.getShopID()))
-                    {
-                        dbRef.child(ds.getKey()).removeValue(new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        break;
+        dbRef.child("1689264573212")
+                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
                     }
-            }
-        });
+                });
+        String key;
+//        dbRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                for(DataSnapshot ds : task.getResult().getChildren())
+//                    if(ds.getValue(String.class).equals(favouriteShop.getShopID()))
+//                    {
+//                        dbRef.child(ds.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+//                            @Override
+//                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+//                                Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                        break;
+//                    }
+//            }
+//        });
 //        dbRef.addValueEventListener(new ValueEventListener() {
 //                    @Override
 //                    public void onDataChange(@NonNull DataSnapshot snapshot) {
