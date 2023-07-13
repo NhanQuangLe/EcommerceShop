@@ -14,8 +14,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityShopCustomerBinding;
+import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -128,6 +130,21 @@ public class ShopActivityCustomer extends AppCompatActivity {
                 intent.putExtra("textSearch",text);
                 intent.putExtra("shopId",shopId);
                 startActivity(intent);
+            }
+        });
+        mActivityShopCustomerBinding.navHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), MainUserActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        mActivityShopCustomerBinding.navCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), CartActivity.class);
+                startActivity(i);
             }
         });
     }

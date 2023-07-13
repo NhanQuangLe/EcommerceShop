@@ -1,5 +1,6 @@
 package com.example.ecommerceshop.qui.homeuser.searchShops;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,8 @@ import com.example.ecommerceshop.databinding.FragmentAllShopsBinding;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.example.ecommerceshop.qui.homeuser.searchProducts.ShopAdapter;
+import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +37,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class AllShopsFragment extends Fragment {
+public class AllShopsFragment extends Fragment implements ShopAdapter.IClickShopItemListener {
 
     private FragmentAllShopsBinding mFragmentAllShopsBinding;
     private View mView;
@@ -91,6 +94,7 @@ public class AllShopsFragment extends Fragment {
         mFragmentAllShopsBinding.editTextSearch.setText(mMainUserActivity.getTextSearch());
         mListShop = new ArrayList<>();
         shopAdapter = new ShopAdapter();
+        shopAdapter.setiClickShopItemListener(this);
         shopAdapter.setData(mListShop);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
         mFragmentAllShopsBinding.rcvShop.setLayoutManager(linearLayoutManager);
@@ -138,5 +142,13 @@ public class AllShopsFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void sendDataShop(RequestShop shop) {
+        Intent intent = new Intent(getContext(), ShopActivityCustomer.class);
+        String shopId = shop.getUid();
+        intent.putExtra("shopId",shopId);
+        getContext().startActivity(intent);
     }
 }

@@ -24,6 +24,16 @@ public class VoucherShopAdapter extends RecyclerView.Adapter<VoucherShopAdapter.
 
     private List<Voucher> mList;
 
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    private String shopId;
+
     public void setData(List<Voucher> list) {
         this.mList = list;
         notifyDataSetChanged();
@@ -54,34 +64,39 @@ public class VoucherShopAdapter extends RecyclerView.Adapter<VoucherShopAdapter.
             holder.mBinding.voucherDes.setText(voucher.getVoucherdes());
             holder.mBinding.voucherExpired.setText(voucher.getExpiredDate());
             FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Vouchers");
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
+            if (shopId.equals(mCurrentUser.getUid())){
+                holder.mBinding.btnSave.setVisibility(View.GONE);
+                holder.mBinding.tvFollowed.setVisibility(View.GONE);
+            }
+            else {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Vouchers");
+                final boolean[] flat = {false};
 
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Voucher voucher1 = dataSnapshot.getValue(Voucher.class);
-                        String voucherId = voucher1.getVoucherid();
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Voucher voucher1 = dataSnapshot.getValue(Voucher.class);
+                            String voucherId = voucher1.getVoucherid();
 
-                        if (voucher.getVoucherid().equals(voucherId) && voucher1.isUsed()==false) {
-                            holder.mBinding.btnSave.setVisibility(View.GONE);
-                            holder.mBinding.tvFollowed.setVisibility(View.VISIBLE);
+                            if (voucher.getVoucherid().equals(voucherId)) {
+                                holder.mBinding.btnSave.setVisibility(View.GONE);
+                                holder.mBinding.tvFollowed.setVisibility(View.VISIBLE);
+                                flat[0] = true;
+                                break;
+                            }
                         }
-                        else {
+                        if (flat[0]==false) {
                             holder.mBinding.tvFollowed.setVisibility(View.GONE);
                             holder.mBinding.btnSave.setVisibility(View.VISIBLE);
-
                         }
                     }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
 
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
             holder.mBinding.btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

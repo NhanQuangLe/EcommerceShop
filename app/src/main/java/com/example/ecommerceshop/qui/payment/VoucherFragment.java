@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
@@ -80,49 +81,78 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
 
     private void setListVoucher() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Vouchers");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (mListVoucher != null) mListVoucher.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Voucher voucher = dataSnapshot.getValue(Voucher.class);
                     if (voucher != null) {
-                        Log.e("shopId",shopId);
-                        //check minimum
-                        if (voucher.getMinimumPrice() <= money
-                                && voucher.getShopId().equals(shopId)
-                                && !voucher.getShopId().equals(mCurrentUser.getUid())
-                                && voucher.isUsed()==false)
-                            voucher.setCanUse(true);
-                        else voucher.setCanUse(false);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                        Date dateExpired = new Date();
-                        try {
-                            dateExpired = dateFormat.parse(voucher.getExpiredDate());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        Date now = new Date();
-                        if (checkExpired(dateExpired, now) && voucher.getQuantity() > 0) {
+                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("Users/" + voucher.getShopId() + "/Shop/Vouchers");
+                        ref2.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                                    Voucher voucher2 = dataSnapshot1.getValue(Voucher.class);
 
-                            if (voucherFromItemPayment!=null){
-                                if (voucher.getVoucherid().equals(voucherFromItemPayment.getVoucherid())){
-                                    voucher.setCheck(true);
-                                    mFragmentVoucherBinding.tvQuantityChoose.setText("1");
+                                    if (voucher2!=null){
+                                        if (voucher2.getVoucherid().equals(voucher.getVoucherid())){
+
+                                            if (voucher2.getMinimumPrice() <= money
+                                                    && voucher.getShopId().equals(shopId)
+                                                    && !voucher.isUsed()
+                                                    )
+                                                voucher.setCanUse(true);
+                                            else voucher.setCanUse(false);
+                                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                            Date dateExpired = new Date();
+                                            try {
+                                                dateExpired = dateFormat.parse(voucher2.getExpiredDate());
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            Date now = new Date();
+                                            if (checkExpired(dateExpired, now) && voucher2.getQuantity() > 0) {
+
+                                                if (voucherFromItemPayment!=null){
+                                                    if (voucher.getVoucherid().equals(voucherFromItemPayment.getVoucherid())){
+                                                        voucher.setCheck(true);
+                                                        mFragmentVoucherBinding.tvQuantityChoose.setText("1");
+                                                    }
+                                                }
+                                                voucher.setVouchercode(voucher2.getVouchercode());
+                                                voucher.setVoucherdes(voucher2.getVoucherdes());
+                                                voucher.setExpiredDate(voucher2.getExpiredDate());
+                                                voucher.setDiscountPrice(voucher2.getDiscountPrice());
+
+                                                mListVoucher.add(voucher);
+
+
+                                            }
+                                            break;
+                                        }
+
+                                    }
+
                                 }
+                                mVoucherCustomerAdapter.notifyDataSetChanged();
+                                if (mListVoucher == null || mListVoucher.size() == 0) {
+                                    mFragmentVoucherBinding.tvEmpty.setVisibility(View.VISIBLE);
+                                    mFragmentVoucherBinding.listVoucher.setVisibility(View.GONE);
+                                }
+
+
+
                             }
 
-                            mListVoucher.add(voucher);
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-
+                            }
+                        });
                     }
                 }
-                mVoucherCustomerAdapter.notifyDataSetChanged();
-                if (mListVoucher == null || mListVoucher.size() == 0) {
-                    mFragmentVoucherBinding.tvEmpty.setVisibility(View.VISIBLE);
-                    mFragmentVoucherBinding.listVoucher.setVisibility(View.GONE);
-                }
+
             }
 
             @Override
@@ -141,10 +171,6 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
 
     }
 
-    private void setCheckBox(List<Voucher> vouchers) {
-
-
-    }
 
     @Override
     public void sendStatus(boolean b, Voucher voucher) {

@@ -163,6 +163,7 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
     private void setUIVoucher() {
         mListVoucher = new ArrayList<>();
         mVoucherShopAdapter = new VoucherShopAdapter();
+        mVoucherShopAdapter.setShopId(this.shopId);
         mVoucherShopAdapter.setData(mListVoucher);
         mVoucherShopAdapter.setiCickListener(this::clickSaveVoucher);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,false);
@@ -313,15 +314,16 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
 
     @Override
     public void clickSaveVoucher(Voucher voucher) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Vouchers");
-        long id = Calendar.getInstance().getTimeInMillis();
-        voucher.setShopId(shopId);
-        ref.child(id+"").setValue(voucher, new DatabaseReference.CompletionListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Vouchers/"+voucher.getVoucherid());
+        Voucher tmp = new Voucher(voucher.getVoucherid(),false,shopId);
+        ref.setValue(tmp, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(mActivity, "Lưu voucher thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Lưu voucher thành công", Toast.LENGTH_SHORT).show();
             }
         });
+
+
 
     }
 }
