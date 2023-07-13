@@ -87,6 +87,53 @@ public class SignUpActivity extends AppCompatActivity {
                 signUp();
         });
         googleButton.setOnClickListener(v -> LoginWithGoogle());
+
+        signupEmail.setOnClickListener(v -> {
+            if (signupEmail.getText().toString().trim().isEmpty())
+            {
+                signupEmail.setBackgroundResource(R.drawable.background_input_error);
+                textErrorEmail.setText("Vui lòng nhập email để đăng ký!");
+                textErrorEmail.setTextColor(Color.parseColor("#E10000"));
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            else if (!Patterns.EMAIL_ADDRESS.matcher(signupEmail.getText().toString()).matches())
+            {
+                signupEmail.setBackgroundResource(R.drawable.background_input_error);
+                textErrorEmail.setText("Vui lòng nhập email hợp lệ!");
+                textErrorEmail.setTextColor(Color.parseColor("#E10000"));
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                signupEmail.setBackgroundResource(R.drawable.background_input);
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+        });
+        signupPassword.setOnClickListener(v -> {
+            if (signupPassword.getText().toString().trim().isEmpty())
+            {
+                signupPassword.setBackgroundResource(R.drawable.background_input_error);
+                textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng ký!");
+                textErrorPassword.setTextColor(Color.parseColor("#E10000"));
+                textErrorPassword.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                if (signupPassword.getText().toString().trim().length() < 8)
+                {
+                    signupPassword.setBackgroundResource(R.drawable.background_input_error);
+                    textErrorPassword.setText("Mật khẩu phải có độ dài từ 8 ký tự!");
+                    textErrorPassword.setTextColor(Color.parseColor("#E10000"));
+                    textErrorPassword.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    signupPassword.setBackgroundResource(R.drawable.background_input);
+                    textErrorPassword.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
     }
     private void LoginWithGoogle() {
         Intent signInIntent = gsc.getSignInIntent();
@@ -103,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Log.e("e", Objects.requireNonNull(e.getMessage()).trim());
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Một vài điều gì đó đang không đúng", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -118,7 +165,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
             else
             {
-                Toast.makeText(getApplicationContext(), "Failed...........", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Thất bại", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -131,13 +178,13 @@ public class SignUpActivity extends AppCompatActivity {
             if (task.isSuccessful())
             {
                 loading(false);
-                Toast.makeText(SignUpActivity.this, "SignUp Successful !", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                Toast.makeText(SignUpActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(SignUpActivity.this, activity_input_info.class));
             }
             else
             {
                 loading(false);
-                Toast.makeText(SignUpActivity.this, Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "Tài khoản với địa chỉ email này đã tồn tại rồi. Hãy thử đăng ký với một địa chỉ email khác!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -159,7 +206,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (signupEmail.getText().toString().trim().isEmpty())
         {
             signupEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Please enter email!");
+            textErrorEmail.setText("Vui lòng email để đăng ký!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -167,7 +214,7 @@ public class SignUpActivity extends AppCompatActivity {
         else if (!Patterns.EMAIL_ADDRESS.matcher(signupEmail.getText().toString()).matches())
         {
             signupEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Please enter valid email!");
+            textErrorEmail.setText("Vui lòng nhập email hợp lệ!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -175,8 +222,6 @@ public class SignUpActivity extends AppCompatActivity {
         else
         {
             signupEmail.setBackgroundResource(R.drawable.background_input);
-            textErrorEmail.setText("Valid email account");
-            textErrorEmail.setTextColor(Color.parseColor("#08FF00"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return true;
         }
@@ -187,7 +232,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (signupPassword.getText().toString().trim().isEmpty())
         {
             signupPassword.setBackgroundResource(R.drawable.background_input_error);
-            textErrorPassword.setText("Please enter password!");
+            textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng ký!");
             textErrorPassword.setTextColor(Color.parseColor("#E10000"));
             textErrorPassword.setVisibility(View.VISIBLE);
             return false;
@@ -197,7 +242,7 @@ public class SignUpActivity extends AppCompatActivity {
             if (signupPassword.getText().toString().trim().length() < 8)
             {
                 signupPassword.setBackgroundResource(R.drawable.background_input_error);
-                textErrorPassword.setText("Please enter a password longer than 8 characters!");
+                textErrorPassword.setText("Mật khẩu phải có độ dài từ 8 ký tự!");
                 textErrorPassword.setTextColor(Color.parseColor("#E10000"));
                 textErrorPassword.setVisibility(View.VISIBLE);
                 return false;
@@ -205,14 +250,11 @@ public class SignUpActivity extends AppCompatActivity {
             else
             {
                 signupPassword.setBackgroundResource(R.drawable.background_input);
-                textErrorPassword.setText("Valid password");
-                textErrorPassword.setTextColor(Color.parseColor("#08FF00"));
                 textErrorPassword.setVisibility(View.VISIBLE);
                 return true;
             }
         }
     }
-
     private void showToast(String message)
     {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();

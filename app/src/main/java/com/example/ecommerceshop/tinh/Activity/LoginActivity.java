@@ -110,6 +110,53 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         googleButton.setOnClickListener(v -> LoginWithGoogle());
+
+        loginEmail.setOnClickListener(v -> {
+            if (loginEmail.getText().toString().trim().isEmpty())
+            {
+                loginEmail.setBackgroundResource(R.drawable.background_input_error);
+                textErrorEmail.setText("Vui lòng nhập email để đăng nhập!");
+                textErrorEmail.setTextColor(Color.parseColor("#E10000"));
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            else if (!Patterns.EMAIL_ADDRESS.matcher(loginEmail.getText().toString()).matches())
+            {
+                loginEmail.setBackgroundResource(R.drawable.background_input_error);
+                textErrorEmail.setText("Vui lòng nhập email hợp lệ!");
+                textErrorEmail.setTextColor(Color.parseColor("#E10000"));
+                textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                loginEmail.setBackgroundResource(R.drawable.background_input);
+                textErrorEmail.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        loginPass.setOnClickListener(v -> {
+            if (loginPass.getText().toString().trim().isEmpty())
+            {
+                loginPass.setBackgroundResource(R.drawable.background_input_error);
+                textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng nhập!");
+                textErrorPassword.setTextColor(Color.parseColor("#E10000"));
+                textErrorPassword.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                if (!loginPass.getText().toString().trim().isEmpty() && loginPass.getText().toString().trim().length() < 8)
+                {
+                    loginPass.setBackgroundResource(R.drawable.background_input_error);
+                    textErrorPassword.setText("Mật khẩu phải có độ dài từ 8 ký tự!");
+                    textErrorPassword.setTextColor(Color.parseColor("#E10000"));
+                    textErrorPassword.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    loginPass.setBackgroundResource(R.drawable.background_input);
+                    textErrorEmail.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     private void LoginWithGoogle() {
@@ -206,7 +253,7 @@ public class LoginActivity extends AppCompatActivity {
         if (loginEmail.getText().toString().trim().isEmpty())
         {
             loginEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Please enter email to login!");
+            textErrorEmail.setText("Vui lòng nhập email để đăng nhập!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -214,7 +261,7 @@ public class LoginActivity extends AppCompatActivity {
         else if (!Patterns.EMAIL_ADDRESS.matcher(loginEmail.getText().toString()).matches())
         {
             loginEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Please enter valid email!");
+            textErrorEmail.setText("Vui lòng nhập email hợp lệ!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -231,7 +278,7 @@ public class LoginActivity extends AppCompatActivity {
         if (loginPass.getText().toString().trim().isEmpty())
         {
             loginPass.setBackgroundResource(R.drawable.background_input_error);
-            textErrorPassword.setText("Please enter password to login!");
+            textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng nhập!");
             textErrorPassword.setTextColor(Color.parseColor("#E10000"));
             textErrorPassword.setVisibility(View.VISIBLE);
             return false;
@@ -241,12 +288,11 @@ public class LoginActivity extends AppCompatActivity {
             if (!loginPass.getText().toString().trim().isEmpty() && loginPass.getText().toString().trim().length() < 8)
             {
                 loginPass.setBackgroundResource(R.drawable.background_input_error);
-                textErrorPassword.setText("A password longer than 8 characters!");
+                textErrorPassword.setText("Mật khẩu phải có độ dài từ 8 ký tự!");
                 textErrorPassword.setTextColor(Color.parseColor("#E10000"));
                 textErrorPassword.setVisibility(View.VISIBLE);
                 return false;
             }
-
             else
             {
                 loginPass.setBackgroundResource(R.drawable.background_input);
