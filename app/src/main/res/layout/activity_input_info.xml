@@ -64,12 +64,35 @@
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:hint="Nhập họ tên"
             android:inputType="text"
             android:background="@drawable/background_input"/>
         <TextView
             android:id="@+id/textErrorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="34dp"
+            android:layout_marginTop="12dp"
+            android:textColor="#FF0000"
+            android:textSize="12sp"
+            android:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/editTextPhone"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="10dp"
+            android:hint="Nhập số điện thoại"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:background="@drawable/background_input"/>
+        <TextView
+            android:id="@+id/textErrorPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="34dp"
@@ -122,7 +145,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp"
             android:gravity="center">
             <CheckBox
                 android:id="@+id/checkbox_nam"

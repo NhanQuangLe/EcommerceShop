@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class InputInfoActivity extends AppCompatActivity {
     private FirebaseAuth auth;
@@ -65,8 +66,8 @@ public class InputInfoActivity extends AppCompatActivity {
     private PreferenceManagement preferenceManagement;
     private RoundedImageView avatar;
     private FrameLayout layoutImage;
-    private TextView textAddImage, textError, textErrorGender, textErrorBirthdate, textErrorImage;
-    private EditText edittextName, edittextBirthdate;
+    private TextView textAddImage, textError, textErrorGender, textErrorBirthdate, textErrorImage, textErrorPhone;
+    private EditText edittextName, edittextBirthdate, editTextPhone;
     private ImageView buttonShowDatePicker;
     private CheckBox cbNam, cbNu;
     private Button buttonStart;
@@ -87,7 +88,8 @@ public class InputInfoActivity extends AppCompatActivity {
             Boolean checkImage = IsValidImage();
             Boolean checkDate = IsValidDate();
             Boolean checkCheckBox = IsValidGender();
-            if (checkName && checkDate && checkCheckBox && checkImage) {
+            Boolean checkPhone = IsValidPhone();
+            if (checkName && checkDate && checkCheckBox && checkImage && checkPhone) {
                 Started();
             }
         });
@@ -119,7 +121,7 @@ public class InputInfoActivity extends AppCompatActivity {
                 textError.setVisibility(View.INVISIBLE);
             } else {
                 edittextName.setBackgroundResource(R.drawable.background_input_error);
-                textError.setText("Vui lòng nhập họ tên để bắt đầu!");
+                textError.setText("Vui lòng nhập họ tên để đăng ký!");
                 textError.setTextColor(Color.parseColor("#E10000"));
                 textError.setVisibility(View.VISIBLE);
             }
@@ -137,6 +139,73 @@ public class InputInfoActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             pickImage.launch(intent);
         });
+
+        editTextPhone.setOnClickListener(v -> {
+            if (editTextPhone.getText().toString().trim().isEmpty()) {
+                editTextPhone.setBackgroundResource(R.drawable.background_input_error);
+                textErrorPhone.setText("Vui lòng nhập số điện thoại để đăng ký!");
+                textErrorPhone.setTextColor(Color.parseColor("#E10000"));
+                textErrorPhone.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                String phone = editTextPhone.getText().toString().trim();
+                Pattern p = Pattern.compile("^[0-9]{10}$");
+                Pattern p1 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4}$");
+                Pattern p2 = Pattern.compile("^[0-9]{3}.[0-9]{3}.[0-9]{4}$");
+                Pattern p3 = Pattern.compile("^[0-9]{3} [0-9]{3} [0-9]{4}$");
+                Pattern p4 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4} (x|ext)[0-9]{4}$");
+                Pattern p5 = Pattern.compile("^\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}$");
+                if (p.matcher(phone).find() || p1.matcher(phone).find() || p2.matcher(phone).find()
+                        || p3.matcher(phone).find() || p4.matcher(phone).find() || p5.matcher(phone).find())
+                {
+                    editTextPhone.setBackgroundResource(R.drawable.background_input);
+                    textErrorPhone.setVisibility(View.INVISIBLE);
+                }
+                else
+                {
+                    editTextPhone.setBackgroundResource(R.drawable.background_input_error);
+                    textErrorPhone.setText("Số điện thoại không hợp lệ. Vui lòng nhập lại!");
+                    textErrorPhone.setTextColor(Color.parseColor("#E10000"));
+                    textErrorPhone.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    private Boolean IsValidPhone() {
+        if (editTextPhone.getText().toString().trim().isEmpty()) {
+            editTextPhone.setBackgroundResource(R.drawable.background_input_error);
+            textErrorPhone.setText("Vui lòng nhập số điện thoại để đăng ký!");
+            textErrorPhone.setTextColor(Color.parseColor("#E10000"));
+            textErrorPhone.setVisibility(View.VISIBLE);
+            return false;
+        }
+        else
+        {
+            String phone = editTextPhone.getText().toString().trim();
+            Pattern p = Pattern.compile("^[0-9]{10}$");
+            Pattern p1 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4}$");
+            Pattern p2 = Pattern.compile("^[0-9]{3}.[0-9]{3}.[0-9]{4}$");
+            Pattern p3 = Pattern.compile("^[0-9]{3} [0-9]{3} [0-9]{4}$");
+            Pattern p4 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4} (x|ext)[0-9]{4}$");
+            Pattern p5 = Pattern.compile("^\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}$");
+            if (p.matcher(phone).find() || p1.matcher(phone).find() || p2.matcher(phone).find()
+                    || p3.matcher(phone).find() || p4.matcher(phone).find() || p5.matcher(phone).find())
+            {
+                editTextPhone.setBackgroundResource(R.drawable.background_input);
+                textErrorPhone.setVisibility(View.INVISIBLE);
+                return true;
+            }
+            else
+            {
+                editTextPhone.setBackgroundResource(R.drawable.background_input_error);
+                textErrorPhone.setText("Số điện thoại không hợp lệ. Vui lòng nhập lại!");
+                textErrorPhone.setTextColor(Color.parseColor("#E10000"));
+                textErrorPhone.setVisibility(View.VISIBLE);
+                return false;
+            }
+        }
     }
 
     private String encodeImage(Bitmap bitmap) {
@@ -177,7 +246,7 @@ public class InputInfoActivity extends AppCompatActivity {
         edittextBirthdate.setText(dateFormat.format(myCalendar.getTime()));
         if (edittextBirthdate.getText().toString().trim().isEmpty()) {
             edittextBirthdate.setBackgroundResource(R.drawable.background_input_error);
-            textErrorBirthdate.setText("Vui lòng chọn ngày tháng năm sinh để bắt đầu!");
+            textErrorBirthdate.setText("Vui lòng chọn ngày tháng năm sinh để đăng ký!");
             textErrorBirthdate.setTextColor(Color.parseColor("#E10000"));
             textErrorBirthdate.setVisibility(View.VISIBLE);
         } else {
@@ -205,7 +274,7 @@ public class InputInfoActivity extends AppCompatActivity {
     private Boolean IsValidGender() {
 
         if (!cbNam.isChecked() && !cbNu.isChecked()) {
-            textErrorGender.setText("Vui lòng chọn giới tính để bắt đầu!");
+            textErrorGender.setText("Vui lòng chọn giới tính để đăng ký!");
             textErrorGender.setTextColor(Color.parseColor("#E10000"));
             textErrorGender.setVisibility(View.VISIBLE);
             return false;
@@ -219,7 +288,7 @@ public class InputInfoActivity extends AppCompatActivity {
     private Boolean IsValidDate() {
         if (edittextBirthdate.getText().toString().trim().isEmpty()) {
             edittextBirthdate.setBackgroundResource(R.drawable.background_input_error);
-            textErrorBirthdate.setText("Vui lòng chọn ngày sinh để bắt đầu!");
+            textErrorBirthdate.setText("Vui lòng chọn ngày sinh để đăng ký!");
             textErrorBirthdate.setTextColor(Color.parseColor("#E10000"));
             textErrorBirthdate.setVisibility(View.VISIBLE);
             return false;
@@ -262,7 +331,7 @@ public class InputInfoActivity extends AppCompatActivity {
     private Boolean IsValidName() {
         if (edittextName.getText().toString().trim().isEmpty()) {
             edittextName.setBackgroundResource(R.drawable.background_input_error);
-            textError.setText("Vui lòng nhập họ tên để bắt đầu");
+            textError.setText("Vui lòng nhập họ tên để đăng ký!");
             textError.setTextColor(Color.parseColor("#E10000"));
             textError.setVisibility(View.VISIBLE);
             return false;
@@ -283,7 +352,7 @@ public class InputInfoActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                  mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
                 CreateAccountChat(email, password);
-                Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                 Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                 i2.putExtra("signUp", true);
                 startActivity(i2);
@@ -362,9 +431,9 @@ public class InputInfoActivity extends AppCompatActivity {
         textErrorBirthdate = findViewById(R.id.textErrorBirthdate);
         layoutImage = findViewById(R.id.layoutImage);
         textErrorImage = findViewById(R.id.textErrorImage);
+        editTextPhone = findViewById(R.id.editTextPhone);
+        textErrorPhone = findViewById(R.id.textErrorPhone);
     }
-
-
     private void loading(Boolean isLoading) {
         if (isLoading) {
             buttonStart.setVisibility(View.INVISIBLE);

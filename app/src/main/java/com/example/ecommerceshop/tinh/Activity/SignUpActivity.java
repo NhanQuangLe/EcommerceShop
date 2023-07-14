@@ -104,7 +104,7 @@ public class SignUpActivity extends AppCompatActivity {
             if (signupEmail.getText().toString().trim().isEmpty())
             {
                 signupEmail.setBackgroundResource(R.drawable.background_input_error);
-                textErrorEmail.setText("Vui lòng nhập email để đăng ký!");
+                textErrorEmail.setText("Vui lòng nhập email để tiếp tục!");
                 textErrorEmail.setTextColor(Color.parseColor("#E10000"));
                 textErrorEmail.setVisibility(View.VISIBLE);
             }
@@ -125,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity {
             if (signupPassword.getText().toString().trim().isEmpty())
             {
                 signupPassword.setBackgroundResource(R.drawable.background_input_error);
-                textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng ký!");
+                textErrorPassword.setText("Vui lòng nhập mật khẩu để tiếp tục!");
                 textErrorPassword.setTextColor(Color.parseColor("#E10000"));
                 textErrorPassword.setVisibility(View.VISIBLE);
             }
@@ -281,7 +281,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (signupEmail.getText().toString().trim().isEmpty())
         {
             signupEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Vui lòng email để đăng ký!");
+            textErrorEmail.setText("Vui lòng email để tiếp tục!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -307,7 +307,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (signupPassword.getText().toString().trim().isEmpty())
         {
             signupPassword.setBackgroundResource(R.drawable.background_input_error);
-            textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng ký!");
+            textErrorPassword.setText("Vui lòng nhập mật khẩu để tiếp tục!");
             textErrorPassword.setTextColor(Color.parseColor("#E10000"));
             textErrorPassword.setVisibility(View.VISIBLE);
             return false;
