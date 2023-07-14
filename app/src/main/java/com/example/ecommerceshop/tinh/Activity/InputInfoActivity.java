@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -27,10 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.tinh.models.User;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -69,11 +68,14 @@ public class InputInfoActivity extends AppCompatActivity {
     private TextView textAddImage, textError, textErrorGender, textErrorBirthdate, textErrorImage, textErrorPhone;
     private EditText edittextName, edittextBirthdate, editTextPhone;
     private ImageView buttonShowDatePicker;
+    private AppCompatImageView buttonBack;
     private CheckBox cbNam, cbNu;
     private Button buttonStart;
     private ProgressBar progressBar;
     private String encodedImage;
     final Calendar myCalendar = Calendar.getInstance();
+    private Boolean isWithGoogle;
+    private String currentUserId;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -81,6 +83,8 @@ public class InputInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_info);
         InitUI();
+        Intent i = getIntent();
+        isWithGoogle = i.getBooleanExtra("withGoogle",false);
         auth = FirebaseAuth.getInstance();
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         buttonStart.setOnClickListener(v -> {
@@ -90,10 +94,17 @@ public class InputInfoActivity extends AppCompatActivity {
             Boolean checkCheckBox = IsValidGender();
             Boolean checkPhone = IsValidPhone();
             if (checkName && checkDate && checkCheckBox && checkImage && checkPhone) {
-                Started();
+                if (!isWithGoogle){
+                    Started();
+                }
+                else{
+                    currentUserId = i.getStringExtra("userId");
+                    Started2();
+                }
+
             }
         });
-
+        buttonBack.setOnClickListener(view -> startActivity(new Intent(InputInfoActivity.this, SignUpActivity.class)));
         cbNam.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (cbNam.isChecked()) {
                 cbNam.setChecked(true);
@@ -352,7 +363,7 @@ public class InputInfoActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                  mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
                 CreateAccountChat(email, password);
-                Toast.makeText(getApplicationContext(), "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
                 Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                 i2.putExtra("signUp", true);
                 startActivity(i2);
@@ -363,8 +374,14 @@ public class InputInfoActivity extends AppCompatActivity {
         });
         loading(false);
     }
+    private void Started2() {
+        loading(true);
+        String email = getIntent().getStringExtra("email");
+        SaveImgInFirebaseStorage(email);
 
-    private void CreateAccountChat(String email, String pass) {
+    }
+
+    private void CreateAccountChat(String email, String password) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         HashMap<String, Object> userChat = new HashMap<>();
         userChat.put(Constants.KEY_EMAIL, email);
@@ -389,8 +406,10 @@ public class InputInfoActivity extends AppCompatActivity {
     }
 
     private void SaveImgInFirebaseStorage(String email) {
-        String t = ""+System.currentTimeMillis();
-        StorageReference storage = FirebaseStorage.getInstance().getReference("ImageCustomer/"+mCurrentUser.getUid()+"/"+t);
+        String userId;
+        if (isWithGoogle) userId = currentUserId;
+        else userId = mCurrentUser.getUid();
+        StorageReference storage = FirebaseStorage.getInstance().getReference("ImageCustomer/"+userId+"/"+userId+"Avt");
         storage.putFile(mUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -406,6 +425,11 @@ public class InputInfoActivity extends AppCompatActivity {
                 user.put("name",edittextName.getText().toString().trim());
                 user.put("gender",gender);
                 ref.setValue(user);
+                if (isWithGoogle){
+                    Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
+                    Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(i2);
+                }
 
             }
         });
@@ -433,7 +457,10 @@ public class InputInfoActivity extends AppCompatActivity {
         textErrorImage = findViewById(R.id.textErrorImage);
         editTextPhone = findViewById(R.id.editTextPhone);
         textErrorPhone = findViewById(R.id.textErrorPhone);
+        buttonBack = findViewById(R.id.buttonBack);
     }
+
+
     private void loading(Boolean isLoading) {
         if (isLoading) {
             buttonStart.setVisibility(View.INVISIBLE);

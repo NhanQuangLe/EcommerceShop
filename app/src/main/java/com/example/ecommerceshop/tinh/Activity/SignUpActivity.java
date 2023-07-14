@@ -51,7 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
     private Button buttonSignUp;
     private TextView loginTextView, textErrorEmail, textErrorPassword, textErrorConfirmPassword;
     private ProgressBar signupProgressBar;
-    private AppCompatImageView buttonBack;
     private ImageView eyeImagePass, eyeConfirmPassword;
     private LinearLayout googleButton;
     GoogleSignInOptions gso;
@@ -79,7 +78,6 @@ public class SignUpActivity extends AppCompatActivity {
         textErrorPassword = findViewById(R.id.textErrorPassword);
         eyeImagePass = findViewById(R.id.eyePassword);
         loginTextView = findViewById(R.id.textHaveAccount);
-        buttonBack = findViewById(R.id.buttonBack);
         signupProgressBar = findViewById(R.id.progressBar);
         buttonSignUp = findViewById(R.id.buttonSignup);
         googleButton = findViewById(R.id.buttonGoogle);
@@ -88,7 +86,6 @@ public class SignUpActivity extends AppCompatActivity {
         eyeConfirmPassword = findViewById(R.id.eyeConfirmPassword);
     }
     private void setListeners() {
-        buttonBack.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         loginTextView.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> HandleEyePassword());
@@ -262,23 +259,7 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
         loading(false);
     }
-    private void CreateAccountChat(String email, String pass) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        HashMap<String, Object> userChat = new HashMap<>();
-        userChat.put(Constants.KEY_EMAIL, email);
-        db.collection(Constants.KEY_COLLECTION_USER).add(userChat)
-                .addOnSuccessListener(documentReference -> {
-                    loading(false);
-                    preferenceManagement.putString(Constants.KEY_USER_ID, documentReference.getId());
-                    String accountChatId = preferenceManagement.getString(Constants.KEY_USER_ID);
-                    String idCurrentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+idCurrentUser+"/Customer/accountChatId");
-                    ref.setValue(accountChatId);
-                }).addOnFailureListener(exception -> {
-                    loading(false);
-                    showToast(exception.getMessage());
-                });
-    }
+
     private void HandleEyePassword()
     {
         if (signupPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance()))
