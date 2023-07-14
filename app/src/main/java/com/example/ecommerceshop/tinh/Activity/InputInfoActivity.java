@@ -2,6 +2,7 @@ package com.example.ecommerceshop.tinh.Activity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,8 +24,24 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.tinh.models.User;
+import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -34,10 +51,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 public class InputInfoActivity extends AppCompatActivity {
-
+    private FirebaseAuth auth;
+    FirebaseUser mCurrentUser;
+    private Uri mUri;
+    private String avt;
+    private String gender;
+    private PreferenceManagement preferenceManagement;
     private RoundedImageView avatar;
     private FrameLayout layoutImage;
     private TextView textAddImage, textError, textErrorGender, textErrorBirthdate, textErrorImage;
@@ -47,58 +72,52 @@ public class InputInfoActivity extends AppCompatActivity {
     private Button buttonStart;
     private ProgressBar progressBar;
     private String encodedImage;
-    final Calendar myCalendar= Calendar.getInstance();
-    
+    final Calendar myCalendar = Calendar.getInstance();
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_info);
         InitUI();
+        auth = FirebaseAuth.getInstance();
+        preferenceManagement = new PreferenceManagement(getApplicationContext());
         buttonStart.setOnClickListener(v -> {
             Boolean checkName = IsValidName();
             Boolean checkImage = IsValidImage();
             Boolean checkDate = IsValidDate();
             Boolean checkCheckBox = IsValidGender();
-            if (checkName && checkDate && checkCheckBox && checkImage)
-            {
+            if (checkName && checkDate && checkCheckBox && checkImage) {
                 Started();
             }
         });
 
         cbNam.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (cbNam.isChecked())
-            {
+            if (cbNam.isChecked()) {
                 cbNam.setChecked(true);
+                gender = cbNam.getText().toString();
                 cbNu.setChecked(false);
                 textErrorGender.setVisibility(View.INVISIBLE);
-            }
-            else
-            {
+            } else {
                 cbNam.setChecked(false);
             }
         });
 
         cbNu.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (cbNu.isChecked())
-            {
+            if (cbNu.isChecked()) {
                 cbNu.setChecked(true);
+                gender = cbNu.getText().toString();
                 cbNam.setChecked(false);
                 textErrorGender.setVisibility(View.INVISIBLE);
-            }
-            else
-            {
+            } else {
                 cbNu.setChecked(false);
             }
         });
         edittextName.setOnClickListener(v -> {
-            if (!edittextName.getText().toString().trim().isEmpty())
-            {
+            if (!edittextName.getText().toString().trim().isEmpty()) {
                 edittextName.setBackgroundResource(R.drawable.background_input);
                 textError.setVisibility(View.INVISIBLE);
-            }
-            else
-            {
+            } else {
                 edittextName.setBackgroundResource(R.drawable.background_input_error);
                 textError.setText("Vui lòng nhập họ tên để bắt đầu!");
                 textError.setTextColor(Color.parseColor("#E10000"));
@@ -107,11 +126,11 @@ public class InputInfoActivity extends AppCompatActivity {
         });
         DatePickerDialog.OnDateSetListener date = (view, year, month, day) -> {
             myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH,month);
-            myCalendar.set(Calendar.DAY_OF_MONTH,day);
+            myCalendar.set(Calendar.MONTH, month);
+            myCalendar.set(Calendar.DAY_OF_MONTH, day);
             updateLabel();
         };
-        buttonShowDatePicker.setOnClickListener(v -> new DatePickerDialog(InputInfoActivity.this,date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+        buttonShowDatePicker.setOnClickListener(v -> new DatePickerDialog(InputInfoActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         layoutImage.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -120,33 +139,31 @@ public class InputInfoActivity extends AppCompatActivity {
         });
     }
 
-    private String encodeImage(Bitmap bitmap)
-    {
+    private String encodeImage(Bitmap bitmap) {
         int previewWidth = 150;
         int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
         Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), previewBitmap, "Title", null);
+        mUri = Uri.parse(path);
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
+
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == RESULT_OK)
-                {
-                    if(result.getData() != null)
-                    {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
                         Uri imageUri = result.getData().getData();
-                        try
-                        {
+                        try {
                             InputStream inputStream = getContentResolver().openInputStream(imageUri);
                             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                             avatar.setImageBitmap(bitmap);
                             textAddImage.setVisibility(View.GONE);
                             encodedImage = encodeImage(bitmap);
-                        }
-                        catch (FileNotFoundException e) {
+                        } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
                     }
@@ -155,18 +172,15 @@ public class InputInfoActivity extends AppCompatActivity {
     );
 
     private void updateLabel() {
-        String myFormat="dd/MM/yyyy";
+        String myFormat = "dd/MM/yyyy";
         SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.US);
         edittextBirthdate.setText(dateFormat.format(myCalendar.getTime()));
-        if (edittextBirthdate.getText().toString().trim().isEmpty())
-        {
+        if (edittextBirthdate.getText().toString().trim().isEmpty()) {
             edittextBirthdate.setBackgroundResource(R.drawable.background_input_error);
             textErrorBirthdate.setText("Vui lòng chọn ngày tháng năm sinh để bắt đầu!");
             textErrorBirthdate.setTextColor(Color.parseColor("#E10000"));
             textErrorBirthdate.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             SimpleDateFormat date_format = new SimpleDateFormat("dd/MM/yyyy");
             Date birthdate = new Date();
             try {
@@ -176,14 +190,12 @@ public class InputInfoActivity extends AppCompatActivity {
             }
             Date now = new Date();
 
-            if (birthdate.compareTo(now) >= 0)
-            {
+            if (birthdate.compareTo(now) >= 0) {
                 edittextBirthdate.setBackgroundResource(R.drawable.background_input_error);
                 textErrorBirthdate.setText("Ngày sinh không hợp lệ! Vui lòng chọn ngày sinh trước ngày hiện tại!");
                 textErrorBirthdate.setTextColor(Color.parseColor("#E10000"));
                 textErrorBirthdate.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 edittextBirthdate.setBackgroundResource(R.drawable.background_input);
                 textErrorBirthdate.setVisibility(View.INVISIBLE);
             }
@@ -192,15 +204,12 @@ public class InputInfoActivity extends AppCompatActivity {
 
     private Boolean IsValidGender() {
 
-        if (!cbNam.isChecked() &&!cbNu.isChecked())
-        {
+        if (!cbNam.isChecked() && !cbNu.isChecked()) {
             textErrorGender.setText("Vui lòng chọn giới tính để bắt đầu!");
             textErrorGender.setTextColor(Color.parseColor("#E10000"));
             textErrorGender.setVisibility(View.VISIBLE);
             return false;
-        }
-        else
-        {
+        } else {
             textErrorGender.setVisibility(View.INVISIBLE);
             return true;
         }
@@ -208,16 +217,13 @@ public class InputInfoActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private Boolean IsValidDate() {
-        if (edittextBirthdate.getText().toString().trim().isEmpty())
-        {
+        if (edittextBirthdate.getText().toString().trim().isEmpty()) {
             edittextBirthdate.setBackgroundResource(R.drawable.background_input_error);
             textErrorBirthdate.setText("Vui lòng chọn ngày sinh để bắt đầu!");
             textErrorBirthdate.setTextColor(Color.parseColor("#E10000"));
             textErrorBirthdate.setVisibility(View.VISIBLE);
             return false;
-        }
-        else
-        {
+        } else {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date birthdate = new Date();
             try {
@@ -227,46 +233,40 @@ public class InputInfoActivity extends AppCompatActivity {
             }
             Date now = new Date();
 
-            if (birthdate.compareTo(now) >= 0)
-            {
+            if (birthdate.compareTo(now) >= 0) {
                 edittextBirthdate.setBackgroundResource(R.drawable.background_input_error);
                 textErrorBirthdate.setText("Ngày sinh không hợp lệ! Vui lòng chọn ngày sinh trước ngày hiện tại!");
                 textErrorBirthdate.setTextColor(Color.parseColor("#E10000"));
                 textErrorBirthdate.setVisibility(View.VISIBLE);
                 return false;
-            }
-            else {
+            } else {
                 edittextBirthdate.setBackgroundResource(R.drawable.background_input);
                 textErrorBirthdate.setVisibility(View.INVISIBLE);
                 return true;
             }
         }
     }
+
     private Boolean IsValidImage() {
-        if (encodedImage == null)
-        {
+        if (encodedImage == null) {
             textErrorImage.setText("Vui lòng chọn ảnh đại diện!");
             textErrorImage.setTextColor(Color.parseColor("#E10000"));
             textErrorImage.setVisibility(View.VISIBLE);
             return false;
-        }
-        else
-        {
+        } else {
             textErrorImage.setVisibility(View.INVISIBLE);
             return true;
         }
     }
+
     private Boolean IsValidName() {
-        if (edittextName.getText().toString().trim().isEmpty())
-        {
+        if (edittextName.getText().toString().trim().isEmpty()) {
             edittextName.setBackgroundResource(R.drawable.background_input_error);
             textError.setText("Vui lòng nhập họ tên để bắt đầu");
             textError.setTextColor(Color.parseColor("#E10000"));
             textError.setVisibility(View.VISIBLE);
             return false;
-        }
-        else
-        {
+        } else {
             edittextName.setBackgroundResource(R.drawable.background_input);
             textError.setVisibility(View.INVISIBLE);
             return true;
@@ -275,14 +275,78 @@ public class InputInfoActivity extends AppCompatActivity {
 
     private void Started() {
         loading(true);
-
-        // thực hiện lưu thông tin trên csdl
-
         // đăng ký
-
-        startActivity(new Intent(InputInfoActivity.this, LoginActivity.class));
+        Intent i = getIntent();
+        String email = i.getStringExtra("email");
+        String password = i.getStringExtra("password");
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                 mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+                CreateAccountChat(email, password);
+                Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
+                Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
+                i2.putExtra("signUp", true);
+                startActivity(i2);
+            } else {
+                loading(false);
+                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
+            }
+        });
         loading(false);
     }
+
+    private void CreateAccountChat(String email, String pass) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        HashMap<String, Object> userChat = new HashMap<>();
+        userChat.put(Constants.KEY_EMAIL, email);
+        db.collection(Constants.KEY_COLLECTION_USER).document(mCurrentUser.getUid())
+                .set(userChat)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        loading(false);
+                        preferenceManagement.putString(Constants.KEY_USER_ID, mCurrentUser.getUid());
+                        SaveImgInFirebaseStorage(email);
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        loading(false);
+                        showToast(e.getMessage());
+                    }
+                });
+    }
+
+    private void SaveImgInFirebaseStorage(String email) {
+        String t = ""+System.currentTimeMillis();
+        StorageReference storage = FirebaseStorage.getInstance().getReference("ImageCustomer/"+mCurrentUser.getUid()+"/"+t);
+        storage.putFile(mUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful());
+                Uri downloadUri = uriTask.getResult();
+                if(uriTask.isSuccessful()) avt=downloadUri.toString();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/CustomerInfos");
+                Map<String,String> user = new HashMap<>();
+                user.put("avatar",avt);
+                user.put("dateOfBirth",edittextBirthdate.getText().toString().trim());
+                user.put("email",email);
+                user.put("name",edittextName.getText().toString().trim());
+                user.put("gender",gender);
+                ref.setValue(user);
+
+            }
+        });
+
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
     private void InitUI() {
         avatar = findViewById(R.id.imageProfile);
         textAddImage = findViewById(R.id.textAddImage);
@@ -301,15 +365,11 @@ public class InputInfoActivity extends AppCompatActivity {
     }
 
 
-    private void loading(Boolean isLoading)
-    {
-        if(isLoading)
-        {
+    private void loading(Boolean isLoading) {
+        if (isLoading) {
             buttonStart.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             buttonStart.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
         }

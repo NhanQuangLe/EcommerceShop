@@ -240,25 +240,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp() {
         loading(true);
-        startActivity(new Intent(SignUpActivity.this, InputInfoActivity.class));
+        Intent intent = new Intent(SignUpActivity.this, InputInfoActivity.class);
+        intent.putExtra("email",signupEmail.getText().toString().trim());
+        intent.putExtra("password",signupPassword.getText().toString().trim());
+        startActivity(intent);
         loading(false);
-//        loading(true);
-//        String email = signupEmail.getText().toString().trim();
-//        String pass = signupPassword.getText().toString().trim();
-//        auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(task -> {
-//            if (task.isSuccessful())
-//            {
-//                loading(false);
-//                Toast.makeText(SignUpActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-////                CreateAccountChat(email, pass);
-//                startActivity(new Intent(SignUpActivity.this, InputInfoActivity.class));
-//            }
-//            else
-//            {
-//                loading(false);
-//                Toast.makeText(SignUpActivity.this, "Tài khoản với địa chỉ email này đã tồn tại rồi. Hãy thử đăng ký với một địa chỉ email khác!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
     private void CreateAccountChat(String email, String pass) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

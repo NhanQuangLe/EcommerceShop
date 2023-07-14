@@ -29,9 +29,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -189,6 +191,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
+
             } catch (ApiException e) {
                 Log.e("e", Objects.requireNonNull(e.getMessage()).trim());
                 Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -201,6 +204,7 @@ public class LoginActivity extends AppCompatActivity {
         auth.signInWithCredential(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful())
             {
+                String userId = auth.getCurrentUser().getUid();
                 Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
                 startActivity(intent);
             }

@@ -106,10 +106,10 @@
             android:padding="10dp"
             android:textSize="20sp"
             android:textColor="@color/black"
+            android:inputType="textPassword"
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="10dp"
             android:hint="Nhập lại mật khẩu"
-            android:inputType="textEmailAddress"
             android:background="@drawable/background_input"/>
         <TextView
             android:id="@+id/textErrorConfirmPass"
