@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private String avt;
     private GoogleSignInAccount mGoogleAccount;
-    private AppCompatImageView buttonBack;
+//    private AppCompatImageView buttonBack;
     private EditText loginEmail, loginPass;
     private TextView textForgotPass, textSignUp, textErrorEmail, textErrorPassword;
     private Button loginButton;
@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setListener() {
         textSignUp.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
         textForgotPass.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class)));
-        buttonBack.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
+//        buttonBack.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> {
             HandleEyePassword();
@@ -354,7 +354,7 @@ public class LoginActivity extends AppCompatActivity {
         textErrorPassword = findViewById(R.id.textErrorPassword);
         textForgotPass = findViewById(R.id.textForgotPass);
         textSignUp = findViewById(R.id.textSignUpAccount);
-        buttonBack = findViewById(R.id.buttonBack);
+//        buttonBack = findViewById(R.id.buttonBack);
         loginButton = findViewById(R.id.buttonLogin);
         eyeImagePass = findViewById(R.id.eyePassword);
         loginProgressBar = findViewById(R.id.progressBar);

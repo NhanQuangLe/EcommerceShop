@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -55,6 +56,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class InputInfoActivity extends AppCompatActivity {
     private FirebaseAuth auth;
@@ -65,9 +67,10 @@ public class InputInfoActivity extends AppCompatActivity {
     private PreferenceManagement preferenceManagement;
     private RoundedImageView avatar;
     private FrameLayout layoutImage;
-    private TextView textAddImage, textError, textErrorGender, textErrorBirthdate, textErrorImage;
-    private EditText edittextName, edittextBirthdate;
+    private TextView textAddImage, textError, textErrorGender, textErrorBirthdate, textErrorImage, textErrorPhone;
+    private EditText edittextName, edittextBirthdate, editTextPhone;
     private ImageView buttonShowDatePicker;
+    private AppCompatImageView buttonBack;
     private CheckBox cbNam, cbNu;
     private Button buttonStart;
     private ProgressBar progressBar;
@@ -91,7 +94,8 @@ public class InputInfoActivity extends AppCompatActivity {
             Boolean checkImage = IsValidImage();
             Boolean checkDate = IsValidDate();
             Boolean checkCheckBox = IsValidGender();
-            if (checkName && checkDate && checkCheckBox && checkImage) {
+            Boolean checkPhone = IsValidPhone();
+            if (checkName && checkDate && checkCheckBox && checkImage && checkPhone) {
                 if (!isWithGoogle){
                     Started();
                 }
@@ -102,7 +106,7 @@ public class InputInfoActivity extends AppCompatActivity {
 
             }
         });
-
+        buttonBack.setOnClickListener(view -> startActivity(new Intent(InputInfoActivity.this, SignUpActivity.class)));
         cbNam.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (cbNam.isChecked()) {
                 cbNam.setChecked(true);
@@ -148,8 +152,72 @@ public class InputInfoActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             pickImage.launch(intent);
         });
+        editTextPhone.setOnClickListener(v -> {
+            if (editTextPhone.getText().toString().trim().isEmpty()) {
+                editTextPhone.setBackgroundResource(R.drawable.background_input_error);
+                textErrorPhone.setText("Vui lòng nhập số điện thoại để đăng ký!");
+                textErrorPhone.setTextColor(Color.parseColor("#E10000"));
+                textErrorPhone.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                String phone = editTextPhone.getText().toString().trim();
+                Pattern p = Pattern.compile("^[0-9]{10}$");
+                Pattern p1 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4}$");
+                Pattern p2 = Pattern.compile("^[0-9]{3}.[0-9]{3}.[0-9]{4}$");
+                Pattern p3 = Pattern.compile("^[0-9]{3} [0-9]{3} [0-9]{4}$");
+                Pattern p4 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4} (x|ext)[0-9]{4}$");
+                Pattern p5 = Pattern.compile("^\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}$");
+                if (p.matcher(phone).find() || p1.matcher(phone).find() || p2.matcher(phone).find()
+                        || p3.matcher(phone).find() || p4.matcher(phone).find() || p5.matcher(phone).find())
+                {
+                    editTextPhone.setBackgroundResource(R.drawable.background_input);
+                    textErrorPhone.setVisibility(View.INVISIBLE);
+                }
+                else
+                {
+                    editTextPhone.setBackgroundResource(R.drawable.background_input_error);
+                    textErrorPhone.setText("Số điện thoại không hợp lệ. Vui lòng nhập lại!");
+                    textErrorPhone.setTextColor(Color.parseColor("#E10000"));
+                    textErrorPhone.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
-
+    private Boolean IsValidPhone() {
+        if (editTextPhone.getText().toString().trim().isEmpty()) {
+            editTextPhone.setBackgroundResource(R.drawable.background_input_error);
+            textErrorPhone.setText("Vui lòng nhập số điện thoại để đăng ký!");
+            textErrorPhone.setTextColor(Color.parseColor("#E10000"));
+            textErrorPhone.setVisibility(View.VISIBLE);
+            return false;
+        }
+        else
+        {
+            String phone = editTextPhone.getText().toString().trim();
+            Pattern p = Pattern.compile("^[0-9]{10}$");
+            Pattern p1 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4}$");
+            Pattern p2 = Pattern.compile("^[0-9]{3}.[0-9]{3}.[0-9]{4}$");
+            Pattern p3 = Pattern.compile("^[0-9]{3} [0-9]{3} [0-9]{4}$");
+            Pattern p4 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4} (x|ext)[0-9]{4}$");
+            Pattern p5 = Pattern.compile("^\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}$");
+            if (p.matcher(phone).find() || p1.matcher(phone).find() || p2.matcher(phone).find()
+                    || p3.matcher(phone).find() || p4.matcher(phone).find() || p5.matcher(phone).find())
+            {
+                editTextPhone.setBackgroundResource(R.drawable.background_input);
+                textErrorPhone.setVisibility(View.INVISIBLE);
+                return true;
+            }
+            else
+            {
+                editTextPhone.setBackgroundResource(R.drawable.background_input_error);
+                textErrorPhone.setText("Số điện thoại không hợp lệ. Vui lòng nhập lại!");
+                textErrorPhone.setTextColor(Color.parseColor("#E10000"));
+                textErrorPhone.setVisibility(View.VISIBLE);
+                return false;
+            }
+        }
+    }
     private String encodeImage(Bitmap bitmap) {
         int previewWidth = 150;
         int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
@@ -292,7 +360,7 @@ public class InputInfoActivity extends AppCompatActivity {
         String password = i.getStringExtra("password");
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                 mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+                mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
                 CreateAccountChat(email);
 
             } else {
@@ -352,6 +420,7 @@ public class InputInfoActivity extends AppCompatActivity {
                 user.put("email",email);
                 user.put("name",edittextName.getText().toString().trim());
                 user.put("gender",gender);
+                user.put("phoneNumber",editTextPhone.getText().toString().trim());
                 ref.setValue(user);
                 if (isWithGoogle){
                     Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
@@ -365,6 +434,8 @@ public class InputInfoActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
     }
 
@@ -387,6 +458,9 @@ public class InputInfoActivity extends AppCompatActivity {
         textErrorBirthdate = findViewById(R.id.textErrorBirthdate);
         layoutImage = findViewById(R.id.layoutImage);
         textErrorImage = findViewById(R.id.textErrorImage);
+        editTextPhone = findViewById(R.id.editTextPhone);
+        textErrorPhone = findViewById(R.id.textErrorPhone);
+        buttonBack = findViewById(R.id.buttonBack);
     }
 
 

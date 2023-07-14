@@ -51,8 +51,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Button buttonSignUp;
     private TextView loginTextView, textErrorEmail, textErrorPassword, textErrorConfirmPassword;
     private ProgressBar signupProgressBar;
-    private AppCompatImageView buttonBack;
-    private ImageView eyeImagePass;
+    private ImageView eyeImagePass, eyeConfirmPassword;
     private LinearLayout googleButton;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -79,18 +78,19 @@ public class SignUpActivity extends AppCompatActivity {
         textErrorPassword = findViewById(R.id.textErrorPassword);
         eyeImagePass = findViewById(R.id.eyePassword);
         loginTextView = findViewById(R.id.textHaveAccount);
-        buttonBack = findViewById(R.id.buttonBack);
         signupProgressBar = findViewById(R.id.progressBar);
         buttonSignUp = findViewById(R.id.buttonSignup);
         googleButton = findViewById(R.id.buttonGoogle);
         signupConfirmPass = findViewById(R.id.editTextConfirmPass);
         textErrorConfirmPassword = findViewById(R.id.textErrorConfirmPass);
+        eyeConfirmPassword = findViewById(R.id.eyeConfirmPassword);
     }
     private void setListeners() {
-        buttonBack.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         loginTextView.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> HandleEyePassword());
+        eyeConfirmPassword.setImageResource(R.drawable.ic_eye);
+        eyeConfirmPassword.setOnClickListener(view -> HandleEyeConfirmPassword());
         buttonSignUp.setOnClickListener(view -> {
             Boolean checkEmail = IsValidSignUpEmail();
             Boolean checkPassword = IsValidSignUpPassword();
@@ -104,7 +104,7 @@ public class SignUpActivity extends AppCompatActivity {
             if (signupEmail.getText().toString().trim().isEmpty())
             {
                 signupEmail.setBackgroundResource(R.drawable.background_input_error);
-                textErrorEmail.setText("Vui lòng nhập email để đăng ký!");
+                textErrorEmail.setText("Vui lòng nhập email để tiếp tục!");
                 textErrorEmail.setTextColor(Color.parseColor("#E10000"));
                 textErrorEmail.setVisibility(View.VISIBLE);
             }
@@ -125,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity {
             if (signupPassword.getText().toString().trim().isEmpty())
             {
                 signupPassword.setBackgroundResource(R.drawable.background_input_error);
-                textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng ký!");
+                textErrorPassword.setText("Vui lòng nhập mật khẩu để tiếp tục!");
                 textErrorPassword.setTextColor(Color.parseColor("#E10000"));
                 textErrorPassword.setVisibility(View.VISIBLE);
             }
@@ -171,6 +171,19 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void HandleEyeConfirmPassword() {
+        if (signupConfirmPass.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance()))
+        {
+            signupConfirmPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            eyeConfirmPassword.setImageResource(R.drawable.ic_eye);
+        }
+        else
+        {
+            signupConfirmPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            eyeConfirmPassword.setImageResource(R.drawable.ic_not_eye);
+        }
     }
 
     private Boolean IsValidSignUpConfirmPassword() {
@@ -265,7 +278,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (signupEmail.getText().toString().trim().isEmpty())
         {
             signupEmail.setBackgroundResource(R.drawable.background_input_error);
-            textErrorEmail.setText("Vui lòng email để đăng ký!");
+            textErrorEmail.setText("Vui lòng email để tiếp tục!");
             textErrorEmail.setTextColor(Color.parseColor("#E10000"));
             textErrorEmail.setVisibility(View.VISIBLE);
             return false;
@@ -291,7 +304,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (signupPassword.getText().toString().trim().isEmpty())
         {
             signupPassword.setBackgroundResource(R.drawable.background_input_error);
-            textErrorPassword.setText("Vui lòng nhập mật khẩu để đăng ký!");
+            textErrorPassword.setText("Vui lòng nhập mật khẩu để tiếp tục!");
             textErrorPassword.setTextColor(Color.parseColor("#E10000"));
             textErrorPassword.setVisibility(View.VISIBLE);
             return false;
