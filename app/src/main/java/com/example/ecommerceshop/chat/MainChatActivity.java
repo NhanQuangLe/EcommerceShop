@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainChatActivity extends AppCompatActivity implements ConversionListener {
+public class MainChatActivity  extends BaseActivity implements ConversionListener {
     private FirebaseUser mCurrentUser;
     private ActivityMainChatBinding binding;
     private List<ChatMessage> conversationsList;

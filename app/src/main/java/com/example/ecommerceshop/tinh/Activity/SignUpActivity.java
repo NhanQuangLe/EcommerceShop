@@ -246,23 +246,7 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
         loading(false);
     }
-    private void CreateAccountChat(String email, String pass) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        HashMap<String, Object> userChat = new HashMap<>();
-        userChat.put(Constants.KEY_EMAIL, email);
-        db.collection(Constants.KEY_COLLECTION_USER).add(userChat)
-                .addOnSuccessListener(documentReference -> {
-                    loading(false);
-                    preferenceManagement.putString(Constants.KEY_USER_ID, documentReference.getId());
-                    String accountChatId = preferenceManagement.getString(Constants.KEY_USER_ID);
-                    String idCurrentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+idCurrentUser+"/Customer/accountChatId");
-                    ref.setValue(accountChatId);
-                }).addOnFailureListener(exception -> {
-                    loading(false);
-                    showToast(exception.getMessage());
-                });
-    }
+
     private void HandleEyePassword()
     {
         if (signupPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance()))

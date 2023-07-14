@@ -73,6 +73,8 @@ public class InputInfoActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private String encodedImage;
     final Calendar myCalendar = Calendar.getInstance();
+    private Boolean isWithGoogle;
+    private String currentUserId;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -80,6 +82,8 @@ public class InputInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_info);
         InitUI();
+        Intent i = getIntent();
+        isWithGoogle = i.getBooleanExtra("withGoogle",false);
         auth = FirebaseAuth.getInstance();
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         buttonStart.setOnClickListener(v -> {
@@ -88,7 +92,14 @@ public class InputInfoActivity extends AppCompatActivity {
             Boolean checkDate = IsValidDate();
             Boolean checkCheckBox = IsValidGender();
             if (checkName && checkDate && checkCheckBox && checkImage) {
-                Started();
+                if (!isWithGoogle){
+                    Started();
+                }
+                else{
+                    currentUserId = i.getStringExtra("userId");
+                    Started2();
+                }
+
             }
         });
 
@@ -282,7 +293,7 @@ public class InputInfoActivity extends AppCompatActivity {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                  mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-                CreateAccountChat(email, password);
+                CreateAccountChat(email);
                 Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
                 Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                 i2.putExtra("signUp", true);
@@ -294,8 +305,14 @@ public class InputInfoActivity extends AppCompatActivity {
         });
         loading(false);
     }
+    private void Started2() {
+        loading(true);
+        String email = getIntent().getStringExtra("email");
+        SaveImgInFirebaseStorage(email);
 
-    private void CreateAccountChat(String email, String pass) {
+    }
+
+    private void CreateAccountChat(String email) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         HashMap<String, Object> userChat = new HashMap<>();
         userChat.put(Constants.KEY_EMAIL, email);
@@ -320,8 +337,10 @@ public class InputInfoActivity extends AppCompatActivity {
     }
 
     private void SaveImgInFirebaseStorage(String email) {
-        String t = ""+System.currentTimeMillis();
-        StorageReference storage = FirebaseStorage.getInstance().getReference("ImageCustomer/"+mCurrentUser.getUid()+"/"+t);
+        String userId;
+        if (isWithGoogle) userId = currentUserId;
+        else userId = mCurrentUser.getUid();
+        StorageReference storage = FirebaseStorage.getInstance().getReference("ImageCustomer/"+userId+"/"+userId+"Avt");
         storage.putFile(mUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -329,7 +348,7 @@ public class InputInfoActivity extends AppCompatActivity {
                 while (!uriTask.isSuccessful());
                 Uri downloadUri = uriTask.getResult();
                 if(uriTask.isSuccessful()) avt=downloadUri.toString();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/CustomerInfos");
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + userId + "/Customer/CustomerInfos");
                 Map<String,String> user = new HashMap<>();
                 user.put("avatar",avt);
                 user.put("dateOfBirth",edittextBirthdate.getText().toString().trim());
@@ -337,6 +356,11 @@ public class InputInfoActivity extends AppCompatActivity {
                 user.put("name",edittextName.getText().toString().trim());
                 user.put("gender",gender);
                 ref.setValue(user);
+                if (isWithGoogle){
+                    Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
+                    Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(i2);
+                }
 
             }
         });

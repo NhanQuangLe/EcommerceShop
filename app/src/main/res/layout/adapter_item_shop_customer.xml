@@ -147,6 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4.9"
+                android:id="@+id/rating"
                 android:textColor="#EA1C00"
                 android:textSize="14sp"
                 android:layout_marginStart="20dp"
