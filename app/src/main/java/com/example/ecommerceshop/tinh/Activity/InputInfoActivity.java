@@ -294,10 +294,7 @@ public class InputInfoActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                  mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
                 CreateAccountChat(email);
-                Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
-                Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
-                i2.putExtra("signUp", true);
-                startActivity(i2);
+
             } else {
                 loading(false);
                 Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
@@ -357,11 +354,15 @@ public class InputInfoActivity extends AppCompatActivity {
                 user.put("gender",gender);
                 ref.setValue(user);
                 if (isWithGoogle){
-                    Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
                     Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i2);
                 }
-
+                else {
+                    Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
+                    i2.putExtra("signUp",true);
+                    startActivity(i2);
+                }
             }
         });
 

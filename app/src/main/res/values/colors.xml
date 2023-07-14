@@ -30,5 +30,7 @@
     <color name="input_background">#ECECEC</color>
     <color name="received_message_background">#090D16</color>
     <color name="error">#B00020</color>
+    <color name="primary_dark">#142232</color>
+    <color name="green_online">#008000</color>
 
 </resources>

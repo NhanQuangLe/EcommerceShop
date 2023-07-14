@@ -92,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if (acct != null) {
             navigateToSecondActivity();
+            return;
         }
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
@@ -102,11 +103,13 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 Intent i = getIntent();
-                if (i.getBooleanExtra("signUp", false) == true) return;
-                finish();
-                Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                if (i.getBooleanExtra("signUp", false) == false){
+                    finish();
+                    Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+
             }
 
         }
