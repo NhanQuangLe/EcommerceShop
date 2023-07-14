@@ -52,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView loginTextView, textErrorEmail, textErrorPassword, textErrorConfirmPassword;
     private ProgressBar signupProgressBar;
     private AppCompatImageView buttonBack;
-    private ImageView eyeImagePass;
+    private ImageView eyeImagePass, eyeConfirmPassword;
     private LinearLayout googleButton;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -85,12 +85,15 @@ public class SignUpActivity extends AppCompatActivity {
         googleButton = findViewById(R.id.buttonGoogle);
         signupConfirmPass = findViewById(R.id.editTextConfirmPass);
         textErrorConfirmPassword = findViewById(R.id.textErrorConfirmPass);
+        eyeConfirmPassword = findViewById(R.id.eyeConfirmPassword);
     }
     private void setListeners() {
         buttonBack.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         loginTextView.setOnClickListener(view -> startActivity(new Intent(SignUpActivity.this, LoginActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> HandleEyePassword());
+        eyeConfirmPassword.setImageResource(R.drawable.ic_eye);
+        eyeConfirmPassword.setOnClickListener(view -> HandleEyeConfirmPassword());
         buttonSignUp.setOnClickListener(view -> {
             Boolean checkEmail = IsValidSignUpEmail();
             Boolean checkPassword = IsValidSignUpPassword();
@@ -171,6 +174,19 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void HandleEyeConfirmPassword() {
+        if (signupConfirmPass.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance()))
+        {
+            signupConfirmPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            eyeConfirmPassword.setImageResource(R.drawable.ic_eye);
+        }
+        else
+        {
+            signupConfirmPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            eyeConfirmPassword.setImageResource(R.drawable.ic_not_eye);
+        }
     }
 
     private Boolean IsValidSignUpConfirmPassword() {

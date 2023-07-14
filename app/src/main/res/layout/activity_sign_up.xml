@@ -99,18 +99,35 @@
             android:visibility="invisible"
             android:textSize="12sp"/>
 
-        <EditText
-            android:id="@+id/editTextConfirmPass"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:padding="10dp"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:inputType="textPassword"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="10dp"
-            android:hint="Nhập lại mật khẩu"
-            android:background="@drawable/background_input"/>
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/editTextConfirmPass"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:padding="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                android:hint="Nhập lại mật khẩu"
+                android:background="@drawable/background_input"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/eyeConfirmPassword"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="10dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:id="@+id/textErrorConfirmPass"
             android:layout_width="match_parent"
