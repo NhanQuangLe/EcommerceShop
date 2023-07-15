@@ -196,6 +196,11 @@ public class InputInfoActivity extends AppCompatActivity {
                 }
             }
         });
+        edittextBirthdate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         edittextBirthdate.setOnClickListener(v -> new DatePickerDialog(InputInfoActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show());
     }
     private Boolean IsValidPhone() {
