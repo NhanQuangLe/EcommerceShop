@@ -166,39 +166,6 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                         String receiverId2;
                         if (isRoleShop){
                             receiverId2 = receiverId;
-                        }
-                        else {
-                            receiverId2 = receiverId.substring(0,receiverId.length()-4);
-                        }
-                        if (!isRoleShop){
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+receiverId2+"/Shop/ShopInfos");
-                            ref.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    for (ChatMessage chat:conversationsList){
-                                        if (chat.conversionId.equals(chatMessage.conversionId)){
-                                            conversationsList.remove(chat);
-                                            break;
-                                        }
-                                    }
-                                    String name = snapshot.child("shopName").getValue(String.class);
-                                    String shopAvt = snapshot.child("shopAvt").getValue(String.class);
-                                    chatMessage.conversionImage = shopAvt;
-                                    chatMessage.conversionName = name;
-                                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
-                                    conversationsList.add(chatMessage);
-                                    Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
-                                    conversationsAdapter.notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                        }
-                        else {
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+receiverId2+"/Customer/CustomerInfos");
                             ref.addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -226,23 +193,9 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                                 }
                             });
                         }
-
-
-
-
-                    }
-                    else
-                    {
-                        chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
-                        String senderId2;
-                        if (isRoleShop){
-                            senderId2 = senderId;
-                        }
                         else {
-                            senderId2 = senderId.substring(0,receiverId.length()-4);
-                        }
-                        if (!isRoleShop){
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+senderId2+"/Shop/ShopInfos");
+                            receiverId2 = receiverId.substring(0,receiverId.length()-4);
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+receiverId2+"/Shop/ShopInfos");
                             ref.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -269,7 +222,13 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                                 }
                             });
                         }
-                        else {
+                    }
+                    else
+                    {
+                        chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
+                        String senderId2;
+                        if (isRoleShop){
+                            senderId2 = senderId;
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+senderId2+"/Customer/CustomerInfos");
                             ref.addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -297,7 +256,35 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                                 }
                             });
                         }
+                        else {
+                            senderId2 = senderId.substring(0,receiverId.length()-4);
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+senderId2+"/Shop/ShopInfos");
+                            ref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (ChatMessage chat:conversationsList){
+                                        if (chat.conversionId.equals(chatMessage.conversionId)){
+                                            conversationsList.remove(chat);
+                                            break;
+                                        }
+                                    }
+                                    String name = snapshot.child("shopName").getValue(String.class);
+                                    String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                                    chatMessage.conversionImage = shopAvt;
+                                    chatMessage.conversionName = name;
+                                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                                    conversationsList.add(chatMessage);
+                                    Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
+                                    conversationsAdapter.notifyDataSetChanged();
+                                }
 
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
                     }
 
                 }
