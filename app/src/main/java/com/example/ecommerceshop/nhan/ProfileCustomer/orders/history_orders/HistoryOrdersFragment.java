@@ -122,6 +122,7 @@ public class HistoryOrdersFragment extends Fragment {
                                                 {
                                                     Product pd = new Product();
                                                     pd.setProductID(product.child("pid").getValue(String.class));
+                                                    pd.setShopID(ds.child("shopId").getValue(String.class));
                                                     pd.setProductAvatar(product.child("pAvatar").getValue(String.class));
                                                     pd.setProductBrand(product.child("pBrand").getValue(String.class));
                                                     pd.setProductName(product.child("pName").getValue(String.class));

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     TextView address_name, address_phone, address_detail, address_main;
 
     ImageView iv_ShopAvatar;
+    Button btnBackward;
     RecyclerView rv_ProductList;
     TextView tv_ShopName;
     TextView tv_SumMoney, tv_DiscountPrice, tv_DeliveryPrice, tv_TotalPrice;
@@ -64,6 +66,13 @@ public class OrderDetailActivity extends AppCompatActivity {
         tv_TotalPrice = findViewById(R.id.tv_TotalPrice);
 
         btn_buy = findViewById(R.id.btn_buy);
+        btnBackward = findViewById(R.id.btnBackward);
+        btnBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
     private void LoadData(HistoryOrder ho)
     {

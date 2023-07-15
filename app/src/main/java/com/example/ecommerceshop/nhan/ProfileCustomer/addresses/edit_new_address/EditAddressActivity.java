@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class EditAddressActivity extends AppCompatActivity {
     Button btn_UpdateAddress;
     LinearLayout btn_ChooseAddress;
     Address addressNew;
-
+    ImageView ic_back;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -66,6 +67,13 @@ public class EditAddressActivity extends AppCompatActivity {
         int status = intent.getIntExtra("Status", UserAddressActivity.NEW_ACTIVITY);
 
         InitUI(status);
+        ic_back = findViewById(R.id.ic_back);
+        ic_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         if(status == UserAddressActivity.EDIT_ACTIVITY)
         {

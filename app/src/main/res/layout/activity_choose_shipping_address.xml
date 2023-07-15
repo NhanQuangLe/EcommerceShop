@@ -53,17 +53,45 @@
             />
         </RelativeLayout>
     </LinearLayout>
-
+    <LinearLayout
+        android:id="@+id/btn_open_google_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/white"
+        android:outlineAmbientShadowColor="@color/black"
+        android:outlineSpotShadowColor="@color/gray5"
+        app:layout_constraintTop_toBottomOf="@+id/topControl">
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_address_user"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:textColor="@color/primary_red"
+            android:layout_marginLeft="10dp"
+            android:textSize="16dp"
+            android:text="Chọn vị trí hiện tại của tôi"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_CurrentLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topControl"
+        app:layout_constraintTop_toBottomOf="@+id/btn_open_google_map"
         android:layout_marginTop="6dp"
         android:orientation="vertical"
         android:visibility="gone"
         android:background="@color/white">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

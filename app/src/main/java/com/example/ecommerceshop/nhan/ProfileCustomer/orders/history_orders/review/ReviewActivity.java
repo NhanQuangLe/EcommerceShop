@@ -7,11 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Toast;
-
+import com.google.android.gms.tasks.Task;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -42,6 +43,7 @@ import com.google.firebase.storage.UploadTask;
 
 import org.checkerframework.checker.units.qual.A;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,10 +65,9 @@ public class ReviewActivity extends AppCompatActivity {
                     Intent intent = result.getData();
                     if (result.getResultCode() == RESULT_LOAD_IMG) {
                         imageSelection = intent.getData();
-                        rv.getUriList().add(imageSelection);
+                        rv.getUriList().add(imageSelection.toString());
                         ivAdapter.notifyDataSetChanged();
                     }
-
                 }
 
             });
@@ -76,7 +77,7 @@ public class ReviewActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMG && data != null && data.getData() != null) {
             imageSelection = data.getData();
-            rv.getUriList().add(imageSelection);
+            rv.getUriList().add(imageSelection.toString());
             ivAdapter.notifyDataSetChanged();
         }
     }
@@ -85,6 +86,7 @@ public class ReviewActivity extends AppCompatActivity {
     ProductInReviewAdapter productInReviewAdapter;
     ArrayList<Review> productViewList;
     LinearLayout btn_Send;
+    Button btnBackward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +102,10 @@ public class ReviewActivity extends AppCompatActivity {
         for (int i = 0; i < productList.size(); i++) {
             Review review = new Review();
             review.setProductId(productList.get(i).getProductID());
+            review.setShopId(productList.get(i).getShopID());
             review.setProductName(productList.get(i).getProductName());
             review.setProductAvatar(productList.get(i).getProductAvatar());
-            review.setRating(0);
+            review.setRating((double) 0);
             review.setUriList(new ArrayList<>());
             productViewList.add(review);
         }
@@ -117,7 +120,7 @@ public class ReviewActivity extends AppCompatActivity {
             }
 
             @Override
-            public void RatingBarChange(RatingBar ratingBar, float v, boolean b, Review review) {
+            public void RatingBarChange(RatingBar ratingBar, double v, boolean b, Review review) {
                 review.setRating(v);
             }
 
@@ -135,6 +138,13 @@ public class ReviewActivity extends AppCompatActivity {
 
     private void InitUI() {
         rv_listProductInReview = findViewById(R.id.rv_listProductInReview);
+        btnBackward = findViewById(R.id.btnBackward);
+        btnBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         btn_Send = findViewById(R.id.btn_Send);
     }
 
@@ -156,10 +166,11 @@ public class ReviewActivity extends AppCompatActivity {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
                 .child(firebaseAuth.getUid()).child("Customer");
-        ref.child("CustomerInfos").addValueEventListener(new ValueEventListener() {
+        ref.child("CustomerInfos").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Date currentTime = Calendar.getInstance().getTime();
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 for (int i = 0; i < productViewList.size(); i++) {
                     ProductInReviewAdapter.ReviewViewholder holder = (ProductInReviewAdapter.ReviewViewholder) rv_listProductInReview.findViewHolderForAdapterPosition(i);
                     productViewList.get(i).setContent(holder.et_Comment.getText() + "");
@@ -167,10 +178,11 @@ public class ReviewActivity extends AppCompatActivity {
                     productViewList.get(i).setCustomerId(firebaseAuth.getUid());
                     productViewList.get(i).setCustomerName(snapshot.child("name").getValue(String.class));
                     String key = String.valueOf((int) new Date().getTime());
-                    productViewList.get(i).setReviewDate(currentTime + "");
+                    productViewList.get(i).setReviewDate(simpleDateFormat.format(calendar.getTime()) + "");
                     productViewList.get(i).setReviewId(key);
                 }
-                pushData(0);
+                if(productViewList.size() != 0)
+                    pushReviewToFirebase(0);
             }
 
             @Override
@@ -193,29 +205,43 @@ public class ReviewActivity extends AppCompatActivity {
         }
         return false;
     }
-    private void pushUriList(String key, ArrayList<Uri> uriList, int n, int currentReviewIndex){
-        if(n == uriList.size())
-            pushData(currentReviewIndex + 1);
+    private void pushReviewToFirebase(int n){
+        if(n == productViewList.size())
+        {
+            Toast.makeText(ReviewActivity.this, "Cảm ơn bạn đã đánh giá", Toast.LENGTH_SHORT).show();
+            onBackPressed();
+            return;
+        }
+        pushUriList(productViewList.get(n).getUriList(),0 , n);
+    }
+
+    private void pushUriList(ArrayList<String> uriList, int currentUri, int currentProduct){
+        if(currentUri == uriList.size())
+        {
+            pushData(currentProduct);
+            return;
+        }
         storageReference.child("ImageReview")
-                //.child(key)
-                .putFile(uriList.get(n))
+                .child(productViewList.get(currentProduct).getCustomerId())
+                .child(productViewList.get(currentProduct).getReviewId())
+                .child(String.valueOf((int) new Date().getTime()))
+                .putFile(Uri.parse(uriList.get(currentUri)))
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        pushUriList(key, uriList, n + 1, currentReviewIndex);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ReviewActivity.this, "Không đánh giá được, thử lại sau", Toast.LENGTH_SHORT).show();
-                        finish();
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uriTask.isSuccessful());
+                        Uri downloadUri = uriTask.getResult();
+                        if(uriTask.isSuccessful())
+                        {
+                            productViewList.get(currentProduct).getUriList().set(currentUri, downloadUri.toString());
+                        }
+                        pushUriList(uriList, currentUri + 1, currentProduct);
                     }
                 });
     }
     private void pushData(int n)
     {
-        //if(n >= productViewList.size()) return;
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
                 .child(firebaseAuth.getUid())
                 .child("Customer")
@@ -225,8 +251,7 @@ public class ReviewActivity extends AppCompatActivity {
         ref.child(b).setValue(a, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(ReviewActivity.this, "oke dc r", Toast.LENGTH_SHORT).show();
-                //pushData(n + 1);
+                pushReviewToFirebase(n + 1);
             }
         });
     }

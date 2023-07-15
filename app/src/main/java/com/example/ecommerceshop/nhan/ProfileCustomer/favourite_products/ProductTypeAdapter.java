@@ -1,6 +1,8 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +26,11 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
 
     private Context context;
     private ArrayList<String> productTypes;
-    public ProductTypeAdapter(Context context, ArrayList<String> productTypes) {
+    private IClickProductType mClickProductType;
+    public ProductTypeAdapter(Context context, ArrayList<String> productTypes, IClickProductType listener) {
         this.context = context;
         this.productTypes = productTypes;
+        this.mClickProductType = listener;
     }
 
     @NonNull
@@ -41,6 +45,19 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
         String productType = productTypes.get(position);
 
         holder.acBtn_ProductCategory.setText(productType);
+        holder.acBtn_ProductCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.acBtn_ProductCategory.getBackgroundTintList() == ColorStateList.valueOf(Color.parseColor("#D9D9D9"))){
+                    mClickProductType.IClickFilter(productType, true);
+                    holder.acBtn_ProductCategory.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#000000")));
+                }
+                else{
+                    mClickProductType.IClickFilter(productType, false);
+                    holder.acBtn_ProductCategory.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#D9D9D9")));
+                }
+            }
+        });
     }
 
     @Override

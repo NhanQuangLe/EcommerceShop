@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -57,6 +58,7 @@ public class EditUserInfoActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     DatePickerDialog datePickerDialog;
     FirebaseAuth firebaseAuth;
+    ImageView backbtn;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMultipleMedia = registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), uris -> {
         if (!uris.isEmpty()) {
             photo=new Photo(uris.get(0),1);
@@ -71,6 +73,7 @@ public class EditUserInfoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         currentCus = (Customer) intent.getSerializableExtra("currentUser");
         firebaseAuth = FirebaseAuth.getInstance();
+
         initDatePicker();
         InitUI();
         LoadData();
@@ -108,6 +111,13 @@ public class EditUserInfoActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(EditUserInfoActivity.this);
         progressDialog.setTitle("Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
+        backbtn = findViewById(R.id.backbtn);
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
     private void LoadData(){
         Picasso.get().load(currentCus.getAvatar()).into(userAvatar);

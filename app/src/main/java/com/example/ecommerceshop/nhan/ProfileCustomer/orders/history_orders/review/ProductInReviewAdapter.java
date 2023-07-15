@@ -53,7 +53,7 @@ public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReview
         Review review = reviewList.get(position);
         Picasso.get().load(Uri.parse(review.getProductAvatar())).into(holder.iv_ProductAvatar);
         holder.tv_ProductName.setText(review.getProductName());
-        ArrayList<Uri> uriList = review.getUriList();
+        ArrayList<String> uriList = review.getUriList();
         ImageReviewAdapter imageReviewAdapter = new ImageReviewAdapter(context, uriList, new ImageReviewAdapter.IClickImageReview() {
             @Override
             public void RemoveImage(Uri uri) {
@@ -71,7 +71,7 @@ public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReview
         holder.rb_Rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                mClickProductInReviewListener.RatingBarChange(ratingBar, v, b, review);
+                mClickProductInReviewListener.RatingBarChange(ratingBar, (double)v, b, review);
             }
         });
         holder.btn_AddImage.setOnClickListener(new View.OnClickListener() {

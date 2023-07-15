@@ -10,10 +10,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.AddressItem;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -63,12 +70,21 @@ public class ChooseAddressActivity extends AppCompatActivity {
     public String mainAddress;
     RecyclerView rv_ListAddress;
     TextView btn_ResetAddress, tv_TypeChoose, tv_CurrentProvince, tv_CurrentDistrict;
-    LinearLayout ll_CurrentLocation, ll_ChooseDistrictRoundbox, ll_ChooseWardRoundbox;
+    LinearLayout ll_CurrentLocation, ll_ChooseDistrictRoundbox, ll_ChooseWardRoundbox, btn_open_google_map;
     ArrayList<AddressItem> addressList;
     ArrayList<AddressItem> addressSearchResult;
     AddressAdapter addressAdapter;
     EditText et_SearchBox;
+    ImageView ic_back;
 
+    private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent intent = result.getData();
+                    if(result.getResultCode() == ChooseAddressActivity.SUCCESS_CREATE_ADDRESS);
+                }
+            });
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +108,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
 
     }
     void InitUI(){
+        ic_back = findViewById(R.id.ic_back);
         rv_ListAddress = findViewById(R.id.rv_ListAddress);
         btn_ResetAddress = findViewById(R.id.btn_ResetAddress);
         tv_TypeChoose = findViewById(R.id.tv_TypeChoose);
@@ -101,6 +118,21 @@ public class ChooseAddressActivity extends AppCompatActivity {
         ll_ChooseDistrictRoundbox = findViewById(R.id.ll_ChooseDistrictRoundBox);
         ll_ChooseWardRoundbox = findViewById(R.id.ll_ChooseWardRoundBox);
         et_SearchBox = findViewById(R.id.et_SearchBox);
+        btn_open_google_map = findViewById(R.id.btn_open_google_map);
+        btn_open_google_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ChooseAddressActivity.this, GoogleMapLocationActivity.class);
+                mActivityLauncher.launch(intent);
+
+            }
+        });
+        ic_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         et_SearchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

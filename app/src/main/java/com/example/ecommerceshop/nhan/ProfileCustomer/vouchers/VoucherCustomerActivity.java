@@ -1,6 +1,8 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.vouchers;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,7 @@ public class VoucherCustomerActivity extends AppCompatActivity {
     VoucherCustomerAdapter voucherCustomerAdapter;
     RecyclerView listVoucherView;
     FirebaseAuth firebaseAuth;
+    Button btnBackward;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,13 @@ public class VoucherCustomerActivity extends AppCompatActivity {
         voucherCustomerAdapter = new VoucherCustomerAdapter(VoucherCustomerActivity.this, listVoucher);
         listVoucherView.setAdapter(voucherCustomerAdapter);
         firebaseAuth = FirebaseAuth.getInstance();
+        btnBackward = findViewById(R.id.btnBackward);
+        btnBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         GetData();
     }
     private void GetData(){

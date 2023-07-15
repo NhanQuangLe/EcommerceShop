@@ -1,6 +1,8 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.type.DateTime;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,21 +40,32 @@ public class FavouriteProductsActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     RecyclerView rv_FavouriteProductsView, rv_ProductTypesView;
     ArrayList<Product> listFavouriteProduct;
+    ArrayList<Product> AllFavouriteProduct;
     ArrayList<String> listProductType;
     FavouriteProductsAdapter favouriteProductsAdapter;
     ProductTypeAdapter productTypeAdapter;
+    ArrayList<String> listProductTypeChoosen;
+    ImageView ic_back;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite_product);
-
+        ic_back = findViewById(R.id.ic_back);
+        ic_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         firebaseAuth = FirebaseAuth.getInstance();
 
         rv_FavouriteProductsView = findViewById(R.id.rv_FavouriteProducts);
         rv_ProductTypesView = findViewById(R.id.rv_ProductTypes);
 
         listFavouriteProduct = new ArrayList<>();
+        AllFavouriteProduct = new ArrayList<>();
         listProductType = new ArrayList<>();
+        listProductTypeChoosen = new ArrayList<>();
 
         favouriteProductsAdapter = new FavouriteProductsAdapter(FavouriteProductsActivity.this, listFavouriteProduct, new IClickFavouriteProductListener() {
             @Override
@@ -111,10 +125,12 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                                             if(listFavouriteProduct.get(i).getProductID().equals(s.child("productId").getValue(String.class)))
                                             {
                                                 listFavouriteProduct.set(i, product);
+                                                AllFavouriteProduct.set(i, product);
                                                 favouriteProductsAdapter.notifyDataSetChanged();
                                                 return;
                                             }
                                         listFavouriteProduct.add(product);
+                                        AllFavouriteProduct.add(product);
                                         favouriteProductsAdapter.notifyDataSetChanged();
                                     }
                                     @Override
@@ -136,6 +152,7 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                             if(listFavouriteProduct.get(i).getProductID().equals(snapshot.child("productId").getValue(String.class)))
                             {
                                 listFavouriteProduct.remove(i);
+                                AllFavouriteProduct.remove(i);
                                 favouriteProductsAdapter.notifyDataSetChanged();
                                 return;
                             }
@@ -159,7 +176,19 @@ public class FavouriteProductsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds : snapshot.getChildren())
                     listProductType.add(ds.getValue(String.class));
-                productTypeAdapter = new ProductTypeAdapter(FavouriteProductsActivity.this, listProductType);
+                productTypeAdapter = new ProductTypeAdapter(FavouriteProductsActivity.this, listProductType, new IClickProductType() {
+                    @Override
+                    public void IClickFilter(String productType, boolean isChoose) {
+                        if(isChoose){
+                            listProductTypeChoosen.remove(productType);
+                            GetProductFavouriteDataBy(listProductTypeChoosen);
+                        }
+                        else{
+                            listProductTypeChoosen.add(productType);
+                            GetProductFavouriteDataBy(listProductTypeChoosen);
+                        }
+                    }
+                });
                 rv_ProductTypesView.setAdapter(productTypeAdapter);
             }
 
@@ -171,30 +200,36 @@ public class FavouriteProductsActivity extends AppCompatActivity {
     }
     public void AddProductToCart(Product favouriteProduct) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference();
-        String cartId = Long.toString(new Date().getTime());
-        Cart cart = new Cart(cartId, favouriteProduct.getProductID(), favouriteProduct.getShopID(), 1);
-        dbRef.child("Users")
-                .child(firebaseAuth.getUid())
-                .child("Customer")
-                .child("Cart")
-                .child(cartId).setValue(cart, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        dbRef.child("Users")
-                                .child(firebaseAuth.getUid())
-                                .child("Customer")
-                                .child("FavouriteProducts")
-                                .child(cart.getProductId())
-                                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(FavouriteProductsActivity.this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
-                });
+        DatabaseReference dbRef = database.getReference().child("Users").child(firebaseAuth.getUid()).child("Customer").child("Cart");
 
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean isContain = false;
+                for(DataSnapshot pd : snapshot.getChildren()){
+                    if(pd.child("productId").getValue(String.class).equals(favouriteProduct.getProductID()))
+                    {
+                        isContain = true;
+                        Toast.makeText(FavouriteProductsActivity.this, "Sản phẩm đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                if(!isContain){
+                    String cartId = Long.toString(new Date().getTime());
+                    Cart cart = new Cart(cartId, favouriteProduct.getProductID(), favouriteProduct.getShopID(), 1);
+                    dbRef.child(cartId).setValue(cart, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            Toast.makeText(FavouriteProductsActivity.this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(FavouriteProductsActivity.this, "Can not get value", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     public void DeleteFavouriteProduct(Product favouriteProduct) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -221,5 +256,25 @@ public class FavouriteProductsActivity extends AppCompatActivity {
             rate += rvList.get(i).getRating();
         }
         return rate / rvList.size();
+    }
+    private void GetProductFavouriteDataBy(ArrayList<String> productTypeChoosens){
+        listFavouriteProduct.clear();
+        if(listProductType.size() == productTypeChoosens.size() || productTypeChoosens.size() == 0)
+        {
+            for(int i = 0; i < AllFavouriteProduct.size(); i++){
+                listFavouriteProduct.add(AllFavouriteProduct.get(i));
+            }
+        }
+        else
+            for(int i = 0; i < AllFavouriteProduct.size(); i++){
+                for(int j = 0 ; j < productTypeChoosens.size(); j++)
+                {
+                    if(productTypeChoosens.get(j).equals(AllFavouriteProduct.get(i).getProductCategory())){
+                        listFavouriteProduct.add(AllFavouriteProduct.get(i));
+                        break;
+                    }
+                }
+            }
+        favouriteProductsAdapter.notifyDataSetChanged();
     }
 }

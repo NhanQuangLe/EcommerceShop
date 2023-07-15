@@ -3,6 +3,7 @@ package com.example.ecommerceshop.nhan.ProfileCustomer.addresses;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -50,6 +51,7 @@ public class UserAddressActivity extends AppCompatActivity {
     AppCompatButton aBtn_AddAddress;
     HashMap<String, String> mapWard;
     String deFaultId;
+    ImageView ic_back;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -91,6 +93,13 @@ public class UserAddressActivity extends AppCompatActivity {
         listAddressView = findViewById(R.id.rv_ListAddress);
         aBtn_AddAddress = findViewById(R.id.aBtn_AddAddress);
         deFaultId = "";
+        ic_back = findViewById(R.id.ic_back);
+        ic_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         aBtn_AddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
