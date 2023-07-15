@@ -15,30 +15,31 @@ import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.Phat.Activity.RegistrationToShopInAdminActivity;
 import com.example.ecommerceshop.Phat.Model.RequestShop;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterListRequest extends RecyclerView.Adapter<AdapterListRequest.RequestViewHolder> {
+public class AdapterListShopAdmin extends RecyclerView.Adapter<AdapterListShopAdmin.ShopViewholder> {
     Context context;
     ArrayList<RequestShop> requestShops;
 
-    public AdapterListRequest(Context context, ArrayList<RequestShop> requestShops) {
+    public AdapterListShopAdmin(Context context, ArrayList<RequestShop> requestShops) {
         this.context = context;
         this.requestShops = requestShops;
     }
 
     @NonNull
     @Override
-    public RequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ShopViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.adapter_list_shops_admin, parent, false);
-        return new RequestViewHolder(view);
+        return new AdapterListShopAdmin.ShopViewholder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RequestViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ShopViewholder holder, int position) {
         RequestShop requestShop = requestShops.get(position);
         Glide.with(context).load(Uri.parse(requestShop.getShopAvt())).into(holder.imgview_item);
         holder.shopname.setText(requestShop.getShopName());
@@ -48,8 +49,9 @@ public class AdapterListRequest extends RecyclerView.Adapter<AdapterListRequest.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =new Intent(context, RegistrationToShopInAdminActivity.class);
-                intent.putExtra("id", requestShop.getUid());
+                Intent intent =new Intent(context, ShopActivityCustomer.class);
+                intent.putExtra("shopId",requestShop.getUid());
+                intent.putExtra("role","Admin");
                 context.startActivity(intent);
 
             }
@@ -61,11 +63,12 @@ public class AdapterListRequest extends RecyclerView.Adapter<AdapterListRequest.
         return requestShops.size();
     }
 
-    public static class RequestViewHolder extends RecyclerView.ViewHolder{
+
+    public static class ShopViewholder extends RecyclerView.ViewHolder{
         CircleImageView imgview_item;
         TextView shopname, shopemail,shopphone,regisdate;
 
-        public RequestViewHolder(@NonNull View itemView) {
+        public ShopViewholder(@NonNull View itemView) {
             super(itemView);
             imgview_item=itemView.findViewById(R.id.imgview_item);
             shopname=itemView.findViewById(R.id.shopname);

@@ -196,6 +196,14 @@
                        android:background="@drawable/bg_edit_text"
                        android:inputType="textPersonName|textCapWords" />
                </com.google.android.material.textfield.TextInputLayout>
+               <TextView
+                   android:id="@+id/notification"
+                   android:visibility="gone"
+                   android:layout_width="wrap_content"
+                   android:textColor="@color/black"
+                   android:textSize="16sp"
+                   android:text="Đây là thông tin shop cũ đã bị ngưng hoạt động. Vui lòng liên hệ với sđt 0356289099 hoặc email admin@gmail.com để yêu cầu phục hồi trước khi gửi đăng ký!"
+                   android:layout_height="wrap_content"/>
                <Button
                    android:id="@+id/btnAddRequest"
                    android:layout_marginBottom="10dp"

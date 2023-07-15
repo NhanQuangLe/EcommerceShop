@@ -1,10 +1,12 @@
 package com.example.ecommerceshop.Phat.Activity;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,9 +16,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.ecommerceshop.Phat.Adapter.AdapterListItemOrderDetail;
 import com.example.ecommerceshop.Phat.Adapter.AdapterOrderShop;
 import com.example.ecommerceshop.Phat.Adapter.AdapterVoucherShop;
+import com.example.ecommerceshop.Phat.Model.Notification;
 import com.example.ecommerceshop.Phat.Model.OrderItem;
 import com.example.ecommerceshop.Phat.Model.OrderShop;
 import com.example.ecommerceshop.Phat.Model.Product;
@@ -32,8 +40,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class OrderDetailShopActivity extends AppCompatActivity {
     TextView orderId, orderedDate,ReceiverName, phonenum_order,orderStatus,orderQuantity,addressBuyer,paymentMethod,deliveryMethod,orderDiscount,orderTotalPrice,deliveryPrice;
@@ -90,46 +109,115 @@ public class OrderDetailShopActivity extends AppCompatActivity {
     private void editOrdStatus(String selectOpt) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("orderStatus", selectOpt);
+        final String[] voucherId = new String[1];
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(customerid).child("Customer").child("Orders").child(orderid)
-                .updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        if(selectOpt.equals("Completed")){
-                            for (OrderItem orderItem : orderItems){
-                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                                databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products")
-                                        .child(orderItem.getPid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                int psold = 0;
-                                                psold=snapshot.child("psoldQuantity").getValue(Integer.class);
-                                                int pQuantity = 0;
-                                                pQuantity =snapshot.child("productQuantity").getValue(Integer.class);
-                                                HashMap<String, Object> hashMap1 = new HashMap<>();
-                                                hashMap1.clear();
-                                                hashMap1.put("psoldQuantity", psold+orderItem.getpQuantity());
-                                                hashMap1.put("productQuantity", pQuantity-orderItem.getpQuantity());
-                                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
-                                                reference1.child(firebaseAuth.getUid()).child("Shop").child("Products")
-                                                        .child(orderItem.getPid()).updateChildren(hashMap1);
-                                            }
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }
-                        }
-                        Toast.makeText(OrderDetailShopActivity.this, "Order is now "+selectOpt, Toast.LENGTH_SHORT).show();
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String vId = snapshot.child("voucherUserId").getValue(String.class);
+                if (!vId.isEmpty()) voucherId[0] = vId;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        reference.child(customerid).child("Customer").child("Orders")
+                .child(orderid).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                if(selectOpt.equals("Completed")){
+                    for (OrderItem orderItem : orderItems){
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                        databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products")
+                                .child(orderItem.getPid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        int psold = 0;
+                                        psold=snapshot.child("psoldQuantity").getValue(Integer.class);
+                                        int pQuantity = 0;
+                                        pQuantity =snapshot.child("productQuantity").getValue(Integer.class);
+                                        HashMap<String, Object> hashMap1 = new HashMap<>();
+                                        hashMap1.clear();
+                                        hashMap1.put("psoldQuantity", psold+orderItem.getpQuantity());
+                                        hashMap1.put("productQuantity", pQuantity-orderItem.getpQuantity());
+                                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
+                                        reference1.child(firebaseAuth.getUid()).child("Shop").child("Products")
+                                                .child(orderItem.getPid()).updateChildren(hashMap1);
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(OrderDetailShopActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                if(selectOpt.equals("Completed")||selectOpt.equals("Processing")){
+                    if(!voucherId[0].isEmpty()){
+                        Toast.makeText(OrderDetailShopActivity.this, ""+voucherId[0], Toast.LENGTH_SHORT).show();
+
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                        reference.child(customerid).child("Customer").child("Vouchers").child(voucherId[0]).removeValue();
+
+                        reference.child(firebaseAuth.getUid()).child("Shop")
+                                .child("Vouchers").child(voucherId[0]).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        int pQuantity = 0;
+                                        pQuantity =snapshot.child("quantity").getValue(Integer.class);
+                                        HashMap<String, Object> hashMap1 = new HashMap<>();
+                                        hashMap1.clear();
+
+                                        hashMap1.put("quantity", pQuantity-1);
+                                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
+                                        reference1.child(firebaseAuth.getUid()).child("Shop").child("Vouchers")
+                                                .child(voucherId[0]).updateChildren(hashMap1);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
-                });
+
+                }
+                if(selectOpt.equals("Cancelled")){
+                    HashMap<String, Object> hashMap1 = new HashMap<String, Object>();
+                    hashMap1.clear();
+                    hashMap1.put("used", false);
+                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
+                    reference1.child(customerid).child("Customer").child("Vouchers").child(voucherId[0])
+                            .updateChildren(hashMap1);
+                }
+                Toast.makeText(OrderDetailShopActivity.this, "Order is now "+selectOpt, Toast.LENGTH_SHORT).show();
+                saveNotification(selectOpt);
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(OrderDetailShopActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveNotification(String selectOpt) {
+        String timestamp = ""+System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+
+        // Lấy giờ, phút, ngày, tháng, năm hiện tại
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1; // Vì Calendar.MONTH bắt đầu từ 0
+        int year = calendar.get(Calendar.YEAR);
+        String date = hour+":"+minute+" "+day+"/"+month+"/"+year;
+        Notification notification = new Notification(orderItems.get(0).getpAvatar(), orderid, selectOpt, customerid, date);
+        DatabaseReference reference =FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(customerid).child("Customer").child("Notifications").child(timestamp).setValue(notification);
     }
 
     private void LoadOrderDetail() {
@@ -197,6 +285,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                     }
                 });
     }
+
     private void initUI(){
         orderId=findViewById(R.id.orderId);
         ReceiverName=findViewById(R.id.ReceiverName);

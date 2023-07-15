@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.ecommerceshop.Phat.Fragment.NotificationFragment;
 import com.example.ecommerceshop.chat.MainChatActivity;
 import com.example.ecommerceshop.databinding.ActivityHomeUserBinding;
 import com.example.ecommerceshop.nhan.ProfileCustomer.UserProfileFragment;
@@ -59,12 +60,7 @@ public class MainUserActivity extends AppCompatActivity {
                         startActivity(i);
                         break;
                     case R.id.notification:
-//                        ReplaceFragment(new VoucherShopFragment());
-//                        textView.setText("VOUCHERS");
-                        FirebaseAuth firebaseAuth  = FirebaseAuth.getInstance();
-                        firebaseAuth.signOut();
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        finish();
+                        replaceFragment(new NotificationFragment());
                         break;
                     case R.id.profile_user:
                         replaceFragment(new UserProfileFragment());
