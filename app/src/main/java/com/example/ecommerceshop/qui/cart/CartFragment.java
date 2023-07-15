@@ -1,6 +1,5 @@
 package com.example.ecommerceshop.qui.cart;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,10 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Parcelable;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,15 +21,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.databinding.AdapterItemOnCartBinding;
 import com.example.ecommerceshop.databinding.FragmentCartBinding;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.payment.PaymentActivity;
 import com.example.ecommerceshop.qui.product_detail.Cart;
@@ -49,21 +41,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.checkerframework.checker.units.qual.A;
-
-import java.io.Serializable;
-import java.sql.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 
 public class CartFragment extends Fragment {
@@ -78,11 +62,11 @@ public class CartFragment extends Fragment {
 
     private List<ProductCart> listSelectedProductCart;
     int numSelectedCart = 0;
-    private HistoryOrder historyOrder;
+    private Order order;
     public CartFragment() {}
 
-    public CartFragment(HistoryOrder ho) {
-        historyOrder = ho;
+    public CartFragment(Order ho) {
+        order = ho;
     }
 
     @Override
@@ -136,8 +120,8 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.rcvCart.setAdapter(shopProductCartAdapter);
         mShopListProductCarts = new ArrayList<>();
         shopProductCartAdapter.setData(mShopListProductCarts);
-        if(historyOrder != null)
-            loadHistoryOrderToCart(historyOrder);
+        if(order != null)
+            loadHistoryOrderToCart(order);
         setListShopProductCarts();
     }
     private void showActivityProductDetail(ProductCart productCart) {
@@ -216,9 +200,9 @@ public class CartFragment extends Fragment {
                                             mapProductCart.get(cart.getShopId()).add(productCart);
                                             mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId())));
                                             shopProductCartAdapter.notifyDataSetChanged();
-                                            if(historyOrder != null)
+                                            if(order != null)
                                             {
-                                                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
+                                                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = order.getItems();
                                                 for(int i = 0; i < listProduct.size();i++)
                                                     if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
                                                     {
@@ -270,9 +254,9 @@ public class CartFragment extends Fragment {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
                                                     Log.e("qui", "Giong");
                                                     shopProductCart.getProductCarts().add(productCart);
-                                                    if(historyOrder != null)
+                                                    if(order != null)
                                                     {
-                                                        ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
+                                                        ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = order.getItems();
                                                         for(int i = 0; i < listProduct.size();i++)
                                                             if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
                                                             {
@@ -591,7 +575,7 @@ public class CartFragment extends Fragment {
 //            }
 //        }
 //    }
-    public void loadHistoryOrderToCart(HistoryOrder ho)
+    public void loadHistoryOrderToCart(Order ho)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
         ArrayList<String> listProductCartId = new ArrayList<>();
@@ -615,7 +599,7 @@ public class CartFragment extends Fragment {
             }
         });
     }
-    public void pushItemsCart(HistoryOrder ho, ArrayList<String> listProductCartId, ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct, int check, int n)
+    public void pushItemsCart(Order ho, ArrayList<String> listProductCartId, ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct, int check, int n)
     {
         if(check >= n) return;
 

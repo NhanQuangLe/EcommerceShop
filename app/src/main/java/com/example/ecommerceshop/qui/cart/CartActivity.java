@@ -10,10 +10,8 @@ import android.view.View;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityCartBinding;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
-
-import java.util.ArrayList;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -33,7 +31,7 @@ public class CartActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         if(intent.getIntExtra("Key", 0) == HistoryOrdersFragment.HISTORY_ORDER)
-            replaceFragment(new CartFragment((HistoryOrder) intent.getSerializableExtra("HistoryOrder")));
+            replaceFragment(new CartFragment((Order) intent.getSerializableExtra("HistoryOrder")));
         else
             replaceFragment(new CartFragment());
     }

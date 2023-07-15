@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.order_detail;
+package com.example.ecommerceshop.nhan.ProfileCustomer.orders;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,9 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
 import com.example.ecommerceshop.qui.cart.CartActivity;
@@ -31,7 +28,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     ImageView iv_ShopAvatar;
     Button btnBackward;
     RecyclerView rv_ProductList;
-    TextView tv_ShopName;
+    TextView tv_ShopName, tv_statusOrder, tv_DateSuccess;
     TextView tv_SumMoney, tv_DiscountPrice, tv_DeliveryPrice, tv_TotalPrice;
     LinearLayout btn_buy;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -45,7 +42,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_detail_read_only);
         Intent intent = getIntent();
-        HistoryOrder ho = (HistoryOrder) intent.getSerializableExtra("HistoryOrder");
+        Order ho = (Order) intent.getSerializableExtra("HistoryOrder");
         InitUI();
         LoadData(ho);
     }
@@ -59,11 +56,12 @@ public class OrderDetailActivity extends AppCompatActivity {
         iv_ShopAvatar = findViewById(R.id.iv_ShopAvatar);
         rv_ProductList = findViewById(R.id.rv_ProductList);
         tv_ShopName = findViewById(R.id.tv_ShopName);
-
+        tv_statusOrder = findViewById(R.id.tv_statusOrder);
         tv_SumMoney = findViewById(R.id.tv_SumMoney);
         tv_DiscountPrice = findViewById(R.id.tv_DiscountPrice);
         tv_DeliveryPrice = findViewById(R.id.tv_DeliveryPrice);
         tv_TotalPrice = findViewById(R.id.tv_TotalPrice);
+        tv_DateSuccess = findViewById(R.id.tv_DateSuccess);
 
         btn_buy = findViewById(R.id.btn_buy);
         btnBackward = findViewById(R.id.btnBackward);
@@ -74,8 +72,12 @@ public class OrderDetailActivity extends AppCompatActivity {
             }
         });
     }
-    private void LoadData(HistoryOrder ho)
+    private void LoadData(Order ho)
     {
+
+        tv_statusOrder.setText("Đơn hàng đã được giao thành công");
+        tv_DateSuccess.setText(ho.getOrderedDate());
+
         address_name.setText(ho.getReceiveAddress().getFullName());
         address_phone.setText(ho.getReceiveAddress().getPhoneNumber());
         address_detail.setText(ho.getReceiveAddress().getDetail());

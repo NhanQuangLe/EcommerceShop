@@ -1,14 +1,11 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Toast;
@@ -25,12 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.nhan.Model.Review;
-import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,14 +34,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ReviewActivity extends AppCompatActivity {
 
@@ -69,9 +58,7 @@ public class ReviewActivity extends AppCompatActivity {
                         ivAdapter.notifyDataSetChanged();
                     }
                 }
-
             });
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -96,7 +83,7 @@ public class ReviewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         firebaseAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        HistoryOrder ho = (HistoryOrder) intent.getSerializableExtra("HistoryOrder");
+        Order ho = (Order) intent.getSerializableExtra("HistoryOrder");
         ArrayList<Product> productList = ho.getItems();
         productViewList = new ArrayList<>();
         for (int i = 0; i < productList.size(); i++) {

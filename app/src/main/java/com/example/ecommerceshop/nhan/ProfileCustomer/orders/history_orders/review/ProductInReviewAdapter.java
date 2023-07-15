@@ -1,7 +1,6 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,22 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.nhan.Model.Review;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersAdapter;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReviewAdapter.ReviewViewholder> {
 

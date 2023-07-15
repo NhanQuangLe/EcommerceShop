@@ -1,4 +1,4 @@
-package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders;
+package com.example.ecommerceshop.nhan.ProfileCustomer.orders;
 
 
 import com.example.ecommerceshop.nhan.Model.Address;
@@ -7,15 +7,15 @@ import com.example.ecommerceshop.nhan.Model.Product;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class HistoryOrder implements Serializable {
+public class Order implements Serializable {
     String orderId, shopId, customerId, orderStatus, orderedDate;
     int discountPrice, shipPrice, totalPrice;
     String shopAvt, shopName;
     Address receiveAddress;
     ArrayList<Product> items;
-    public HistoryOrder(){}
+    public Order(){}
 
-    public HistoryOrder(String orderId, String shopId, String customerId, String orderStatus, String orderedDate, int discountPrice, int shipPrice, int totalPrice, String shopAvt, String shopName, Address receiveAddress, ArrayList<Product> items) {
+    public Order(String orderId, String shopId, String customerId, String orderStatus, String orderedDate, int discountPrice, int shipPrice, int totalPrice, String shopAvt, String shopName, Address receiveAddress, ArrayList<Product> items) {
         this.orderId = orderId;
         this.shopId = shopId;
         this.customerId = customerId;
