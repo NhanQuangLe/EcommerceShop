@@ -111,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                     Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    preferenceManagement.putString(Constants.KEY_COLLECTION_USER,auth.getCurrentUser().getUid());
                     startActivity(intent);
                 }
 
@@ -129,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
     void navigateToSecondActivity() {
         finish();
         Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
+        preferenceManagement.putString(Constants.KEY_COLLECTION_USER,auth.getCurrentUser().getUid());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -353,7 +355,7 @@ public class LoginActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(authResult -> {
                 loading(false);
                 Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
-
+                preferenceManagement.putString(Constants.KEY_COLLECTION_USER,auth.getCurrentUser().getUid());
                 startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
                 finish();
             }).addOnFailureListener(e -> {

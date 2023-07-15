@@ -161,6 +161,7 @@ public class UserProfileFragment extends Fragment {
                             preferenceManagement.putBoolean("roleShop", true);
                             Intent intent = new Intent(getContext(), MainShopActivity.class);
                             mActivityLauncher.launch(intent);
+                            getActivity().finish();
                         }
                         else{
                             Intent intent = new Intent(getContext(), RequestToShopActivity.class);
