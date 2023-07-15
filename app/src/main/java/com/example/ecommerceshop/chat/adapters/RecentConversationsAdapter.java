@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -73,20 +74,21 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                 isRoleShop  = preferenceManagement.getBoolean("roleShop");
                 UserChat user = new UserChat();
                if (isRoleShop){
-                   user.idShop = chatMessage.conversionId;
-                   user.imageShop = chatMessage.conversionImage;
-                   user.nameShop = chatMessage.conversionName;
-                   user.idCus = "";
-                   user.imageCus = "";
-                   user.nameCus = "";
-               }
-               else {
                    user.idCus = chatMessage.conversionId;
                    user.imageCus = chatMessage.conversionImage;
                    user.nameCus = chatMessage.conversionName;
                    user.idShop = "";
                    user.imageShop = "";
                    user.nameShop = "";
+               }
+               else {
+
+                   user.idShop = chatMessage.conversionId;
+                   user.imageShop = chatMessage.conversionImage;
+                   user.nameShop = chatMessage.conversionName;
+                   user.idCus = "";
+                   user.imageCus = "";
+                   user.nameCus = "";
                }
                 conversionListener.onConversionClicked(user);
             });

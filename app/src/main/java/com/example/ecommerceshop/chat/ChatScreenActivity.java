@@ -92,6 +92,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         if (!receiverUser.idCus.equals("")) receiverUser.id = receiverUser.idCus;
         if (!receiverUser.nameShop.equals("")) receiverUser.name = receiverUser.nameShop;
         if (!receiverUser.nameCus.equals("")) receiverUser.name = receiverUser.nameCus;
+        binding.textName.setText(receiverUser.name);
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         chatMessageList = new ArrayList<>();
         chatAdapter = new ChatAdapter(
@@ -299,7 +300,6 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void LoadReceiverUser()
     {
         receiverUser = (UserChat) getIntent().getSerializableExtra(Constants.KEY_USER);
-        binding.textName.setText(receiverUser.name);
     }
     private void setListener()
     {
