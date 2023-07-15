@@ -354,7 +354,7 @@ public class PaymentActivity extends AppCompatActivity {
         String orderId = id + "";
         String customerId = mCurrentUser.getUid();
         long discountPrice = itemPayment.getTienKhuyenMai();
-        String orderStatus = "1";
+        String orderStatus = "UnProcessed";
         Date date = new Date();
         SimpleDateFormat sp = new SimpleDateFormat("dd/MM/yyyy");
         String orderedDate = sp.format(date);

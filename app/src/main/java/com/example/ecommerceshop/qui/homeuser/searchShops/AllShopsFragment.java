@@ -104,7 +104,6 @@ public class AllShopsFragment extends Fragment implements ShopAdapter.IClickShop
     }
 
     private void setListSearchShop() {
-        Log.e("name","Đã vào");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         String res = mFragmentAllShopsBinding.editTextSearch.getText().toString().toLowerCase(Locale.ROOT);
         ref.addValueEventListener(new ValueEventListener() {
@@ -118,7 +117,6 @@ public class AllShopsFragment extends Fragment implements ShopAdapter.IClickShop
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()){
                                 RequestShop shop = snapshot.getValue(RequestShop.class);
-                                Log.e("name",shop.getShopName());
                                 if (shop!=null){
                                     if (shop.getShopName().toLowerCase(Locale.ROOT).contains(res) || shop.getShopAddress().toLowerCase(Locale.ROOT).contains(res)){
                                         mListShop.add(shop);

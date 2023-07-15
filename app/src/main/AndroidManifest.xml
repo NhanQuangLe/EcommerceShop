@@ -20,10 +20,7 @@
 <!--        <meta-data android:name="com.google.android.geo.API_KEY"-->
 <!--            android:value="AIzaSyDH7iqzyg4WBFxmAer7qlnkS9dchOC515o"></meta-data>-->
         <activity
-            android:name=".chat.ChatScreenActivity"
-            android:exported="false" />
-        <activity
-            android:name=".chat.MainChatActivity"
+            android:name=".chat.UsersActivity"
             android:exported="false" />
         <activity
             android:name=".qui.shop.AllFilterProductActivity"
@@ -44,10 +41,14 @@
             android:name=".tinh.Activity.ForgotPasswordActivity"
             android:exported="false" />
         <activity
+            android:name=".chat.MainChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".tinh.Activity.SignUpActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
+        <activity
+            android:name=".tinh.Activity.InputInfoActivity"
+            android:exported="true" />
         <activity
             android:name=".tinh.Activity.LoginActivity"
             android:exported="true">

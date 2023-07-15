@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.chat.models.ChatMessage;
 import com.example.ecommerceshop.databinding.ItemContainerReceivedMessageBinding;
 import com.example.ecommerceshop.databinding.ItemContainerSendMessageBinding;
@@ -18,17 +19,17 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Bitmap receiverProfileImage;
+    private String receiverProfileImage;
     private final List<ChatMessage> chatMessageList;
     private final String senderId;
 
     public static final int VIEW_TYPE_SENT = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
-    public void setReceiverProfileImage(Bitmap bitmap)
+    public void setReceiverProfileImage(String bitmap)
     {
         receiverProfileImage = bitmap;
     }
-    public ChatAdapter(List<ChatMessage> chatMessageList, Bitmap receiverProfileImage, String senderId) {
+    public ChatAdapter(List<ChatMessage> chatMessageList, String receiverProfileImage, String senderId) {
         this.chatMessageList = chatMessageList;
         this.receiverProfileImage = receiverProfileImage;
         this.senderId = senderId;
@@ -106,13 +107,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemContainerReceivedMessageBinding.getRoot());
             binding = itemContainerReceivedMessageBinding;
         }
-        void setData(ChatMessage chatMessage, Bitmap receiverProfileImage)
+        void setData(ChatMessage chatMessage, String receiverProfileImage)
         {
             binding.textMessage.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
             if (receiverProfileImage != null)
             {
-                binding.imageProfile.setImageBitmap(receiverProfileImage);
+                Glide.with(binding.imageProfile).load(receiverProfileImage).into(binding.imageProfile);
             }
         }
     }
