@@ -81,8 +81,8 @@ public class ChooseAddressActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    Intent intent = result.getData();
-                    if(result.getResultCode() == ChooseAddressActivity.SUCCESS_CREATE_ADDRESS);
+//                    Intent intent = result.getData();
+//                    if(result.getResultCode() == ChooseAddressActivity.SUCCESS_CREATE_ADDRESS);
                 }
             });
     @Override
@@ -123,8 +123,9 @@ public class ChooseAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ChooseAddressActivity.this, GoogleMapLocationActivity.class);
+                Toast.makeText(ChooseAddressActivity.this, "oo dc r", Toast.LENGTH_SHORT).show();
                 mActivityLauncher.launch(intent);
-
+                Toast.makeText(ChooseAddressActivity.this, "oo dc r", Toast.LENGTH_SHORT).show();
             }
         });
         ic_back.setOnClickListener(new View.OnClickListener() {

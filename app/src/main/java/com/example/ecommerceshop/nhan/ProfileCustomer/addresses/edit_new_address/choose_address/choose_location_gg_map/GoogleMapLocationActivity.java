@@ -15,9 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.nhan.Model.AddressItem;
-import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.AddressAdapter;
-import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.IClickAddressItemListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,6 +43,8 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map_location);
+        InitUI();
+
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -69,7 +68,6 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                         permissionToken.continuePermissionRequest();
                     }
                 }).check();
-        InitUI();
     }
 
     private void InitUI() {
