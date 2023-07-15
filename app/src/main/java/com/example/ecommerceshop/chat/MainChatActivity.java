@@ -74,7 +74,7 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
 
     private void init(){
         conversationsList = new ArrayList<>();
-        conversationsAdapter = new RecentConversationsAdapter(conversationsList, this);
+        conversationsAdapter = new RecentConversationsAdapter(getApplicationContext(),conversationsList, this);
         binding.conversationsRecyclerView.setAdapter(conversationsAdapter);
         database = FirebaseFirestore.getInstance();
     }

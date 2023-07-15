@@ -279,10 +279,13 @@ public class ProductDetailFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String shopName = snapshot.child("shopName").getValue(String.class);
-                        user.name = shopName;
+                        user.nameShop = shopName;
+                        user.nameCus="";
                         String shopAvt = snapshot.child("shopAvt").getValue(String.class);
-                        user.image = shopAvt;
-                        user.id = product.getUid()+"Shop";
+                        user.imageShop = shopAvt;
+                        user.imageCus="";
+                        user.idShop = product.getUid()+"Shop";
+                        user.idCus="";
                         Intent intent = new Intent(getContext(), ChatScreenActivity.class);
                         intent.putExtra(Constants.KEY_USER ,user);
                         startActivity(intent);

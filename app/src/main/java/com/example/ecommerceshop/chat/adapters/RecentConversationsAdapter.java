@@ -1,6 +1,7 @@
 package com.example.ecommerceshop.chat.adapters;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -16,6 +17,7 @@ import com.example.ecommerceshop.chat.interfaces.ConversionListener;
 import com.example.ecommerceshop.chat.models.ChatMessage;
 import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.databinding.ItemConstainerRecentConversionBinding;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 
 import java.util.List;
 
@@ -23,9 +25,10 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
 
     private final List<ChatMessage> chatMessageList;
     private final ConversionListener conversionListener;
+    private Context mContext;
 
-
-    public RecentConversationsAdapter(List<ChatMessage> chatMessageList, ConversionListener conversionListener) {
+    public RecentConversationsAdapter(Context context,List<ChatMessage> chatMessageList, ConversionListener conversionListener) {
+        this.mContext = context;
         this.chatMessageList = chatMessageList;
         this.conversionListener = conversionListener;
     }
@@ -65,10 +68,26 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
             binding.textName.setText(chatMessage.conversionName);
             binding.textRecentMessage.setText(chatMessage.message);
             binding.getRoot().setOnClickListener(view -> {
+                PreferenceManagement preferenceManagement = new PreferenceManagement(mContext);
+                Boolean isRoleShop =false;
+                isRoleShop  = preferenceManagement.getBoolean("roleShop");
                 UserChat user = new UserChat();
-                user.id = chatMessage.conversionId;
-                user.image = chatMessage.conversionImage;
-                user.name = chatMessage.conversionName;
+               if (isRoleShop){
+                   user.idShop = chatMessage.conversionId;
+                   user.imageShop = chatMessage.conversionImage;
+                   user.nameShop = chatMessage.conversionName;
+                   user.idCus = "";
+                   user.imageCus = "";
+                   user.nameCus = "";
+               }
+               else {
+                   user.idCus = chatMessage.conversionId;
+                   user.imageCus = chatMessage.conversionImage;
+                   user.nameCus = chatMessage.conversionName;
+                   user.idShop = "";
+                   user.imageShop = "";
+                   user.nameShop = "";
+               }
                 conversionListener.onConversionClicked(user);
             });
         }

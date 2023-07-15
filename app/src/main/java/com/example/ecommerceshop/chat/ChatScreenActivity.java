@@ -61,11 +61,14 @@ public class ChatScreenActivity extends AppCompatActivity {
     private String conversationId = null;
     private Boolean isReceiverAvailability = false;
     private FirebaseUser mCurrentUser;
+    private Boolean isRoleShop;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatScreenBinding.inflate(getLayoutInflater());
+        preferenceManagement = new PreferenceManagement(getApplicationContext());
         setContentView(binding.getRoot());
         setListener();
         LoadReceiverUser();
@@ -74,8 +77,21 @@ public class ChatScreenActivity extends AppCompatActivity {
     }
     private void Init()
     {
+        isRoleShop = false;
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String currentUserId = mCurrentUser.getUid();
+        isRoleShop = preferenceManagement.getBoolean("roleShop");
+        if (isRoleShop){
+            currentUserId = mCurrentUser.getUid()+"Shop";
+        }
+        else {
+           currentUserId = mCurrentUser.getUid();
+        }
+        if (!receiverUser.imageShop.equals("")) receiverUser.image = receiverUser.imageShop;
+        if (!receiverUser.imageCus.equals("")) receiverUser.image = receiverUser.imageCus;
+        if (!receiverUser.idShop.equals("")) receiverUser.id = receiverUser.idShop;
+        if (!receiverUser.idCus.equals("")) receiverUser.id = receiverUser.idCus;
+        if (!receiverUser.nameShop.equals("")) receiverUser.name = receiverUser.nameShop;
+        if (!receiverUser.nameCus.equals("")) receiverUser.name = receiverUser.nameCus;
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         chatMessageList = new ArrayList<>();
         chatAdapter = new ChatAdapter(
@@ -138,7 +154,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void sendMessage()
     {
         HashMap<String, Object> message = new HashMap<>();
-        message.put(Constants.KEY_SENDER_ID, mCurrentUser.getUid());
+        message.put(Constants.KEY_SENDER_ID, currentUserId);
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
@@ -150,7 +166,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         else
         {
             HashMap<String, Object> conversion = new HashMap<>();
-            conversion.put(Constants.KEY_SENDER_ID, mCurrentUser.getUid());
+            conversion.put(Constants.KEY_SENDER_ID, currentUserId);
             conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
             conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
@@ -220,12 +236,12 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void listenerMessage()
     {
         database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_SENDER_ID, mCurrentUser.getUid())
+                .whereEqualTo(Constants.KEY_SENDER_ID, currentUserId)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser.id)
                 .addSnapshotListener(eventListener);
         database.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)
-                .whereEqualTo(Constants.KEY_RECEIVER_ID, mCurrentUser.getUid())
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, currentUserId)
                 .addSnapshotListener(eventListener);
     }
 
@@ -315,12 +331,12 @@ public class ChatScreenActivity extends AppCompatActivity {
         if (chatMessageList.size() != 0)
         {
             checkForConversionRemotely(
-                    mCurrentUser.getUid(),
+                    currentUserId,
                     receiverUser.id
             );
             checkForConversionRemotely(
                     receiverUser.id,
-                    mCurrentUser.getUid()
+                    currentUserId
             );
         }
     }
