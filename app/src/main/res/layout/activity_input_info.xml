@@ -8,11 +8,15 @@
     android:overScrollMode="never"
     android:scrollbars="none"
     android:padding="24dp"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".tinh.Activity.InputInfoActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusableInTouchMode="true">
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/buttonBack"
             android:layout_width="40dp"

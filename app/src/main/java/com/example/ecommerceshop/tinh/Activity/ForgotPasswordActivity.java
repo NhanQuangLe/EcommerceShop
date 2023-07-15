@@ -3,11 +3,13 @@ package com.example.ecommerceshop.tinh.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -38,12 +40,18 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(view -> startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class)));
         textGoToLogin.setOnClickListener(view -> startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class)));
         buttonConfirm.setOnClickListener(view -> {
+            hideKeyboard(view);
             if (IsValidEmail())
             {
                 OnClickConfirmReset();
             }
         });
 
+        editTextEmail.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         editTextEmail.setOnClickListener(v -> {
             if (editTextEmail.getText().toString().trim().isEmpty())
             {
@@ -122,6 +130,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         textGoToLogin = findViewById(R.id.textGoToLogin);
         progress = findViewById(R.id.progressBar);
         buttonConfirm = findViewById(R.id.buttonResetPassword);
+    }
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
     private void loading(Boolean isLoading)
     {

@@ -48,12 +48,13 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SignUpActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".tinh.Activity.InputInfoActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".tinh.Activity.LoginActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

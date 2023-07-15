@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/fourth_gray"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".tinh.Activity.SignUpActivity">
 
     <TextView
