@@ -16,6 +16,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.UserProfileFragment;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +39,8 @@ public class MainUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManagement preferenceManagement = new PreferenceManagement(getApplicationContext());
+        preferenceManagement.putBoolean("roleShop", false);
         mActivityHomeUserBinding = ActivityHomeUserBinding.inflate(getLayoutInflater());
         setContentView(mActivityHomeUserBinding.getRoot());
         homeFragmentUser = new HomeFragmentUser();
