@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -15,6 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCzFcIyxXtTVly8-8nVeWXDU8OEahUUMR8"></meta-data>
         <activity
             android:name=".chat.UsersActivity"
             android:exported="false" />
@@ -145,6 +149,15 @@
             android:exported="false" />
         <activity
             android:name=".nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.edit_user_info.EditUserInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.vouchers.VoucherCustomerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity"
             android:exported="false" />
     </application>
 

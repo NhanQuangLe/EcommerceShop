@@ -1,8 +1,9 @@
 package com.example.ecommerceshop.nhan.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Customer{
+public class Customer implements Serializable {
     String CustomerID, Avatar, Name, PhoneNumber, Email, DateOfBirth, Gender;
     ArrayList<Shop> Followers;
 

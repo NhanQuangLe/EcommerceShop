@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private String avt;
     private GoogleSignInAccount mGoogleAccount;
-//    private AppCompatImageView buttonBack;
+    //    private AppCompatImageView buttonBack;
     private EditText loginEmail, loginPass;
     private TextView textForgotPass, textSignUp, textErrorEmail, textErrorPassword;
     private Button loginButton;
