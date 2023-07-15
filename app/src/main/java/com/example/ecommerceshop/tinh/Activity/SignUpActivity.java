@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -92,6 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
         eyeConfirmPassword.setImageResource(R.drawable.ic_eye);
         eyeConfirmPassword.setOnClickListener(view -> HandleEyeConfirmPassword());
         buttonSignUp.setOnClickListener(view -> {
+            hideKeyboard(view);
             Boolean checkEmail = IsValidSignUpEmail();
             Boolean checkPassword = IsValidSignUpPassword();
             Boolean checkConfirmPass = IsValidSignUpConfirmPassword();
@@ -99,7 +102,11 @@ public class SignUpActivity extends AppCompatActivity {
                 signUp();
         });
         googleButton.setOnClickListener(v -> LoginWithGoogle());
-
+        signupEmail.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         signupEmail.setOnClickListener(v -> {
             if (signupEmail.getText().toString().trim().isEmpty())
             {
@@ -119,6 +126,11 @@ public class SignUpActivity extends AppCompatActivity {
             {
                 signupEmail.setBackgroundResource(R.drawable.background_input);
                 textErrorEmail.setVisibility(View.INVISIBLE);
+            }
+        });
+        signupPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
             }
         });
         signupPassword.setOnClickListener(v -> {
@@ -143,6 +155,11 @@ public class SignUpActivity extends AppCompatActivity {
                     signupPassword.setBackgroundResource(R.drawable.background_input);
                     textErrorPassword.setVisibility(View.INVISIBLE);
                 }
+            }
+        });
+        signupConfirmPass.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
             }
         });
         signupConfirmPass.setOnClickListener(v -> {
@@ -173,6 +190,10 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
     private void HandleEyeConfirmPassword() {
         if (signupConfirmPass.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance()))
         {
