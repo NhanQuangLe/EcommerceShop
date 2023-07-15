@@ -18,14 +18,19 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.Phat.Model.RequestShop;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -65,7 +70,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
         btnAllow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadData();
+                CreateAccountChat(requestShop.getShopEmail());
             }
         });
         btnRefuse.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +136,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
         databaseReference.child(id).child("Shop").child("ShopInfos").setValue(requestShop).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("shopId", id);
                 hashMap.put("active", true);
@@ -146,6 +152,49 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+    private void CreateAccountChat(String email) {
+        String userIdChat = FirebaseAuth.getInstance().getCurrentUser().getUid()+"Shop";
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        HashMap<String, Object> userChat = new HashMap<>();
+        userChat.put(Constants.KEY_EMAIL, email);
+        db.collection(Constants.KEY_COLLECTION_USER).document(userIdChat).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+
+                        } else {
+                            db.collection(Constants.KEY_COLLECTION_USER).document(userIdChat)
+                                    .set(userChat)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            PreferenceManagement preferenceManagement = new PreferenceManagement(getApplicationContext());
+                                            preferenceManagement.putString(Constants.KEY_USER_ID, userIdChat);
+                                            uploadData();
+
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            showToast(e.getMessage());
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+    }
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void deleteRequest(String requestId) {

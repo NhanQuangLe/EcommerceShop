@@ -12,23 +12,23 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/imageProfile"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="12dp"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toEndOf="@+id/imageSignOut"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageSignOut"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_logout"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_backward"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:tint="@color/white"
-        android:background="@drawable/background_icon"
+
         android:padding="8dp"/>
 
     <TextView
@@ -39,14 +39,14 @@
         android:layout_marginStart="12dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:gravity="center"
+        android:gravity="start"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageProfile"
         app:layout_constraintStart_toEndOf="@+id/imageProfile"
         app:layout_constraintTop_toTopOf="@+id/imageProfile"
-        app:layout_constraintEnd_toStartOf="@id/imageSignOut"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -54,24 +54,29 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/background_content_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageProfile">
+        app:layout_constraintTop_toBottomOf="@id/imageProfile"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp"
+        >
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/conversationsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/conversationsRecyclerView"
             android:clipToPadding="false"
             android:orientation="vertical"
             android:overScrollMode="never"
             android:paddingVertical="20dp"
             android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
         <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
     </FrameLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,7 +88,8 @@
         android:backgroundTint="@color/red3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white"/>
+        app:tint="@color/white"
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

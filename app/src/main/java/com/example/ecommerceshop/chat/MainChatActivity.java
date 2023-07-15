@@ -69,6 +69,13 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
         loadUserDetails();
         getToken();
         listenConversations();
+        binding.imageSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
 
     }
 
@@ -125,7 +132,7 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
         preferenceManagement.putString(Constants.KEY_FCM_TOKEN, token);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentReference =
-                db.collection(Constants.KEY_COLLECTION_USER).document(preferenceManagement.getString(Constants.KEY_USER_ID));
+                db.collection(Constants.KEY_COLLECTION_USER).document(userId);
         documentReference.update(Constants.KEY_FCM_TOKEN, token)
                 .addOnFailureListener(e -> showToast("Unable to update token !"));
     }

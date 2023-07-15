@@ -134,6 +134,7 @@ public class ProductDetailFragment extends Fragment {
          adapterReviews = new AdapterReviewCustomer(getContext(), reviews);
 
         setRate();
+        setShopRate();
         loadListReview();
 
 
@@ -159,6 +160,44 @@ public class ProductDetailFragment extends Fragment {
                                     rate = (float) temp[0] / i[0];
                                     mFragmentProductDetailBinding.ratingBar.setRating(rate);
                                     mFragmentProductDetailBinding.productRate.setText(rate + "");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void setShopRate() {
+        final float[] rate = {0};
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final int[] temp = {0};
+                final int[] i = {0};
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    DatabaseReference ref2 = dataSnapshot.getRef().child("Customer/Reviews");
+                    ref2.orderByChild("shopId").equalTo(product.getUid()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                                if (dataSnapshot1.exists()){
+                                    int rating = dataSnapshot1.child("rating").getValue(Integer.class);
+                                    temp[0] +=rating;
+                                    i[0]++;
+                                    rate[0] = (float)temp[0]/i[0];
+                                    mFragmentProductDetailBinding.tvShopRating.setText(rate[0]+"");
                                 }
                             }
                         }
@@ -244,7 +283,7 @@ public class ProductDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (product.getUid().equals(mCurrentUser.getUid())){
-                    noti();
+                    noti("Không thể mua hàng thuộc Shop của bạn");
                 }
                 else {
                     showNavBuyDetail();
@@ -273,6 +312,10 @@ public class ProductDetailFragment extends Fragment {
         mFragmentProductDetailBinding.navChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (product.getUid().equals(mCurrentUser.getUid())){
+                    noti("Không thể chat với shop của bạn!");
+                    return;
+                }
                 UserChat user = new UserChat();
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+product.getUid()+"/Shop/ShopInfos");
                 ref.addValueEventListener(new ValueEventListener() {
@@ -302,7 +345,7 @@ public class ProductDetailFragment extends Fragment {
 
     }
 
-    private void noti() {
+    private void noti(String message) {
         final Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_dialog_ok_cancel);
@@ -317,7 +360,7 @@ public class ProductDetailFragment extends Fragment {
         window.setAttributes(windowAttributes);
         dialog.setCancelable(true);
         TextView tvContent = dialog.findViewById(R.id.tv_content);
-        tvContent.setText("Không thể mua hàng thuộc Shop của bạn");
+        tvContent.setText(message);
         TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
         tvCancel.setVisibility(View.GONE);
         TextView tvOk = dialog.findViewById(R.id.tv_ok);

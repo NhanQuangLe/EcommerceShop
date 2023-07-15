@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_red"
+    android:background="@color/red3"
     android:animateLayoutChanges="true"
     tools:context=".chat.ChatScreenActivity">
 
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/headerBackground"
-        android:background="@color/primary_red"
+        android:background="@color/red3"
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -32,7 +32,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:padding="5dp"
-        android:src="@drawable/ic_back"
+        android:src="@drawable/ic_backward"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/white"/>

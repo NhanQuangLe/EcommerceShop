@@ -8,16 +8,26 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.chat.ChatScreenActivity;
+import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.databinding.ActivityShopCustomerBinding;
 import com.example.ecommerceshop.qui.cart.CartActivity;
+import com.example.ecommerceshop.utilities.Constants;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -117,6 +127,38 @@ public class ShopActivityCustomer extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), CartActivity.class);
                 startActivity(i);
+            }
+        });
+        mActivityShopCustomerBinding.navChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shopId.equals(mCurrentUser.getUid())){
+                    noti("Không thể chat với shop của bạn!");
+                    return;
+                }
+                UserChat user = new UserChat();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+shopId+"/Shop/ShopInfos");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String shopName = snapshot.child("shopName").getValue(String.class);
+                        user.nameShop = shopName;
+                        user.nameCus="";
+                        String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                        user.imageShop = shopAvt;
+                        user.imageCus="";
+                        user.idShop = shopId+"Shop";
+                        user.idCus="";
+                        Intent intent = new Intent(getApplicationContext(), ChatScreenActivity.class);
+                        intent.putExtra(Constants.KEY_USER ,user);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
     }
@@ -230,6 +272,35 @@ public class ShopActivityCustomer extends AppCompatActivity {
             }
         });
         setVisibleButtonFollow();
+    }
+    private void noti(String message) {
+        final Dialog dialog = new Dialog(ShopActivityCustomer.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_ok_cancel);
+        Window window = dialog.getWindow();
+        if (window == null) return;
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+
+        window.setAttributes(windowAttributes);
+        dialog.setCancelable(true);
+        TextView tvContent = dialog.findViewById(R.id.tv_content);
+        tvContent.setText(message);
+        TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
+        tvCancel.setVisibility(View.GONE);
+        TextView tvOk = dialog.findViewById(R.id.tv_ok);
+
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+            }
+        });
+        dialog.show();
     }
 
     private void setVisibleButtonFollow() {
