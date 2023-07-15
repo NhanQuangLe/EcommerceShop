@@ -30,6 +30,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteS
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -156,6 +157,8 @@ public class UserProfileFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists())
                         {
+                            PreferenceManagement preferenceManagement = new PreferenceManagement(getContext());
+                            preferenceManagement.putBoolean("roleShop", true);
                             Intent intent = new Intent(getContext(), MainShopActivity.class);
                             mActivityLauncher.launch(intent);
                         }

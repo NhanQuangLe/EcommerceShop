@@ -42,11 +42,13 @@ import java.util.List;
 
 public class MainChatActivity  extends BaseActivity implements ConversionListener {
     private FirebaseUser mCurrentUser;
+    private String userId;
     private ActivityMainChatBinding binding;
     private List<ChatMessage> conversationsList;
     private RecentConversationsAdapter conversationsAdapter;
     private FirebaseFirestore database;
     private PreferenceManagement preferenceManagement;
+    private Boolean isRoleShop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,14 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
         setContentView(binding.getRoot());
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+         isRoleShop= false;
+        isRoleShop= preferenceManagement.getBoolean("roleShop");
+        if (isRoleShop){
+            userId = mCurrentUser.getUid()+"Shop";
+        }
+        else {
+            userId = mCurrentUser.getUid();
+        }
 
         init();
         loadUserDetails();
@@ -69,22 +79,42 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
         database = FirebaseFirestore.getInstance();
     }
     private void loadUserDetails() {
+        if (!isRoleShop){
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+userId+"/Customer/CustomerInfos");
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String name = snapshot.child("name").getValue(String.class);
+                    String image = snapshot.child("avatar").getValue(String.class);
+                    binding.textName.setText(name);
+                    Glide.with(getApplicationContext()).load(image).into(binding.imageProfile);
+                }
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/CustomerInfos");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String name = snapshot.child("name").getValue(String.class);
-                String image = snapshot.child("avatar").getValue(String.class);
-                binding.textName.setText(name);
-                Glide.with(getApplicationContext()).load(image).into(binding.imageProfile);
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+        else {
+            String userIdTmp = userId.substring(0,userId.length()-4);
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+userIdTmp+"/Shop/ShopInfos");
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String name = snapshot.child("shopName").getValue(String.class);
+                    String image = snapshot.child("shopAvt").getValue(String.class);
+                    binding.textName.setText(name);
+                    Glide.with(getApplicationContext()).load(image).into(binding.imageProfile);
+                }
 
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
     }
     private void getToken()
     {
@@ -105,11 +135,12 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
     }
     private void listenConversations()
     {
+
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .whereEqualTo(Constants.KEY_SENDER_ID, mCurrentUser.getUid())
+                .whereEqualTo(Constants.KEY_SENDER_ID, userId)
                 .addSnapshotListener(eventListener);
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .whereEqualTo(Constants.KEY_RECEIVER_ID, mCurrentUser.getUid())
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, userId)
                 .addSnapshotListener(eventListener);
     }
 
@@ -129,69 +160,143 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.senderId = senderId;
                     chatMessage.receiverId = receiverId;
-                    if (mCurrentUser.getUid().equals(senderId))
+                    if (userId.equals(senderId))
                     {
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
-                        String receiverId2 = receiverId.substring(0,receiverId.length()-4);
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+receiverId2+"/Shop/ShopInfos");
-                        ref.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (ChatMessage chat:conversationsList){
-                                    if (chat.conversionId.equals(chatMessage.conversionId)){
-                                        conversationsList.remove(chat);
-                                        break;
+                        String receiverId2;
+                        if (isRoleShop){
+                            receiverId2 = receiverId;
+                        }
+                        else {
+                            receiverId2 = receiverId.substring(0,receiverId.length()-4);
+                        }
+                        if (!isRoleShop){
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+receiverId2+"/Shop/ShopInfos");
+                            ref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (ChatMessage chat:conversationsList){
+                                        if (chat.conversionId.equals(chatMessage.conversionId)){
+                                            conversationsList.remove(chat);
+                                            break;
+                                        }
                                     }
+                                    String name = snapshot.child("shopName").getValue(String.class);
+                                    String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                                    chatMessage.conversionImage = shopAvt;
+                                    chatMessage.conversionName = name;
+                                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                                    conversationsList.add(chatMessage);
+                                    Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
+                                    conversationsAdapter.notifyDataSetChanged();
                                 }
-                                String name = snapshot.child("shopName").getValue(String.class);
-                                String shopAvt = snapshot.child("shopAvt").getValue(String.class);
-                                chatMessage.conversionImage = shopAvt;
-                                chatMessage.conversionName = name;
-                                chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                                chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
-                                conversationsList.add(chatMessage);
-                                Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
-                                conversationsAdapter.notifyDataSetChanged();
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
+                        else {
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+receiverId2+"/Customer/CustomerInfos");
+                            ref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (ChatMessage chat:conversationsList){
+                                        if (chat.conversionId.equals(chatMessage.conversionId)){
+                                            conversationsList.remove(chat);
+                                            break;
+                                        }
+                                    }
+                                    String name = snapshot.child("name").getValue(String.class);
+                                    String shopAvt = snapshot.child("avatar").getValue(String.class);
+                                    chatMessage.conversionImage = shopAvt;
+                                    chatMessage.conversionName = name;
+                                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                                    conversationsList.add(chatMessage);
+                                    Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
+                                    conversationsAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+
+
 
 
                     }
                     else
                     {
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
-                        String senderId2 = senderId.substring(0,receiverId.length()-4);
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+senderId2+"/Shop/ShopInfos");
-                        ref.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (ChatMessage chat:conversationsList){
-                                    if (chat.conversionId.equals(chatMessage.conversionId)){
-                                        conversationsList.remove(chat);
-                                        break;
+                        String senderId2;
+                        if (isRoleShop){
+                            senderId2 = senderId;
+                        }
+                        else {
+                            senderId2 = senderId.substring(0,receiverId.length()-4);
+                        }
+                        if (!isRoleShop){
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+senderId2+"/Shop/ShopInfos");
+                            ref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (ChatMessage chat:conversationsList){
+                                        if (chat.conversionId.equals(chatMessage.conversionId)){
+                                            conversationsList.remove(chat);
+                                            break;
+                                        }
                                     }
+                                    String name = snapshot.child("shopName").getValue(String.class);
+                                    String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                                    chatMessage.conversionImage = shopAvt;
+                                    chatMessage.conversionName = name;
+                                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                                    conversationsList.add(chatMessage);
+                                    Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
+                                    conversationsAdapter.notifyDataSetChanged();
                                 }
-                                String name = snapshot.child("shopName").getValue(String.class);
-                                String shopAvt = snapshot.child("shopAvt").getValue(String.class);
-                                chatMessage.conversionImage = shopAvt;
-                                chatMessage.conversionName = name;
-                                chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                                chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
-                                conversationsList.add(chatMessage);
-                                Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
-                                conversationsAdapter.notifyDataSetChanged();
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
+                        else {
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+senderId2+"/Customer/CustomerInfos");
+                            ref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (ChatMessage chat:conversationsList){
+                                        if (chat.conversionId.equals(chatMessage.conversionId)){
+                                            conversationsList.remove(chat);
+                                            break;
+                                        }
+                                    }
+                                    String name = snapshot.child("name").getValue(String.class);
+                                    String shopAvt = snapshot.child("avatar").getValue(String.class);
+                                    chatMessage.conversionImage = shopAvt;
+                                    chatMessage.conversionName = name;
+                                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                                    conversationsList.add(chatMessage);
+                                    Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
+                                    conversationsAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
 
                     }
 
