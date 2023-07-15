@@ -40,6 +40,9 @@
             android:name=".chat.MainChatActivity"
             android:exported="false" />
         <activity
+            android:name=".chat.ChatScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".tinh.Activity.SignUpActivity"
             android:exported="true" />
         <activity

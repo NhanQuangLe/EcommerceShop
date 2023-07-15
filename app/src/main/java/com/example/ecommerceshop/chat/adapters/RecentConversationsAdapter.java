@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.chat.interfaces.ConversionListener;
 import com.example.ecommerceshop.chat.models.ChatMessage;
 import com.example.ecommerceshop.chat.models.UserChat;
@@ -60,7 +61,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         }
         void setData(ChatMessage chatMessage)
         {
-            binding.imageProfile.setImageBitmap(getConversionImage(chatMessage.conversionImage));
+            Glide.with(binding.imageProfile).load(chatMessage.conversionImage).into(binding.imageProfile);
             binding.textName.setText(chatMessage.conversionName);
             binding.textRecentMessage.setText(chatMessage.message);
             binding.getRoot().setOnClickListener(view -> {

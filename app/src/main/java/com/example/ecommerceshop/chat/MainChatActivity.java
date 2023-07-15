@@ -106,10 +106,10 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
     private void listenConversations()
     {
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManagement.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.KEY_SENDER_ID, mCurrentUser.getUid())
                 .addSnapshotListener(eventListener);
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManagement.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, mCurrentUser.getUid())
                 .addSnapshotListener(eventListener);
     }
 
@@ -129,21 +129,72 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.senderId = senderId;
                     chatMessage.receiverId = receiverId;
-                    if (preferenceManagement.getString(Constants.KEY_USER_ID).equals(senderId))
+                    if (mCurrentUser.getUid().equals(senderId))
                     {
-                        chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
-                        chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
+                        String receiverId2 = receiverId.substring(0,receiverId.length()-4);
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+receiverId2+"/Shop/ShopInfos");
+                        ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (ChatMessage chat:conversationsList){
+                                    if (chat.conversionId.equals(chatMessage.conversionId)){
+                                        conversationsList.remove(chat);
+                                        break;
+                                    }
+                                }
+                                String name = snapshot.child("shopName").getValue(String.class);
+                                String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                                chatMessage.conversionImage = shopAvt;
+                                chatMessage.conversionName = name;
+                                chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                                chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                                conversationsList.add(chatMessage);
+                                Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
+                                conversationsAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
                     }
                     else
                     {
-                        chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
-                        chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
+                        String senderId2 = senderId.substring(0,receiverId.length()-4);
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+senderId2+"/Shop/ShopInfos");
+                        ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (ChatMessage chat:conversationsList){
+                                    if (chat.conversionId.equals(chatMessage.conversionId)){
+                                        conversationsList.remove(chat);
+                                        break;
+                                    }
+                                }
+                                String name = snapshot.child("shopName").getValue(String.class);
+                                String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                                chatMessage.conversionImage = shopAvt;
+                                chatMessage.conversionName = name;
+                                chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                                chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                                conversationsList.add(chatMessage);
+                                Collections.sort(conversationsList, (obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
+                                conversationsAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
-                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
-                    conversationsList.add(chatMessage);
+
                 }
                 else if (documentChange.getType() == DocumentChange.Type.MODIFIED)
                 {

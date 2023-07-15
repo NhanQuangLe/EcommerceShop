@@ -38,11 +38,14 @@ import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.Phat.Adapter.AdapterReviews;
 import com.example.ecommerceshop.Phat.Model.Review;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.chat.ChatScreenActivity;
+import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.databinding.FragmentProductDetailBinding;
 import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
+import com.example.ecommerceshop.utilities.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -265,6 +268,31 @@ public class ProductDetailFragment extends Fragment {
                 String shopId = product.getUid();
                 intent.putExtra("shopId", shopId);
                 getContext().startActivity(intent);
+            }
+        });
+        mFragmentProductDetailBinding.navChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserChat user = new UserChat();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+product.getUid()+"/Shop/ShopInfos");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String shopName = snapshot.child("shopName").getValue(String.class);
+                        user.name = shopName;
+                        String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                        user.image = shopAvt;
+                        user.id = product.getUid()+"Shop";
+                        Intent intent = new Intent(getContext(), ChatScreenActivity.class);
+                        intent.putExtra(Constants.KEY_USER ,user);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 

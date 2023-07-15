@@ -20,6 +20,13 @@ import com.example.ecommerceshop.databinding.ActivityChatScreenBinding;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -53,6 +60,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private String conversationId = null;
     private Boolean isReceiverAvailability = false;
+    private FirebaseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +74,14 @@ public class ChatScreenActivity extends AppCompatActivity {
     }
     private void Init()
     {
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String currentUserId = mCurrentUser.getUid();
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         chatMessageList = new ArrayList<>();
         chatAdapter = new ChatAdapter(
                 chatMessageList,
                 receiverUser.image,
-                preferenceManagement.getString(Constants.KEY_USER_ID)
+                currentUserId
         );
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
@@ -128,7 +138,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void sendMessage()
     {
         HashMap<String, Object> message = new HashMap<>();
-        message.put(Constants.KEY_SENDER_ID, preferenceManagement.getString(Constants.KEY_USER_ID));
+        message.put(Constants.KEY_SENDER_ID, mCurrentUser.getUid());
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
@@ -140,41 +150,35 @@ public class ChatScreenActivity extends AppCompatActivity {
         else
         {
             HashMap<String, Object> conversion = new HashMap<>();
-            conversion.put(Constants.KEY_SENDER_ID, preferenceManagement.getString(Constants.KEY_USER_ID));
-            conversion.put(Constants.KEY_SENDER_NAME, preferenceManagement.getString(Constants.KEY_NAME));
-            conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManagement.getString(Constants.KEY_IMAGE));
+            conversion.put(Constants.KEY_SENDER_ID, mCurrentUser.getUid());
             conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
-            conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
-            conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
             conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
             addConversion(conversion);
-
         }
-        if (!isReceiverAvailability)
-        {
-            try
-            {
-                JSONArray tokens = new JSONArray();
-                tokens.put(receiverUser.token);
-
-                JSONObject data = new JSONObject();
-                data.put(Constants.KEY_USER_ID, preferenceManagement.getString(Constants.KEY_USER_ID));
-                data.put(Constants.KEY_NAME, preferenceManagement.getString(Constants.KEY_NAME));
-                data.put(Constants.KEY_FCM_TOKEN, preferenceManagement.getString(Constants.KEY_FCM_TOKEN));
-                data.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
-
-                JSONObject body = new JSONObject();
-                body.put(Constants.REMOTE_MSG_DATA, data);
-                body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
-
-                sendNotification(body.toString());
-            }
-            catch (Exception e)
-            {
-                showToast(e.getMessage());
-            }
-        }
+//        if (!isReceiverAvailability)
+//        {
+//            try
+//            {
+//                JSONArray tokens = new JSONArray();
+//                tokens.put(receiverUser.token);
+//                JSONObject data = new JSONObject();
+//                data.put(Constants.KEY_USER_ID, preferenceManagement.getString(Constants.KEY_USER_ID));
+//                data.put(Constants.KEY_NAME, preferenceManagement.getString(Constants.KEY_NAME));
+//                data.put(Constants.KEY_FCM_TOKEN, preferenceManagement.getString(Constants.KEY_FCM_TOKEN));
+//                data.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
+//
+//                JSONObject body = new JSONObject();
+//                body.put(Constants.REMOTE_MSG_DATA, data);
+//                body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
+//
+//                sendNotification(body.toString());
+//            }
+//            catch (Exception e)
+//            {
+//                showToast(e.getMessage());
+//            }
+//        }
         binding.inputMessage.setText(null);
     }
 
@@ -216,12 +220,12 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void listenerMessage()
     {
         database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManagement.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.KEY_SENDER_ID, mCurrentUser.getUid())
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser.id)
                 .addSnapshotListener(eventListener);
         database.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)
-                .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManagement.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, mCurrentUser.getUid())
                 .addSnapshotListener(eventListener);
     }
 
@@ -311,12 +315,12 @@ public class ChatScreenActivity extends AppCompatActivity {
         if (chatMessageList.size() != 0)
         {
             checkForConversionRemotely(
-                    preferenceManagement.getString(Constants.KEY_USER_ID),
+                    mCurrentUser.getUid(),
                     receiverUser.id
             );
             checkForConversionRemotely(
                     receiverUser.id,
-                    preferenceManagement.getString(Constants.KEY_USER_ID)
+                    mCurrentUser.getUid()
             );
         }
     }
