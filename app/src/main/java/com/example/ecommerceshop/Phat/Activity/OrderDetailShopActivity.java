@@ -184,6 +184,14 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                     }
 
                 }
+                if(selectOpt.equals("Cancelled")){
+                    HashMap<String, Object> hashMap1 = new HashMap<String, Object>();
+                    hashMap1.clear();
+                    hashMap1.put("used", false);
+                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
+                    reference1.child(customerid).child("Customer").child("Vouchers").child(voucherId[0])
+                            .updateChildren(hashMap1);
+                }
                 Toast.makeText(OrderDetailShopActivity.this, "Order is now "+selectOpt, Toast.LENGTH_SHORT).show();
                 saveNotification(selectOpt);
             }

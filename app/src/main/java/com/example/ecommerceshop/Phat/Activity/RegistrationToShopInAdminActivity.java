@@ -28,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,20 +37,21 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
 
     ImageView backbtn;
     CircleImageView avatarShop;
-    TextView shopName, shopDescription, shopEmail, shopPhone, shopAddress,regisDate;
+    TextView shopName, shopDescription, shopEmail, shopPhone, shopAddress,regisDate,noti;
     AppCompatButton btnRefuse;
     Button btnAllow;
     ProgressDialog progressDialog;
     FirebaseAuth firebaseAuth;
     String id;
     RequestShop requestShop= new RequestShop();
-    boolean isdelete=false;
+    boolean isdelete=false ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_to_shop_in_admin);
         id=getIntent().getStringExtra("id");
         initUI();
+
         if(!isdelete){
             LoadRequestDetail();
         }
@@ -69,7 +72,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationToShopInAdminActivity.this);
-                builder.setTitle("Refuse...").setMessage("Are you sure you want to refuse this shop ?")
+                builder.setTitle("Refuse...").setMessage("Are you sure you want to refuse this request ?")
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -88,14 +91,52 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
         });
     }
 
+    private void checkExist() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren()) {
+                    String uid = "" + ds.getRef().getKey();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                    ref.child(uid).child("Shop")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        String sid = snapshot.child("shopId").getValue(String.class);
+                                        if(sid.equals(id)){
+                                            noti.setVisibility(View.VISIBLE);
+                                        }
+
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void uploadData() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(id).child("Shop").child("ShopInfos").setValue(requestShop).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("shopId", id);
+                hashMap.put("active", true);
 
                 DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Users");
-                databaseReference1.child(id).child("Shop").child("shopId").setValue(id).addOnSuccessListener(new OnSuccessListener<Void>() {
+                databaseReference1.child(id).child("Shop").updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(RegistrationToShopInAdminActivity.this, "Allow successfully!", Toast.LENGTH_SHORT).show();
@@ -123,11 +164,9 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
                     }
                 });
     }
-    private String getDate(long timestamp){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        return formatter.format(timestamp);
-    }
+
     private void LoadRequestDetail() {
+        checkExist();
         DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Requests");
         databaseReference.child(id).addValueEventListener(new ValueEventListener() {
             @Override
@@ -141,7 +180,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
                     shopPhone.setText(requestShop.getShopPhone());
                     shopDescription.setText(requestShop.getShopDescription());
                     shopAddress.setText(requestShop.getShopAddress());
-                    regisDate.setText(getDate(Long.parseLong(requestShop.getTimestamp())));
+                    regisDate.setText(requestShop.getTimestamp());
                 }
             }
 
@@ -162,6 +201,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
         shopAddress=findViewById(R.id.shopAddress);
         regisDate=findViewById(R.id.regisDate);
         btnRefuse=findViewById(R.id.btnRefuse);
+        noti=findViewById(R.id.noti);
         btnAllow=findViewById(R.id.btnAllow);
         progressDialog=new ProgressDialog(RegistrationToShopInAdminActivity.this);
         progressDialog.setTitle("Please wait...");

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.ecommerceshop.Phat.Fragment.ListRegistrationAdminFragment;
 import com.example.ecommerceshop.Phat.Fragment.ProfileAdminFragment;
+import com.example.ecommerceshop.Phat.Fragment.listShopFragment;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,13 +26,19 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
-        ReplaceFragment(new ListRegistrationAdminFragment());
+        ReplaceFragment(new listShopFragment());
+
         bottomNavigationView =findViewById(R.id.bottomNavigationView);
         textView12=findViewById(R.id.textView12);
+        textView12.setText("SHOPS");
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
+                    case R.id.listShop:
+                        ReplaceFragment(new listShopFragment());
+                        textView12.setText("SHOPS");
+                        break;
                     case R.id.ResAdmin:
                         ReplaceFragment(new ListRegistrationAdminFragment());
                         textView12.setText("REQUESTS");
