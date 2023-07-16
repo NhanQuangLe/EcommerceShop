@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -50,13 +49,11 @@ public class RequestToShopActivity extends AppCompatActivity {
     TextInputEditText shopName, shopDescription, shopEmail,shopPhone,shopAddress;
     Button btnAddRequest;
     Uri uriImage;
-    TextView noti;
     ProgressDialog progressDialog;
     FirebaseAuth firebaseAuth;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMultipleMedia = registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), uris -> {
         if (!uris.isEmpty()) {
             uriImage=uris.get(0);
-            shopavt=uriImage.toString();
             Glide.with(getApplicationContext()).load(uris.get(0)).into(avatarShop);
         }
     });
@@ -65,7 +62,7 @@ public class RequestToShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_to_shop);
         initUI();
-        loadRequest();
+
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,50 +99,6 @@ public class RequestToShopActivity extends AppCompatActivity {
         });
     }
 
-    private void loadRequest() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds: snapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-                    ref.child(uid).child("Shop").orderByChild("shopId")
-                            .equalTo(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()){
-                                RequestShop rq = snapshot.child("ShopInfos").getValue(RequestShop.class);
-                                shopavt=rq.getShopAvt();
-                                shopname=rq.getShopName();
-                                shopdes=rq.getShopDescription();
-                                shopemail=rq.getShopEmail();
-                                shopphone=rq.getShopPhone();
-                                shopaddress=rq.getShopAddress();
-                                Glide.with(getApplicationContext()).load(Uri.parse(shopavt)).into(avatarShop);
-                                shopName.setText(shopname);
-                                shopDescription.setText(shopdes);
-                                shopEmail.setText(shopemail);
-                                shopPhone.setText(shopphone);
-                                shopAddress.setText(shopaddress);
-                                noti.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     String shopavt, shopname, shopdes, shopemail, shopphone, shopaddress;
     private void inputData() {
@@ -174,7 +127,7 @@ public class RequestToShopActivity extends AppCompatActivity {
             Toast.makeText(RequestToShopActivity.this, "Shop Address is required...", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(shopavt.toString())){
+        if(TextUtils.isEmpty(uriImage.toString())){
             Toast.makeText(RequestToShopActivity.this, "Shop Avatar is required...", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -191,26 +144,22 @@ public class RequestToShopActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH) + 1; // Vì Calendar.MONTH bắt đầu từ 0
         int year = calendar.get(Calendar.YEAR);
         String date =day+"/"+month+"/"+year;
-        if(uriImage == null ){
-            uploadRequest(date);
-        }
-        else {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference("ImageShop/"+t);
-            storageReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                    while (!uriTask.isSuccessful());
-                    Uri downloadUri = uriTask.getResult();
-                    if(uriTask.isSuccessful()) shopavt=downloadUri.toString();
-                    uploadRequest(date);
-                }
-            });
-        }
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("ImageShop/"+t);
+        storageReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful());
+                Uri downloadUri = uriTask.getResult();
+                if(uriTask.isSuccessful()) shopavt=downloadUri.toString();
+                uploadRequest(date);
+            }
+        });
+
     }
 
     private void uploadRequest(String timestamp) {
-
         RequestShop requestShop = new RequestShop(firebaseAuth.getUid(),shopavt, shopname, shopdes, shopemail, shopphone, shopaddress, timestamp);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Requests");
         databaseReference.child(firebaseAuth.getUid()).setValue(requestShop).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -239,6 +188,5 @@ public class RequestToShopActivity extends AppCompatActivity {
         progressDialog.setTitle("Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth= FirebaseAuth.getInstance();
-        noti=findViewById(R.id.notification);
     }
 }

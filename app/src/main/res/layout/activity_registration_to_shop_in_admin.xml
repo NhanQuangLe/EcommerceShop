@@ -215,15 +215,7 @@
                     android:layout_height="wrap_content"
                     android:text="16/04/2023"/>
             </LinearLayout>
-            <TextView
-                android:id="@+id/noti"
-                android:visibility="gone"
-                android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="This store is out of business. Would you allow this store to reopen?"
-                android:textColor="@color/black"
-                android:textSize="16sp"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
