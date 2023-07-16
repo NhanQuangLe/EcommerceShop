@@ -230,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
-                            Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "SignIn Successful!", Toast.LENGTH_SHORT).show();
                             Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(i2);
                         } else {

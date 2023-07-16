@@ -32,6 +32,9 @@ import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.example.ecommerceshop.qui.spinner.SpinnerItem;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -62,6 +65,8 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
     private List<Product> mListAccessories;
     private FirebaseUser mCurrentUser;
     private String selectedSpinner;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +78,11 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
         mMainUserActivity.setSupportActionBar(mFragmentHomeUserBinding.toolbarHomeUser);
         mFragmentHomeUserBinding.navView.setItemIconTintList(null);
         mFragmentHomeUserBinding.navView.setNavigationItemSelectedListener(this);
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        gsc = GoogleSignIn.getClient(getContext(), gso);
 
         init();
 
@@ -415,6 +425,7 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
         }
         else if (id == R.id.logout){
             FirebaseAuth.getInstance().signOut();
+            gsc.signOut();
             checkUser();
         }
         mFragmentHomeUserBinding.drawer.closeDrawer(GravityCompat.START);
