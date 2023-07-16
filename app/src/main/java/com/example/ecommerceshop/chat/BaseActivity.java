@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -18,7 +19,7 @@ public class BaseActivity extends AppCompatActivity {
         PreferenceManagement preferenceManagement = new PreferenceManagement(getApplicationContext());
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         documentReference = database.collection(Constants.KEY_COLLECTION_USER)
-                .document(preferenceManagement.getString(Constants.KEY_USER_ID));
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
     @Override
