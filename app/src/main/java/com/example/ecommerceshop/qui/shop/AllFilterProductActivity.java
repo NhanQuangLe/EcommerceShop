@@ -132,7 +132,7 @@ public class AllFilterProductActivity extends AppCompatActivity {
                 if (mListProduct!=null) mListProduct.clear();
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Product product = dataSnapshot.getValue(Product.class);
-                    if (product!=null){
+                    if (product!=null && product.isSold()){
                         mListProduct.add(product);
                     }
                 }
@@ -156,7 +156,7 @@ public class AllFilterProductActivity extends AppCompatActivity {
                     if (mListProduct!=null) mListProduct.clear();
                     for (DataSnapshot dataSnapshot:snapshot.getChildren()){
                         Product product = dataSnapshot.getValue(Product.class);
-                        if (product!=null && checkPrice(product)){
+                        if (product!=null && product.isSold() && checkPrice(product)){
                             mListProduct.add(product);
                         }
                     }
@@ -202,7 +202,7 @@ public class AllFilterProductActivity extends AppCompatActivity {
                 if (mListProduct!=null) mListProduct.clear();
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Product product = dataSnapshot.getValue(Product.class);
-                    if (product!=null){
+                    if (product!=null && product.isSold()){
                         if (product.getProductName().toLowerCase(Locale.ROOT).contains(res) || product.getProductBrand().toLowerCase(Locale.ROOT).contains(res)
                                 || product.getProductCategory().toLowerCase(Locale.ROOT).contains(res)){
                             mListProduct.add(product);

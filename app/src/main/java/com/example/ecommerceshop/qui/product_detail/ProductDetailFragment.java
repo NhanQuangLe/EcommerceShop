@@ -512,7 +512,7 @@ public class ProductDetailFragment extends Fragment {
                 if (mListProduct != null) mListProduct.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Product product = dataSnapshot.getValue(Product.class);
-                    if (product != null) {
+                    if (product != null && product.isSold()) {
                         mListProduct.add(product);
                     }
                 }

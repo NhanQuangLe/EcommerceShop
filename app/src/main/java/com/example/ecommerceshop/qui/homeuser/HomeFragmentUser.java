@@ -266,13 +266,16 @@ public class HomeFragmentUser extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                 Product product = dataSnapshot1.getValue(Product.class);
-                                if (product.getProductCategory().equals("Laptop")) {
-                                    mListLaptop.add(product);
-                                } else if (product.getProductCategory().equals("Smartphone")) {
-                                    mListPhone.add(product);
-                                } else if (product.getProductCategory().equals("Accessory")){
-                                    mListAccessories.add(product);
+                                if (product!=null & product.isSold()){
+                                    if (product.getProductCategory().equals("Laptop")) {
+                                        mListLaptop.add(product);
+                                    } else if (product.getProductCategory().equals("Smartphone")) {
+                                        mListPhone.add(product);
+                                    } else if (product.getProductCategory().equals("Accessory")){
+                                        mListAccessories.add(product);
+                                    }
                                 }
+
 
                             }
                             productAdapterLaptop.notifyDataSetChanged();

@@ -22,6 +22,16 @@ public class Product implements Serializable {
     private String productSite;
     private String uid;
     private int psoldQuantity;
+    private boolean sold;
+
+    public boolean isSold() {
+        return sold;
+    }
+
+    public void setSold(boolean sold) {
+        this.sold = sold;
+    }
+
     private List<String> uriList;
     private List<Review> productReviews;
 
