@@ -210,6 +210,8 @@ public class UserAddressActivity extends AppCompatActivity {
         map.put("phoneNumber", address.getPhoneNumber());
         map.put("province", address.getProvince());
         map.put("ward", address.getWard());
+        map.put("latitude", address.getLatitude());
+        map.put("longitude", address.getLongitude());
         dbRef.child(address.getAddressId())
                 .updateChildren(map, new DatabaseReference.CompletionListener() {
                     @Override
@@ -235,8 +237,11 @@ public class UserAddressActivity extends AppCompatActivity {
             }
         });
         if(address.isDefault()){
-            dbRef.child(deFaultId).child("default").setValue(false);
-            deFaultId = address.getAddressId();
+            if (deFaultId!=""){
+                dbRef.child(deFaultId).child("default").setValue(false);
+                deFaultId = address.getAddressId();
+            }
+
         }
     }
 }

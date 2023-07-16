@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.cancel_orders.CancelOrderFragment;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.delivery_orders.DeliveryOrderFragment;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.unprocessed_orders.UnProcessdOrderFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -21,19 +24,16 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         switch (position)
         {
             case 0:
-                ;
-                break;
+                return new UnProcessdOrderFragment();
             case 1:
                 ;;
                 break;
             case 2:
-                ;;;
-                break;
+                return new DeliveryOrderFragment();
             case 3:
                 return new HistoryOrdersFragment();
             case 4:
-                ;;;;
-                break;
+                return new CancelOrderFragment();
         }
         return new HistoryOrdersFragment();
     }

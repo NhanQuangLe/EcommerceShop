@@ -1,7 +1,12 @@
-package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders;
+package com.example.ecommerceshop.nhan.ProfileCustomer.orders.unprocessed_orders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -11,17 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.ecommerceshop.databinding.FragmentHistoryOrdersBinding;
 import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.OrderDetailActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.delivery_orders.DeliveryOrderAdapter;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,13 +35,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class HistoryOrdersFragment extends Fragment {
+public class UnProcessdOrderFragment extends Fragment {
     public static final int HISTORY_ORDER = 1601;
-    public HistoryOrdersFragment() {
+    public UnProcessdOrderFragment() {
     }
     FirebaseAuth firebaseAuth;
     FragmentHistoryOrdersBinding fragmentHistoryOrdersBinding;
-    HistoryOrdersAdapter mHistoryAdapter;
+    UnProcessedOrderAdapter mHistoryAdapter;
     RecyclerView mHistoryAdapterView;
     ArrayList<Order> listOrders;
     View mViewFragment;
@@ -65,7 +67,7 @@ public class HistoryOrdersFragment extends Fragment {
         listOrders = new ArrayList<>();
         mHistoryAdapterView = fragmentHistoryOrdersBinding.rvHistoryOrder;
         firebaseAuth = FirebaseAuth.getInstance();
-        mHistoryAdapter = new HistoryOrdersAdapter(getContext(), listOrders, new IClickHistoryOrderListener() {
+        mHistoryAdapter = new UnProcessedOrderAdapter(getContext(), listOrders, new IClickHistoryOrderListener() {
             @Override
             public void GoToOrderDetail(Order order) {
                 ToOrderDetail(order);
@@ -96,7 +98,7 @@ public class HistoryOrdersFragment extends Fragment {
                         listOrders.clear();
                         for(DataSnapshot ds : snapshot.getChildren())
                         {
-                            if(ds.child("orderStatus").getValue(String.class).equals("Completed"))
+                            if(ds.child("orderStatus").getValue(String.class).equals("UnProcessed"))
                             {
                                 Order ho = new Order();
                                 ho.setOrderId(ds.child("orderId").getValue(String.class));

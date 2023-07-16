@@ -18,7 +18,7 @@
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCzFcIyxXtTVly8-8nVeWXDU8OEahUUMR8"></meta-data>
+            android:value="AIzaSyAnfF4VrI9WBsiJPDrPqbwsYAdX5WedDQQ"></meta-data>
         <activity
             android:name=".chat.UsersActivity"
             android:exported="false" />
@@ -146,7 +146,7 @@
             android:name=".Phat.Activity.ResponseRVActivity"
             android:exported="false" />
         <activity
-            android:name=".nhan.ProfileCustomer.orders.history_orders.order_detail.OrderDetailActivity"
+            android:name=".nhan.ProfileCustomer.orders.OrderDetailActivity"
             android:exported="false" />
         <activity
             android:name=".nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity"
