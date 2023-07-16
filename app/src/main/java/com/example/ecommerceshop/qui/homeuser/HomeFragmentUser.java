@@ -5,10 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,6 +30,12 @@ import com.example.ecommerceshop.qui.homeuser.searchProducts.AllProductsFragment
 import com.example.ecommerceshop.qui.homeuser.searchShops.AllShopsFragment;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.example.ecommerceshop.qui.spinner.SpinnerItem;
+import com.example.ecommerceshop.tinh.Activity.HelpActivity;
+import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,7 +49,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class HomeFragmentUser extends Fragment {
+public class HomeFragmentUser extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
     private MainUserActivity mMainUserActivity;
     private FragmentHomeUserBinding mFragmentHomeUserBinding;
@@ -57,6 +65,8 @@ public class HomeFragmentUser extends Fragment {
     private List<Product> mListAccessories;
     private FirebaseUser mCurrentUser;
     private String selectedSpinner;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +77,12 @@ public class HomeFragmentUser extends Fragment {
 
         mMainUserActivity.setSupportActionBar(mFragmentHomeUserBinding.toolbarHomeUser);
         mFragmentHomeUserBinding.navView.setItemIconTintList(null);
+        mFragmentHomeUserBinding.navView.setNavigationItemSelectedListener(this);
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        gsc = GoogleSignIn.getClient(getContext(), gso);
 
         init();
 
@@ -266,13 +282,16 @@ public class HomeFragmentUser extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                 Product product = dataSnapshot1.getValue(Product.class);
-                                if (product.getProductCategory().equals("Laptop")) {
-                                    mListLaptop.add(product);
-                                } else if (product.getProductCategory().equals("Smartphone")) {
-                                    mListPhone.add(product);
-                                } else if (product.getProductCategory().equals("Accessory")){
-                                    mListAccessories.add(product);
+                                if (product!=null & product.isSold()){
+                                    if (product.getProductCategory().equals("Laptop")) {
+                                        mListLaptop.add(product);
+                                    } else if (product.getProductCategory().equals("Smartphone")) {
+                                        mListPhone.add(product);
+                                    } else if (product.getProductCategory().equals("Accessory")){
+                                        mListAccessories.add(product);
+                                    }
                                 }
+
 
                             }
                             productAdapterLaptop.notifyDataSetChanged();
@@ -375,4 +394,48 @@ public class HomeFragmentUser extends Fragment {
         return mFragmentHomeUserBinding;
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.laptop){
+
+        }
+        else if (id == R.id.phone){
+
+        }
+        else if (id == R.id.accessories){
+
+        }
+        else if (id == R.id.phoneContact){
+
+        }
+        else if (id == R.id.policy){
+            Intent intent = new Intent(getContext(), HelpActivity.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.promotion){
+
+        }
+        else if (id == R.id.paymentInstruction){
+
+        }
+        else if (id == R.id.cart){
+
+        }
+        else if (id == R.id.logout){
+            FirebaseAuth.getInstance().signOut();
+            gsc.signOut();
+            checkUser();
+        }
+        mFragmentHomeUserBinding.drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    private void checkUser() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user==null){
+            startActivity(new Intent(getContext(), LoginActivity.class));
+            getActivity().finish();
+        }
+    }
 }

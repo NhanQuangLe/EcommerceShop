@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
@@ -38,11 +39,14 @@ import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.Phat.Adapter.AdapterReviews;
 import com.example.ecommerceshop.Phat.Model.Review;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.chat.ChatScreenActivity;
+import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.databinding.FragmentProductDetailBinding;
 import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
+import com.example.ecommerceshop.utilities.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -111,6 +115,21 @@ public class ProductDetailFragment extends Fragment {
     private void unit() {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         product = (Product) getArguments().get("product");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+product.getUid()+"/Shop/ShopInfos");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String shopName = snapshot.child("shopName").getValue(String.class);
+                String shopProvince =snapshot.child("shopAddress").getValue(String.class);
+                product.setShopName(shopName);
+                product.setShopProvince(shopProvince);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         setInfoProduct(product);
         setInfoShop(product.getUid());
         setListShopProductFromFireBase(product.getUid());
@@ -131,6 +150,7 @@ public class ProductDetailFragment extends Fragment {
          adapterReviews = new AdapterReviewCustomer(getContext(), reviews);
 
         setRate();
+        setShopRate();
         loadListReview();
 
 
@@ -156,6 +176,44 @@ public class ProductDetailFragment extends Fragment {
                                     rate = (float) temp[0] / i[0];
                                     mFragmentProductDetailBinding.ratingBar.setRating(rate);
                                     mFragmentProductDetailBinding.productRate.setText(rate + "");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void setShopRate() {
+        final float[] rate = {0};
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final int[] temp = {0};
+                final int[] i = {0};
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    DatabaseReference ref2 = dataSnapshot.getRef().child("Customer/Reviews");
+                    ref2.orderByChild("shopId").equalTo(product.getUid()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                                if (dataSnapshot1.exists()){
+                                    int rating = dataSnapshot1.child("rating").getValue(Integer.class);
+                                    temp[0] +=rating;
+                                    i[0]++;
+                                    rate[0] = (float)temp[0]/i[0];
+                                    mFragmentProductDetailBinding.tvShopRating.setText(rate[0]+"");
                                 }
                             }
                         }
@@ -241,7 +299,7 @@ public class ProductDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (product.getUid().equals(mCurrentUser.getUid())){
-                    noti();
+                    noti("Không thể mua hàng thuộc Shop của bạn");
                 }
                 else {
                     showNavBuyDetail();
@@ -267,11 +325,43 @@ public class ProductDetailFragment extends Fragment {
                 getContext().startActivity(intent);
             }
         });
+        mFragmentProductDetailBinding.navChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (product.getUid().equals(mCurrentUser.getUid())){
+                    noti("Không thể chat với shop của bạn!");
+                    return;
+                }
+                UserChat user = new UserChat();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+product.getUid()+"/Shop/ShopInfos");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String shopName = snapshot.child("shopName").getValue(String.class);
+                        user.nameShop = shopName;
+                        user.nameCus="";
+                        String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                        user.imageShop = shopAvt;
+                        user.imageCus="";
+                        user.idShop = product.getUid()+"Shop";
+                        user.idCus="";
+                        Intent intent = new Intent(getContext(), ChatScreenActivity.class);
+                        intent.putExtra(Constants.KEY_USER ,user);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
 
 
     }
 
-    private void noti() {
+    private void noti(String message) {
         final Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_dialog_ok_cancel);
@@ -286,7 +376,7 @@ public class ProductDetailFragment extends Fragment {
         window.setAttributes(windowAttributes);
         dialog.setCancelable(true);
         TextView tvContent = dialog.findViewById(R.id.tv_content);
-        tvContent.setText("Không thể mua hàng thuộc Shop của bạn");
+        tvContent.setText(message);
         TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
         tvCancel.setVisibility(View.GONE);
         TextView tvOk = dialog.findViewById(R.id.tv_ok);
@@ -361,6 +451,9 @@ public class ProductDetailFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (getActivity() == null) {
+                    return;
+                }
                 String name = snapshot.child("ShopInfos").child("shopName").getValue(String.class);
                 mFragmentProductDetailBinding.shopName.setText(name);
                 String address = snapshot.child("ShopInfos").child("shopAddress").getValue(String.class);
@@ -438,7 +531,7 @@ public class ProductDetailFragment extends Fragment {
                 if (mListProduct != null) mListProduct.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Product product = dataSnapshot.getValue(Product.class);
-                    if (product != null) {
+                    if (product != null && product.isSold()) {
                         mListProduct.add(product);
                     }
                 }
@@ -504,4 +597,6 @@ public class ProductDetailFragment extends Fragment {
         intent.putExtras(bundle);
         getContext().startActivity(intent);
     }
+
+
 }

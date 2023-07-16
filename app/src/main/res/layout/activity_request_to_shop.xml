@@ -196,6 +196,7 @@
                        android:background="@drawable/bg_edit_text"
                        android:inputType="textPersonName|textCapWords" />
                </com.google.android.material.textfield.TextInputLayout>
+
                <Button
                    android:id="@+id/btnAddRequest"
                    android:layout_marginBottom="10dp"

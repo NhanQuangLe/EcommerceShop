@@ -3,6 +3,7 @@ package com.example.ecommerceshop.Phat.Activity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -27,11 +28,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -56,6 +62,7 @@ public class RequestToShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_to_shop);
         initUI();
+
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +98,8 @@ public class RequestToShopActivity extends AppCompatActivity {
             }
         });
     }
+
+
     String shopavt, shopname, shopdes, shopemail, shopphone, shopaddress;
     private void inputData() {
         shopname=shopName.getText().toString().trim();
@@ -129,8 +138,14 @@ public class RequestToShopActivity extends AppCompatActivity {
         progressDialog.setMessage("UPLOADING....");
         progressDialog.show();
         String t = ""+System.currentTimeMillis();
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference("ImageShop/"+t);
+        Calendar calendar = Calendar.getInstance();
 
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1; // Vì Calendar.MONTH bắt đầu từ 0
+        int year = calendar.get(Calendar.YEAR);
+        String date =day+"/"+month+"/"+year;
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("ImageShop/"+t);
         storageReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -138,9 +153,10 @@ public class RequestToShopActivity extends AppCompatActivity {
                 while (!uriTask.isSuccessful());
                 Uri downloadUri = uriTask.getResult();
                 if(uriTask.isSuccessful()) shopavt=downloadUri.toString();
-                uploadRequest(t);
+                uploadRequest(date);
             }
         });
+
     }
 
     private void uploadRequest(String timestamp) {

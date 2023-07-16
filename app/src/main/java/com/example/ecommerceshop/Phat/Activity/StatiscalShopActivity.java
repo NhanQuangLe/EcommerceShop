@@ -7,17 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ecommerceshop.Phat.Adapter.AdapterOrderShop;
 import com.example.ecommerceshop.Phat.Adapter.AdapterTopProducts;
 import com.example.ecommerceshop.Phat.Adapter.SpinnerAdapter;
 import com.example.ecommerceshop.Phat.Model.OrderItem;
@@ -39,7 +36,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -51,9 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,7 +59,7 @@ import java.util.Map;
 public class StatiscalShopActivity extends AppCompatActivity {
 
     TextView totalQuantity,completedQuantity,cancelledQuantity,monthRevenue,YearRevenue;
-    ArrayList<OrderShop> orderShops;
+
     RecyclerView top5Bestseller;
     FirebaseAuth firebaseAuth;
     ImageView btnback;
@@ -104,13 +98,13 @@ public class StatiscalShopActivity extends AppCompatActivity {
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                orderShops.clear();
+
                 onBackPressed();
             }
         });
     }
 
-    private void loadDetailDataByDate(int month, int year) {
+    private void loadDetailDataByDate(int month, int year, ArrayList<OrderShop> orderShops) {
         ArrayList<TopProduct> topProducts = new ArrayList<>();
         topProducts.clear();
         int completed=0, cancelled=0;
@@ -244,7 +238,7 @@ public class StatiscalShopActivity extends AppCompatActivity {
             public String getFormattedValue(float value) {
                 // Chuyển đổi giá trị float của tháng sang định dạng chuỗi
 
-                return value+"% ~ "+ Constants.convertToVND((long)(value*total)/100) +" tr";
+                return value+"% ~ "+ Constants.convertToVND((long)(value*total)/100) ;
             }
         });
         PieData pieData = new PieData(dataSet);
@@ -308,9 +302,9 @@ public class StatiscalShopActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        orderShops = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ArrayList<OrderShop> orderShops = new ArrayList<>();
+        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("Users");
+        ref1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 orderShops.clear();
@@ -347,7 +341,7 @@ public class StatiscalShopActivity extends AppCompatActivity {
                                             spinnerOrdYear.setSelection(0);
                                         }
 
-                                        loadDetailDataByDate(selectedMonth, selectedYear);
+                                        loadDetailDataByDate(selectedMonth, selectedYear, orderShops);
                                     }
                                 }
                                 @Override

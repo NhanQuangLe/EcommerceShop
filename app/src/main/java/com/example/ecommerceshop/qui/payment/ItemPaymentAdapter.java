@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.databinding.AdapterShopListProductPaymentBinding;
+import com.example.ecommerceshop.nhan.Model.Address;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
     private Context mContext;
 
     private ISenData iSendData;
+
+
 
     public void setiSendData(ISenData iSendData) {
         this.iSendData = iSendData;
@@ -57,10 +60,8 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
             ProductCartAdapter2 productCartAdapter2 = new ProductCartAdapter2();
             productCartAdapter2.setData(itemPayment.getListProductCart());
             holder.adapterShopListProductPaymentBinding.rcvProductCart.setAdapter(productCartAdapter2);
-            itemPayment.setTongThanhToan(itemPayment.getTongTienHang());
             holder.adapterShopListProductPaymentBinding.tvTongThanhToan.setText(getPrice(itemPayment.getTongThanhToan()));
             holder.adapterShopListProductPaymentBinding.tvTongTienHang.setText(getPrice(itemPayment.getTongTienHang()));
-
             holder.adapterShopListProductPaymentBinding.tvChooseVoucher.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -74,7 +75,7 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
                             if (itemPayment.getTienKhuyenMai() != 0) {
                                 itemPayment.setTienKhuyenMai(0);
                                 itemPayment.setVoucher(null);
-                                itemPayment.setTongThanhToan(itemPayment.getTongTienHang());
+                                itemPayment.setTongThanhToan(itemPayment.getTongTienHang()+itemPayment.getTienVanChuyen());
                                 holder.adapterShopListProductPaymentBinding.tvChooseVoucher.setText("Chọn hoặc nhập mã");
                                 holder.adapterShopListProductPaymentBinding.tvKhuyenmai.setText(getPrice(itemPayment.getTienKhuyenMai()));
                                 String tmp = getPrice(itemPayment.getTongThanhToan());
@@ -86,22 +87,19 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
                                 itemPayment.setVoucher(voucher);
                             }
 
-
-                            itemPayment.setTongThanhToan(itemPayment.getTongTienHang() - itemPayment.getTienKhuyenMai());
-
                             if (itemPayment.getTienKhuyenMai() != 0) {
-                                Log.e("Mess","Đã vào");
                                 holder.adapterShopListProductPaymentBinding.tvChooseVoucher.setText("Đã chọn");
                                 holder.adapterShopListProductPaymentBinding.tvKhuyenmai.setText(getPrice(itemPayment.getTienKhuyenMai()));
                                 String tmp = getPrice(itemPayment.getTongThanhToan());
                                 holder.adapterShopListProductPaymentBinding.tvTongThanhToan.setText(tmp);
 
                             }
-                            iSendData.senDataToPaymentActivity(mListItemPayment);
+
+                            iSendData.senDataToPaymentActivity();
                         }
 
                         @Override
-                        public void senDataToPaymentActivity(List<ItemPayment> itemPaymentList) {
+                        public void senDataToPaymentActivity() {
 
                         }
                     });
@@ -109,7 +107,6 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
 
 
             });
-
         }
 
 

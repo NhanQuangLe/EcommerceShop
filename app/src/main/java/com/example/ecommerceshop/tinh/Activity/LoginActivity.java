@@ -1,11 +1,15 @@
 package com.example.ecommerceshop.tinh.Activity;
 
+import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +22,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -71,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private String avt;
     private GoogleSignInAccount mGoogleAccount;
-    //    private AppCompatImageView buttonBack;
     private EditText loginEmail, loginPass;
     private TextView textForgotPass, textSignUp, textErrorEmail, textErrorPassword;
     private Button loginButton;
@@ -107,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                     Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    preferenceManagement.putString(Constants.KEY_COLLECTION_USER,auth.getCurrentUser().getUid());
                     startActivity(intent);
                 }
 
@@ -125,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
     void navigateToSecondActivity() {
         finish();
         Intent intent = new Intent(LoginActivity.this, MainUserActivity.class);
+        preferenceManagement.putString(Constants.KEY_COLLECTION_USER,auth.getCurrentUser().getUid());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -132,12 +138,12 @@ public class LoginActivity extends AppCompatActivity {
     private void setListener() {
         textSignUp.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
         textForgotPass.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class)));
-//        buttonBack.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
         eyeImagePass.setImageResource(R.drawable.ic_eye);
         eyeImagePass.setOnClickListener(view -> {
             HandleEyePassword();
         });
         loginButton.setOnClickListener(view -> {
+            hideKeyboard(view);
             Boolean checkEmail = IsValidLoginEmail();
             Boolean checkPassword = IsValidLoginPassword();
             if (checkEmail && checkPassword) {
@@ -145,7 +151,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         googleButton.setOnClickListener(v -> LoginWithGoogle());
-
+        loginEmail.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         loginEmail.setOnClickListener(v -> {
             if (loginEmail.getText().toString().trim().isEmpty()) {
                 loginEmail.setBackgroundResource(R.drawable.background_input_error);
@@ -162,7 +172,11 @@ public class LoginActivity extends AppCompatActivity {
                 textErrorEmail.setVisibility(View.INVISIBLE);
             }
         });
-
+        loginPass.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         loginPass.setOnClickListener(v -> {
             if (loginPass.getText().toString().trim().isEmpty()) {
                 loginPass.setBackgroundResource(R.drawable.background_input_error);
@@ -216,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
-                            Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "SignIn Successful!", Toast.LENGTH_SHORT).show();
                             Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(i2);
                         } else {
@@ -236,6 +250,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
     private void Started(FirebaseUser currentUser) {
         loading(true);
 
@@ -337,7 +355,7 @@ public class LoginActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(authResult -> {
                 loading(false);
                 Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
-
+                preferenceManagement.putString(Constants.KEY_COLLECTION_USER,auth.getCurrentUser().getUid());
                 startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
                 finish();
             }).addOnFailureListener(e -> {
@@ -354,7 +372,6 @@ public class LoginActivity extends AppCompatActivity {
         textErrorPassword = findViewById(R.id.textErrorPassword);
         textForgotPass = findViewById(R.id.textForgotPass);
         textSignUp = findViewById(R.id.textSignUpAccount);
-//        buttonBack = findViewById(R.id.buttonBack);
         loginButton = findViewById(R.id.buttonLogin);
         eyeImagePass = findViewById(R.id.eyePassword);
         loginProgressBar = findViewById(R.id.progressBar);

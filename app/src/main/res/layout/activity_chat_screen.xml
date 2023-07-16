@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/red3"
+    android:background="@color/primary_red"
     android:animateLayoutChanges="true"
     tools:context=".chat.ChatScreenActivity">
 
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/headerBackground"
-        android:background="@color/red3"
+        android:background="@color/primary_red"
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -32,7 +32,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:padding="5dp"
-        android:src="@drawable/ic_back"
+        android:src="@drawable/ic_backward"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/white"/>
@@ -111,7 +111,7 @@
             android:layout_marginStart="4dp"
             android:padding="8dp"
             android:src="@drawable/ic_send"
-            app:tint="@color/white"/>
+            />
     </FrameLayout>
 
     <EditText
@@ -126,9 +126,9 @@
         android:imeOptions="actionDone"
         android:importantForAutofill="no"
         android:inputType="text"
-        android:paddingStart="16dp"
+        android:paddingStart="25dp"
         android:paddingEnd="16dp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textColorHint="@color/secondary_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

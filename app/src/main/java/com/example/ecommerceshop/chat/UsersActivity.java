@@ -13,6 +13,8 @@ import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.databinding.ActivityUsersBinding;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -22,12 +24,18 @@ import java.util.List;
 public class UsersActivity extends BaseActivity implements UserListener {
     private ActivityUsersBinding binding;
     private PreferenceManagement preferenceManagement;
+    private Boolean isRoleShop;
+    private FirebaseUser mCurrentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityUsersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManagement = new PreferenceManagement(getApplicationContext());
+        isRoleShop = false;
+        isRoleShop = preferenceManagement.getBoolean("roleShop");
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         setListener();
         getUsers();
 
@@ -55,10 +63,8 @@ public class UsersActivity extends BaseActivity implements UserListener {
                                 continue;
                             }
                             UserChat user = new UserChat();
-                            user.name = queryDocumentSnapshot.getString(Constants.KEY_NAME);
                             user.email = queryDocumentSnapshot.getString(Constants.KEY_EMAIL);
                             user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN);
-                            user.image = queryDocumentSnapshot.getString(Constants.KEY_IMAGE);
                             user.id = queryDocumentSnapshot.getId();
                             users.add(user);
                         }

@@ -237,8 +237,11 @@ public class UserAddressActivity extends AppCompatActivity {
             }
         });
         if(address.isDefault()){
-            dbRef.child(deFaultId).child("default").setValue(false);
-            deFaultId = address.getAddressId();
+            if (deFaultId!=""){
+                dbRef.child(deFaultId).child("default").setValue(false);
+                deFaultId = address.getAddressId();
+            }
+
         }
     }
 }

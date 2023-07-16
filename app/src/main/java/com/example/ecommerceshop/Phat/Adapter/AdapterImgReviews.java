@@ -40,7 +40,7 @@ public class AdapterImgReviews extends RecyclerView.Adapter<AdapterImgReviews.im
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return arrayList!=null ? arrayList.size():0;
     }
 
     public static class imgViewHolder extends RecyclerView.ViewHolder{

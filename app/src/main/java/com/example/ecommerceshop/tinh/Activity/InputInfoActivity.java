@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -90,6 +92,7 @@ public class InputInfoActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         buttonStart.setOnClickListener(v -> {
+            hideKeyboard(v);
             Boolean checkName = IsValidName();
             Boolean checkImage = IsValidImage();
             Boolean checkDate = IsValidDate();
@@ -128,6 +131,11 @@ public class InputInfoActivity extends AppCompatActivity {
                 cbNu.setChecked(false);
             }
         });
+        edittextName.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         edittextName.setOnClickListener(v -> {
             if (!edittextName.getText().toString().trim().isEmpty()) {
                 edittextName.setBackgroundResource(R.drawable.background_input);
@@ -151,6 +159,11 @@ public class InputInfoActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             pickImage.launch(intent);
+        });
+        editTextPhone.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
         });
         editTextPhone.setOnClickListener(v -> {
             if (editTextPhone.getText().toString().trim().isEmpty()) {
@@ -183,6 +196,12 @@ public class InputInfoActivity extends AppCompatActivity {
                 }
             }
         });
+        edittextBirthdate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
+        edittextBirthdate.setOnClickListener(v -> new DatePickerDialog(InputInfoActivity.this, date, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show());
     }
     private Boolean IsValidPhone() {
         if (editTextPhone.getText().toString().trim().isEmpty()) {
@@ -250,6 +269,10 @@ public class InputInfoActivity extends AppCompatActivity {
             }
     );
 
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
     private void updateLabel() {
         String myFormat = "dd/MM/yyyy";
         SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.US);

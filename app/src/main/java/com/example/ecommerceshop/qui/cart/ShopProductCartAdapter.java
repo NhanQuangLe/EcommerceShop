@@ -1,6 +1,7 @@
 package com.example.ecommerceshop.qui.cart;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.databinding.AdapterShopListItemOnCartBinding;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -60,6 +62,15 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
                     holder.mBinding.yourShop.setVisibility(View.GONE);
                 }
             }
+            holder.mBinding.viewShop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ShopActivityCustomer.class);
+                    String shopId = shopProductCart.getShopId();
+                    intent.putExtra("shopId", shopId);
+                    ((CartActivity)mContext).startActivity(intent);
+                }
+            });
 
              ProductCartAdapter productCartAdapter = new ProductCartAdapter(mContext, new IClickProductCartItemListener() {
                 @Override

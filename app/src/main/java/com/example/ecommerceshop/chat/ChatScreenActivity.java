@@ -20,6 +20,13 @@ import com.example.ecommerceshop.databinding.ActivityChatScreenBinding;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -53,11 +60,15 @@ public class ChatScreenActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private String conversationId = null;
     private Boolean isReceiverAvailability = false;
+    private FirebaseUser mCurrentUser;
+    private Boolean isRoleShop;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatScreenBinding.inflate(getLayoutInflater());
+        preferenceManagement = new PreferenceManagement(getApplicationContext());
         setContentView(binding.getRoot());
         setListener();
         LoadReceiverUser();
@@ -66,12 +77,28 @@ public class ChatScreenActivity extends AppCompatActivity {
     }
     private void Init()
     {
+        isRoleShop = false;
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        isRoleShop = preferenceManagement.getBoolean("roleShop");
+        if (isRoleShop){
+            currentUserId = mCurrentUser.getUid()+"Shop";
+        }
+        else {
+           currentUserId = mCurrentUser.getUid();
+        }
+        if (!receiverUser.imageShop.equals("")) receiverUser.image = receiverUser.imageShop;
+        if (!receiverUser.imageCus.equals("")) receiverUser.image = receiverUser.imageCus;
+        if (!receiverUser.idShop.equals("")) receiverUser.id = receiverUser.idShop;
+        if (!receiverUser.idCus.equals("")) receiverUser.id = receiverUser.idCus;
+        if (!receiverUser.nameShop.equals("")) receiverUser.name = receiverUser.nameShop;
+        if (!receiverUser.nameCus.equals("")) receiverUser.name = receiverUser.nameCus;
+        binding.textName.setText(receiverUser.name);
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         chatMessageList = new ArrayList<>();
         chatAdapter = new ChatAdapter(
                 chatMessageList,
                 receiverUser.image,
-                preferenceManagement.getString(Constants.KEY_USER_ID)
+                currentUserId
         );
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
@@ -128,7 +155,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void sendMessage()
     {
         HashMap<String, Object> message = new HashMap<>();
-        message.put(Constants.KEY_SENDER_ID, preferenceManagement.getString(Constants.KEY_USER_ID));
+        message.put(Constants.KEY_SENDER_ID, currentUserId);
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
@@ -140,41 +167,35 @@ public class ChatScreenActivity extends AppCompatActivity {
         else
         {
             HashMap<String, Object> conversion = new HashMap<>();
-            conversion.put(Constants.KEY_SENDER_ID, preferenceManagement.getString(Constants.KEY_USER_ID));
-            conversion.put(Constants.KEY_SENDER_NAME, preferenceManagement.getString(Constants.KEY_NAME));
-            conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManagement.getString(Constants.KEY_IMAGE));
+            conversion.put(Constants.KEY_SENDER_ID, currentUserId);
             conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
-            conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
-            conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
             conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
             addConversion(conversion);
-
         }
-        if (!isReceiverAvailability)
-        {
-            try
-            {
-                JSONArray tokens = new JSONArray();
-                tokens.put(receiverUser.token);
-
-                JSONObject data = new JSONObject();
-                data.put(Constants.KEY_USER_ID, preferenceManagement.getString(Constants.KEY_USER_ID));
-                data.put(Constants.KEY_NAME, preferenceManagement.getString(Constants.KEY_NAME));
-                data.put(Constants.KEY_FCM_TOKEN, preferenceManagement.getString(Constants.KEY_FCM_TOKEN));
-                data.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
-
-                JSONObject body = new JSONObject();
-                body.put(Constants.REMOTE_MSG_DATA, data);
-                body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
-
-                sendNotification(body.toString());
-            }
-            catch (Exception e)
-            {
-                showToast(e.getMessage());
-            }
-        }
+//        if (!isReceiverAvailability)
+//        {
+//            try
+//            {
+//                JSONArray tokens = new JSONArray();
+//                tokens.put(receiverUser.token);
+//                JSONObject data = new JSONObject();
+//                data.put(Constants.KEY_USER_ID, preferenceManagement.getString(Constants.KEY_USER_ID));
+//                data.put(Constants.KEY_NAME, preferenceManagement.getString(Constants.KEY_NAME));
+//                data.put(Constants.KEY_FCM_TOKEN, preferenceManagement.getString(Constants.KEY_FCM_TOKEN));
+//                data.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
+//
+//                JSONObject body = new JSONObject();
+//                body.put(Constants.REMOTE_MSG_DATA, data);
+//                body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
+//
+//                sendNotification(body.toString());
+//            }
+//            catch (Exception e)
+//            {
+//                showToast(e.getMessage());
+//            }
+//        }
         binding.inputMessage.setText(null);
     }
 
@@ -216,12 +237,12 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void listenerMessage()
     {
         database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManagement.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.KEY_SENDER_ID, currentUserId)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser.id)
                 .addSnapshotListener(eventListener);
         database.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)
-                .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManagement.getString(Constants.KEY_USER_ID))
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, currentUserId)
                 .addSnapshotListener(eventListener);
     }
 
@@ -279,7 +300,6 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void LoadReceiverUser()
     {
         receiverUser = (UserChat) getIntent().getSerializableExtra(Constants.KEY_USER);
-        binding.textName.setText(receiverUser.name);
     }
     private void setListener()
     {
@@ -311,12 +331,12 @@ public class ChatScreenActivity extends AppCompatActivity {
         if (chatMessageList.size() != 0)
         {
             checkForConversionRemotely(
-                    preferenceManagement.getString(Constants.KEY_USER_ID),
+                    currentUserId,
                     receiverUser.id
             );
             checkForConversionRemotely(
                     receiverUser.id,
-                    preferenceManagement.getString(Constants.KEY_USER_ID)
+                    currentUserId
             );
         }
     }

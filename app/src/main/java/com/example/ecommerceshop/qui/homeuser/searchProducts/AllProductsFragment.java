@@ -134,7 +134,7 @@ public class AllProductsFragment extends Fragment {
 
                             for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
                                 Product product = dataSnapshot1.getValue(Product.class);
-                                if (product.getProductCategory().equals(brand)){
+                                if (product.isSold() && product.getProductCategory().equals(brand)){
                                     mListProduct.add(product);
                                 }
                             }
@@ -173,7 +173,7 @@ public class AllProductsFragment extends Fragment {
 
                             for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
                                 Product product = dataSnapshot1.getValue(Product.class);
-                                if (product!=null){
+                                if (product!=null && product.isSold()){
                                     if (product.getProductName().toLowerCase(Locale.ROOT).contains(res) || product.getProductBrand().toLowerCase(Locale.ROOT).contains(res)
                                         || product.getProductCategory().toLowerCase(Locale.ROOT).contains(res)){
                                         mListProduct.add(product);

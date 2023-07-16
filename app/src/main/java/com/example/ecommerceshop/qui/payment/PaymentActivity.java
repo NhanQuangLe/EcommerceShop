@@ -43,13 +43,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +68,12 @@ public class PaymentActivity extends AppCompatActivity {
                         Intent i = result.getData();
                         Address address = (Address) i.getSerializableExtra("address");
                         setAddress(address);
+                        for (ItemPayment itemPayment : mListItemPayment) {
+                            itemPayment.setAddress(address);
+                        }
+                        itemPaymentAdapter.notifyDataSetChanged();
+                        setTotalPayment();
+
 
                     }
                 }
@@ -91,6 +100,8 @@ public class PaymentActivity extends AppCompatActivity {
     int i = 0;
     int numItemPayment = 0;
     int numCart = 0;
+    private Map<String,String> IdProvinceShop = new HashMap<>();
+    private Boolean isHasAddress = false;
     private static final int THREAD_POOL_SIZE = 10;
 
     @Override
@@ -103,17 +114,41 @@ public class PaymentActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         String clickType = bundle.getString("clickType");
-        if (clickType.equals("fromCart")){
+        if (clickType.equals("fromCart")) {
             listSelectedCart = bundle.getParcelableArrayList("listSelectedCart");
-            initIfCart();
-        }
-        else if (clickType.equals("fromProductDetail")){
+            IdProvinceShop = (Map<String, String>) bundle.getSerializable("map");
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("PricePerUnitDistance");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    long priceUnitDistance = snapshot.getValue(Long.class);
+                    initIfCart(priceUnitDistance);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        } else if (clickType.equals("fromProductDetail")) {
             mProduct = (Product) bundle.get("product");
             mQuantity = bundle.getInt("quantity");
-            initIfProductDetail();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("PricePerUnitDistance");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    long priceUnitDistance = snapshot.getValue(Long.class);
+                    initIfProductDetail(priceUnitDistance);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }
-
-
 
 
         iListener();
@@ -138,43 +173,82 @@ public class PaymentActivity extends AppCompatActivity {
         mActivityPaymentBinding.btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(PaymentActivity.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.layout_dialog_ok_cancel);
-                Window window = dialog.getWindow();
-                if (window == null) return;
-                window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                if (!isHasAddress){
+                    noti("Vui lòng chọn địa chỉ để nhận hàng!");
+                    return;
+                }
+                final Boolean[] isHasNoSold = {false};
+                int index1 = -1;
+                for (ItemPayment itemPayment : mListItemPayment) {
+                    index1++;
+                    int index2 = -1;
+                    for (ProductCart productCart : itemPayment.getListProductCart()) {
+                        index2++;
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + productCart.getShopId() + "/Shop/Products/" + productCart.getProductId());
+                        int finalIndex = index1;
+                        int finalIndex1 = index2;
+                        ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Boolean isSold = snapshot.child("sold").getValue(Boolean.class);
+                                if (!isSold) {
+                                    isHasNoSold[0] = true;
+                                }
+                                if (finalIndex == mListItemPayment.size() - 1 && finalIndex1 == itemPayment.getListProductCart().size() - 1) {
+                                    if (isHasNoSold[0]) {
+                                        noti("Xin lỗi, vì đơn hàng có sản phẩm đã ngừng kinh doanh");
+                                    } else {
+                                        // Nếu điều kiện thỏa
+                                        final Dialog dialog = new Dialog(PaymentActivity.this);
+                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        dialog.setContentView(R.layout.layout_dialog_ok_cancel);
+                                        Window window = dialog.getWindow();
+                                        if (window == null) return;
+                                        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                                        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                WindowManager.LayoutParams windowAttributes = window.getAttributes();
-                windowAttributes.gravity = Gravity.CENTER;
+                                        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+                                        windowAttributes.gravity = Gravity.CENTER;
 
-                window.setAttributes(windowAttributes);
-                dialog.setCancelable(true);
-                TextView tvContent = dialog.findViewById(R.id.tv_content);
-                TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
-                TextView tvOk = dialog.findViewById(R.id.tv_ok);
-                tvContent.setText("Nhấn đặt hàng đồng nghĩa với việc bạn đã đồng ý những điều khoản của chúng tôi!");
-                tvCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
+                                        window.setAttributes(windowAttributes);
+                                        dialog.setCancelable(true);
+                                        TextView tvContent = dialog.findViewById(R.id.tv_content);
+                                        TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
+                                        TextView tvOk = dialog.findViewById(R.id.tv_ok);
+                                        tvContent.setText("Nhấn đặt hàng đồng nghĩa với việc bạn đã đồng ý những điều khoản của chúng tôi!");
+                                        tvCancel.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        tvOk.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+
+                                                dialog.dismiss();
+                                                numItemPayment = 0;
+                                                long orderId = calendar.getTimeInMillis();
+                                                createOrderFirebase(orderId);
+
+
+                                            }
+                                        });
+                                        dialog.show();
+
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
-                });
-                tvOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-
-                        dialog.dismiss();
-                        numItemPayment = 0;
-                        long orderId = calendar.getTimeInMillis();
-                        createOrderFirebase(orderId);
-
-
-                    }
-                });
-                dialog.show();
+                }
 
 
             }
@@ -189,7 +263,7 @@ public class PaymentActivity extends AppCompatActivity {
         transaction.commitAllowingStateLoss();
     }
 
-    private void initIfCart() {
+    private void initIfCart(long priceUnitDistance) {
         calendar = Calendar.getInstance();
         TempDialog = new ProgressDialog(PaymentActivity.this);
         TempDialog.setMessage("Đơn hàng của bạn đang được tạo");
@@ -208,8 +282,8 @@ public class PaymentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void senDataToPaymentActivity(List<ItemPayment> itemPaymentList) {
-                setTotalPayment(itemPaymentList);
+            public void senDataToPaymentActivity() {
+                setTotalPayment();
 
             }
         });
@@ -225,12 +299,19 @@ public class PaymentActivity extends AppCompatActivity {
                 listShopName.add(productCart.getShopName());
             }
         }
+
+
+
         for (int i = 0; i < listShopId.size(); i++) {
             String shopId = listShopId.get(i);
             ItemPayment itemPayment = new ItemPayment();
             itemPayment.setShopId(shopId);
             itemPayment.setListProductCart(new ArrayList<>());
             itemPayment.setShopName(listShopName.get(i));
+            itemPayment.setmContext(getApplicationContext());
+            String shopProvince = IdProvinceShop.get(shopId);
+            itemPayment.setShopProvince(shopProvince);
+            itemPayment.priceUnitDistance = priceUnitDistance;
             for (ProductCart productCart : listSelectedCart) {
                 if (productCart.getShopId().equals(shopId)) {
                     itemPayment.getListProductCart().add(productCart);
@@ -239,14 +320,15 @@ public class PaymentActivity extends AppCompatActivity {
             mListItemPayment.add(itemPayment);
         }
 
-        itemPaymentAdapter.notifyDataSetChanged();
 
+        itemPaymentAdapter.notifyDataSetChanged();
         listSelectedCart = new ArrayList<>();
 
         setAddressDefault();
-        setInitTotalPayment();
+
     }
-    private  void initIfProductDetail(){
+
+    private void initIfProductDetail(long priceUnitDistance) {
         calendar = Calendar.getInstance();
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -259,72 +341,65 @@ public class PaymentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void senDataToPaymentActivity(List<ItemPayment> itemPaymentList) {
-                setTotalPayment(itemPaymentList);
+            public void senDataToPaymentActivity() {
+                setTotalPayment();
 
             }
         });
         mListItemPayment = new ArrayList<>();
         itemPaymentAdapter.setData(mListItemPayment);
         mActivityPaymentBinding.rcvItemPayment.setAdapter(itemPaymentAdapter);
+        ProductCart productCart = new ProductCart("null", mProduct.getProductId(), mProduct.getProductName(),
+                mQuantity, mProduct.getProductPrice(), mProduct.getProductDiscountPrice(), mProduct.getUriList().get(0), mProduct.getUid(),
+                mProduct.getShopName(), mProduct.getProductBrand(), mProduct.getProductCategory());
+        String shopId = mProduct.getUid();
+        ItemPayment itemPayment = new ItemPayment();
+        itemPayment.setShopId(shopId);
+        itemPayment.setListProductCart(new ArrayList<>());
+        itemPayment.setShopName(mProduct.getShopName());
+        itemPayment.setShopProvince(mProduct.getShopProvince());
+        itemPayment.getListProductCart().add(productCart);
+        itemPayment.setmContext(getApplicationContext());
+        itemPayment.priceUnitDistance = priceUnitDistance;
+        mListItemPayment.add(itemPayment);
+        itemPaymentAdapter.notifyDataSetChanged();
         setAddressDefault();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mProduct.getUid()+"/Shop/ShopInfos/shopName");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String name = snapshot.getValue(String.class);
-                ProductCart productCart = new ProductCart("null", mProduct.getProductId(),mProduct.getProductName(),
-                        mQuantity,mProduct.getProductPrice(),mProduct.getProductDiscountPrice(),mProduct.getUriList().get(0),mProduct.getUid(),
-                        name,mProduct.getProductBrand(),mProduct.getProductCategory());
-                String shopId = mProduct.getUid();
-                ItemPayment itemPayment = new ItemPayment();
-                itemPayment.setShopId(shopId);
-                itemPayment.setListProductCart(new ArrayList<>());
-                itemPayment.setShopName(name);
-                itemPayment.getListProductCart().add(productCart);
-                mListItemPayment.add(itemPayment);
-                itemPaymentAdapter.notifyDataSetChanged();
-                setInitTotalPayment();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
     }
 
-    private void setInitTotalPayment() {
+
+
+    private void setTotalPayment() {
         long finalPayment = 0;
         for (ItemPayment itemPayment : mListItemPayment) {
-            finalPayment += itemPayment.getTongTienHang();
-        }
-        mActivityPaymentBinding.tvTotalMoney.setText(itemPaymentAdapter.getPrice(finalPayment));
-    }
-
-    private void setTotalPayment(List<ItemPayment> itemPaymentList) {
-        long finalPayment = 0;
-        for (ItemPayment itemPayment : itemPaymentList) {
             finalPayment += itemPayment.getTongThanhToan();
         }
         mActivityPaymentBinding.tvTotalMoney.setText(itemPaymentAdapter.getPrice(finalPayment));
     }
 
     private void setAddressDefault() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Addresses");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        mActivityPaymentBinding.layoutAddress.setVisibility(View.GONE);
+        Query ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Addresses")
+                .orderByChild("default").equalTo(true);
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Address address = dataSnapshot.getValue(Address.class);
-                    if (address != null) {
-                        if (address.isDefault()) {
-                            setAddress(address);
+                if (snapshot.exists()) {
+                    isHasAddress=true;
+                    mActivityPaymentBinding.layoutAddress.setVisibility(View.VISIBLE);
+                    for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        Address address = dataSnapshot.getValue(Address.class);
+                        setAddress(address);
+                        for (ItemPayment itemPayment : mListItemPayment) {
+                            itemPayment.setAddress(address);
                         }
                     }
+                    itemPaymentAdapter.notifyDataSetChanged();
                 }
+                else {
+                    isHasAddress=false;
+                    mActivityPaymentBinding.layoutAddress.setVisibility(View.GONE);
+                }
+                setTotalPayment();
             }
 
             @Override
@@ -363,7 +438,7 @@ public class PaymentActivity extends AppCompatActivity {
 
 
         String voucherUsedId = null;
-        if (itemPayment.getVoucher()!=null){
+        if (itemPayment.getVoucher() != null) {
             voucherUsedId = itemPayment.getVoucher().getVoucherid();
         }
 
@@ -393,8 +468,7 @@ public class PaymentActivity extends AppCompatActivity {
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 if (finalVoucherUsedId != null) {
                     updateVoucherOfItemOrder(finalVoucherUsedId, id);
-                }
-                else {
+                } else {
                     numItemPayment++;
                     createOrderFirebase(id + 1);
                 }
@@ -419,6 +493,36 @@ public class PaymentActivity extends AppCompatActivity {
         Intent intent = new Intent(PaymentActivity.this, OrderSuccessActivity.class);
         startActivity(intent);
         finishAffinity();
+    }
+
+    private void noti(String message) {
+        final Dialog dialog = new Dialog(PaymentActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_ok_cancel);
+        Window window = dialog.getWindow();
+        if (window == null) return;
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+
+        window.setAttributes(windowAttributes);
+        dialog.setCancelable(true);
+        TextView tvContent = dialog.findViewById(R.id.tv_content);
+        tvContent.setText(message);
+        TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
+        tvCancel.setVisibility(View.GONE);
+        TextView tvOk = dialog.findViewById(R.id.tv_ok);
+
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+            }
+        });
+        dialog.show();
     }
 
 
