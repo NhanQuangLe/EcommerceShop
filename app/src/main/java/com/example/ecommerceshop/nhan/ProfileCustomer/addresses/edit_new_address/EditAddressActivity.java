@@ -28,6 +28,8 @@ import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.UserAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +45,8 @@ public class EditAddressActivity extends AppCompatActivity {
     EditText et_FullName, et_PhoneNumber, et_Detail;
     TextView tv_MainAddress;
     SwitchCompat sw_DeFaultAddress;
+    SupportMapFragment google_map ;
+    LinearLayout google_map_layout;
     AppCompatButton aBtn_DeleteAddress;
     Button btn_UpdateAddress;
     LinearLayout btn_ChooseAddress;
@@ -53,8 +57,19 @@ public class EditAddressActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     Intent intent = result.getData();
-                    if(result.getResultCode() == ChooseAddressActivity.SUCCESS_CREATE_ADDRESS)
-                        tv_MainAddress.setText(intent.getStringExtra("Address"));
+                    switch(result.getResultCode())
+                    {
+                        case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS:
+                            tv_MainAddress.setText(intent.getStringExtra("Address"));
+                            break;
+                        case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS_BY_CURRENT_LOCATION:
+                            android.location.Address ad = (android.location.Address)intent.getSerializableExtra("choosenAddress");
+                            if(ad != null)
+                                tv_MainAddress.setText(ad.getAddressLine(0));
+                            else
+                                Toast.makeText(EditAddressActivity.this, "Fail to get your current address!", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 }
             });
     @Override
@@ -90,6 +105,15 @@ public class EditAddressActivity extends AppCompatActivity {
         sw_DeFaultAddress = findViewById(R.id.sw_DefaultAddress);
         aBtn_DeleteAddress = findViewById(R.id.aBtn_DeleteAddress);
         btn_UpdateAddress = findViewById(R.id.btn_UpdateAddress);
+        google_map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        google_map_layout = findViewById(R.id.google_map_layout);
+        google_map_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
+                mActivityLauncher.launch(intent);
+            }
+        });
         btn_ChooseAddress = findViewById(R.id.btn_ChooseAddress);
         btn_ChooseAddress.setOnClickListener(new View.OnClickListener() {
             @Override

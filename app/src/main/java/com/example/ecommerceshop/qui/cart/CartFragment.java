@@ -33,7 +33,7 @@ import android.widget.Toast;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.AdapterItemOnCartBinding;
 import com.example.ecommerceshop.databinding.FragmentCartBinding;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.payment.ItemPayment;
 import com.example.ecommerceshop.qui.payment.PaymentActivity;
@@ -80,13 +80,13 @@ public class CartFragment extends Fragment {
 
     private List<ProductCart> listSelectedProductCart;
     int numSelectedCart = 0;
-    private HistoryOrder historyOrder;
+    private Order order;
 
     public CartFragment() {
     }
 
-    public CartFragment(HistoryOrder ho) {
-        historyOrder = ho;
+    public CartFragment(Order ho) {
+        order = ho;
     }
 
     @Override
@@ -140,8 +140,8 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.rcvCart.setAdapter(shopProductCartAdapter);
         mShopListProductCarts = new ArrayList<>();
         shopProductCartAdapter.setData(mShopListProductCarts);
-        if (historyOrder != null)
-            loadHistoryOrderToCart(historyOrder);
+        if (order != null)
+            loadHistoryOrderToCart(order);
         setListShopProductCarts();
     }
 
@@ -224,8 +224,8 @@ public class CartFragment extends Fragment {
                                             mapProductCart.get(cart.getShopId()).add(productCart);
                                             mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId())));
                                             shopProductCartAdapter.notifyDataSetChanged();
-                                            if (historyOrder != null) {
-                                                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
+                                            if (order != null) {
+                                                ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = order.getItems();
                                                 for (int i = 0; i < listProduct.size(); i++)
                                                     if (listProduct.get(i).getProductID().equals(productCart.getProductId())) {
                                                         productCart.setChecked(true);
@@ -276,8 +276,8 @@ public class CartFragment extends Fragment {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
                                                     Log.e("qui", "Giong");
                                                     shopProductCart.getProductCarts().add(productCart);
-                                                    if (historyOrder != null) {
-                                                        ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
+                                                    if (order != null) {
+                                                        ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = order.getItems();
                                                         for (int i = 0; i < listProduct.size(); i++)
                                                             if (listProduct.get(i).getProductID().equals(productCart.getProductId())) {
                                                                 productCart.setChecked(true);
@@ -474,10 +474,10 @@ public class CartFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                Boolean isSold = snapshot.child("sold").getValue(Boolean.class);
-                                if (!isSold) {
-                                    isHasNoSold[0] = true;
-                                }
+                            Boolean isSold = snapshot.child("sold").getValue(Boolean.class);
+                            if (!isSold) {
+                                isHasNoSold[0] = true;
+                            }
                             if (finalIndex == listSelectedProductCart.size()-1){
                                 if (isHasNoSold[0]) {
                                     noti("Xin lỗi, vì đơn hàng có sản phẩm đã ngừng kinh doanh");
@@ -612,7 +612,7 @@ public class CartFragment extends Fragment {
 //            }
 //        }
 //    }
-    public void loadHistoryOrderToCart(HistoryOrder ho) {
+    public void loadHistoryOrderToCart(Order ho) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
         ArrayList<String> listProductCartId = new ArrayList<>();
         ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -634,7 +634,7 @@ public class CartFragment extends Fragment {
         });
     }
 
-    public void pushItemsCart(HistoryOrder ho, ArrayList<String> listProductCartId, ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct, int check, int n) {
+    public void pushItemsCart(Order ho, ArrayList<String> listProductCartId, ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct, int check, int n) {
         if (check >= n) return;
 
         if (!listProductCartId.contains(listProduct.get(check).getProductID())) {

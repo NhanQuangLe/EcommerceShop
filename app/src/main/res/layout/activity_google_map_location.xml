@@ -6,64 +6,85 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_view"
     tools:context=".nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity">
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#f5f5f5f5">
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            android:id="@+id/toolbar_home_user"
-            android:background="#F1F0F1">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="20dp"
-                    android:paddingBottom="13dp"
-                    android:orientation="horizontal"
-                    android:paddingTop="13dp">
-                    <android.widget.Button
-                        android:id="@+id/btnBackward"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:background="@drawable/ic_backward"
-                        android:backgroundTint="#EA1C00"/>
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Chọn vị trí hiện tại"
-                            android:id="@+id/tv1"
-                            android:textSize="18sp"
-                            android:textColor="#EA1C00"/>
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <fragment
-                android:id="@+id/google_map"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="#f5f5f5f5">
+            <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:name="com.google.android.gms.maps.SupportMapFragment"/>
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:id="@+id/toolbar_home_user"
+                android:background="#F1F0F1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="13dp"
+                        android:orientation="horizontal"
+                        android:paddingTop="13dp">
+                        <android.widget.Button
+                            android:id="@+id/btnBackward"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/ic_backward"
+                            android:backgroundTint="#EA1C00"/>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="20dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Chọn vị trí hiện tại"
+                                android:id="@+id/tv1"
+                                android:textSize="18sp"
+                                android:textColor="#EA1C00"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <fragment
+                    android:id="@+id/google_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+        <Button
+            android:id="@+id/btn_ConfirmLocation"
+            android:layout_width="343dp"
+            android:layout_height="48dp"
+            android:text="Xác nhận"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/border_button_setting_25"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>
