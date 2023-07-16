@@ -18,7 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.Phat.Model.Notification;
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.order_detail.OrderDetailActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.OrderDetailActivity;
+
 
 import java.util.ArrayList;
 

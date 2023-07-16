@@ -20,9 +20,8 @@ import android.widget.Toast;
 import com.example.ecommerceshop.databinding.FragmentHistoryOrdersBinding;
 import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.nhan.Model.Product;
-import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.order_detail.OrderDetailActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.OrderDetailActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +41,7 @@ public class HistoryOrdersFragment extends Fragment {
     FragmentHistoryOrdersBinding fragmentHistoryOrdersBinding;
     HistoryOrdersAdapter mHistoryAdapter;
     RecyclerView mHistoryAdapterView;
-    ArrayList<HistoryOrder> listHistoryOrders;
+    ArrayList<Order> listOrders;
     View mViewFragment;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -63,22 +62,22 @@ public class HistoryOrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         fragmentHistoryOrdersBinding = FragmentHistoryOrdersBinding.inflate(inflater, container, false);
         mViewFragment = fragmentHistoryOrdersBinding.getRoot();
-        listHistoryOrders = new ArrayList<>();
+        listOrders = new ArrayList<>();
         mHistoryAdapterView = fragmentHistoryOrdersBinding.rvHistoryOrder;
         firebaseAuth = FirebaseAuth.getInstance();
-        mHistoryAdapter = new HistoryOrdersAdapter(getContext(), listHistoryOrders, new IClickHistoryOrderListener() {
+        mHistoryAdapter = new HistoryOrdersAdapter(getContext(), listOrders, new IClickHistoryOrderListener() {
             @Override
-            public void GoToOrderDetail(HistoryOrder historyOrder) {
-                ToOrderDetail(historyOrder);
+            public void GoToOrderDetail(Order order) {
+                ToOrderDetail(order);
             }
             @Override
-            public void GotoRebuy(HistoryOrder historyOrder){
-                ToRebuy(historyOrder);
+            public void GotoRebuy(Order order){
+                ToRebuy(order);
             }
 
             @Override
-            public void GoToReview(HistoryOrder historyOrder) {
-                ToReview(historyOrder);
+            public void GoToReview(Order order) {
+                ToReview(order);
             }
         });
         mHistoryAdapterView.setAdapter(mHistoryAdapter);
@@ -94,12 +93,12 @@ public class HistoryOrdersFragment extends Fragment {
                 .child("Orders").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        listHistoryOrders.clear();
+                        listOrders.clear();
                         for(DataSnapshot ds : snapshot.getChildren())
                         {
                             if(ds.child("orderStatus").getValue(String.class).equals("Completed"))
                             {
-                                HistoryOrder ho = new HistoryOrder();
+                                Order ho = new Order();
                                 ho.setOrderId(ds.child("orderId").getValue(String.class));
                                 ho.setCustomerId(ds.child("customerId").getValue(String.class));
                                 dbReference.child(ds.child("shopId").getValue(String.class))
@@ -122,6 +121,7 @@ public class HistoryOrdersFragment extends Fragment {
                                                 {
                                                     Product pd = new Product();
                                                     pd.setProductID(product.child("pid").getValue(String.class));
+                                                    pd.setShopID(ds.child("shopId").getValue(String.class));
                                                     pd.setProductAvatar(product.child("pAvatar").getValue(String.class));
                                                     pd.setProductBrand(product.child("pBrand").getValue(String.class));
                                                     pd.setProductName(product.child("pName").getValue(String.class));
@@ -131,7 +131,7 @@ public class HistoryOrdersFragment extends Fragment {
                                                     products.add(pd);
                                                 }
                                                 ho.setItems(products);
-                                                listHistoryOrders.add(ho);
+                                                listOrders.add(ho);
                                                 mHistoryAdapter.notifyDataSetChanged();
                                             }
 
@@ -149,10 +149,10 @@ public class HistoryOrdersFragment extends Fragment {
                     }
                 });
     }
-    public void ToOrderDetail(HistoryOrder historyOrder){
+    public void ToOrderDetail(Order order){
         try{
             Intent intent = new Intent(getContext(), OrderDetailActivity.class);
-            intent.putExtra("HistoryOrder", historyOrder);
+            intent.putExtra("HistoryOrder", order);
             mActivityLauncher.launch(intent);
         }
         catch (Exception e)
@@ -160,10 +160,10 @@ public class HistoryOrdersFragment extends Fragment {
             Log.d("Nhanle", e + "");
         }
     }
-    public void ToRebuy(HistoryOrder historyOrder){
+    public void ToRebuy(Order order){
         try{
             Intent intent = new Intent(getContext(), CartActivity.class);
-            intent.putExtra("HistoryOrder", historyOrder);
+            intent.putExtra("HistoryOrder", order);
             intent.putExtra("Key", HISTORY_ORDER);
             mActivityLauncher.launch(intent);
         }
@@ -172,10 +172,10 @@ public class HistoryOrdersFragment extends Fragment {
             Log.d("Nhanle", e + "");
         }
     }
-    public void ToReview(HistoryOrder historyOrder){
+    public void ToReview(Order order){
         try{
             Intent intent = new Intent(getContext(), ReviewActivity.class);
-            intent.putExtra("HistoryOrder", historyOrder);
+            intent.putExtra("HistoryOrder", order);
             mActivityLauncher.launch(intent);
         }
         catch (Exception e)

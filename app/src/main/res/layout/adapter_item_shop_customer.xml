@@ -7,7 +7,8 @@
     android:layout_marginEnd="10dp"
     android:layout_marginBottom="10dp"
     app:cardElevation="5dp"
-    app:cardCornerRadius="6dp">
+    app:cardCornerRadius="6dp"
+    android:id="@+id/mainLayout">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,6 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4.9"
+                android:id="@+id/rating"
                 android:textColor="#EA1C00"
                 android:textSize="14sp"
                 android:layout_marginStart="20dp"

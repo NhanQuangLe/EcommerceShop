@@ -3,6 +3,7 @@ package com.example.ecommerceshop.nhan.ProfileCustomer.addresses;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -50,6 +51,7 @@ public class UserAddressActivity extends AppCompatActivity {
     AppCompatButton aBtn_AddAddress;
     HashMap<String, String> mapWard;
     String deFaultId;
+    ImageView ic_back;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -91,6 +93,13 @@ public class UserAddressActivity extends AppCompatActivity {
         listAddressView = findViewById(R.id.rv_ListAddress);
         aBtn_AddAddress = findViewById(R.id.aBtn_AddAddress);
         deFaultId = "";
+        ic_back = findViewById(R.id.ic_back);
+        ic_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         aBtn_AddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,6 +210,8 @@ public class UserAddressActivity extends AppCompatActivity {
         map.put("phoneNumber", address.getPhoneNumber());
         map.put("province", address.getProvince());
         map.put("ward", address.getWard());
+        map.put("latitude", address.getLatitude());
+        map.put("longitude", address.getLongitude());
         dbRef.child(address.getAddressId())
                 .updateChildren(map, new DatabaseReference.CompletionListener() {
                     @Override
@@ -220,14 +231,17 @@ public class UserAddressActivity extends AppCompatActivity {
                 .child("Customer")
                 .child("Addresses");
         dbRef.child(address.getAddressId()).setValue(address, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        Toast.makeText(UserAddressActivity.this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Toast.makeText(UserAddressActivity.this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
+            }
+        });
         if(address.isDefault()){
-            dbRef.child(deFaultId).child("default").setValue(false);
-            deFaultId = address.getAddressId();
+            if (deFaultId!=""){
+                dbRef.child(deFaultId).child("default").setValue(false);
+                deFaultId = address.getAddressId();
+            }
+
         }
     }
 }

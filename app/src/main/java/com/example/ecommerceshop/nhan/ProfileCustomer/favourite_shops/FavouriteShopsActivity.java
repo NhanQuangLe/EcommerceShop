@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.ecommerceshop.R;
@@ -31,6 +33,7 @@ public class FavouriteShopsActivity extends AppCompatActivity {
     FavouriteShopsAdapter favouriteShopsAdapter;
     ArrayList<Shop> listFavouriteShop;
     FirebaseAuth firebaseAuth;
+    ImageView ic_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,6 @@ public class FavouriteShopsActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         listFavouriteShopView = findViewById(R.id.listFavouriteShop);
         listFavouriteShop = new ArrayList<>();
-
         favouriteShopsAdapter = new FavouriteShopsAdapter(FavouriteShopsActivity.this, listFavouriteShop, new IClickFavouriteShopListener() {
             @Override
             public void UnFollowShop(Shop shop) {
@@ -47,6 +49,13 @@ public class FavouriteShopsActivity extends AppCompatActivity {
             }
         });
         listFavouriteShopView.setAdapter(favouriteShopsAdapter);
+        ic_back = findViewById(R.id.ic_back);
+        ic_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         GetData();
     }
@@ -70,15 +79,30 @@ public class FavouriteShopsActivity extends AppCompatActivity {
                                         shop.setShopAvatar(s.child("shopAvt").getValue(String.class));
                                         shop.setShopEmail(s.child("shopEmail").getValue(String.class));
                                         shop.setRating(0);
-                                        firebaseDatabase.addValueEventListener(new ValueEventListener() {
+                                        firebaseDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                 int countFollower = 0;
-                                                for(DataSnapshot ds : snapshot.getChildren())
-                                                    if(ds.child("Customer/Followers") != null)
+                                                double averageStar = 0;
+                                                int numReview = 0;
+                                                for(DataSnapshot ds : snapshot.getChildren()){
+                                                    if(ds.child("Customer/Followers").exists())
                                                         for(DataSnapshot shopID : ds.child("Customer/Followers").getChildren())
                                                             if(shopID.getValue(String.class).equals(s.child("uid").getValue(String.class)))
                                                                 countFollower = countFollower + 1;
+
+                                                    if(ds.child("Customer/Reviews").exists())
+                                                        for(DataSnapshot shopID : ds.child("Customer/Reviews").getChildren())
+                                                            if(shopID.child("shopId").getValue(String.class).equals(s.child("uid").getValue(String.class)))
+                                                            {
+                                                                numReview = numReview + 1;
+                                                                averageStar = averageStar + shopID.child("rating").getValue(Double.class);
+                                                            }
+                                                }
+                                                if(numReview != 0)
+                                                    shop.setRating(averageStar / numReview);
+                                                else
+                                                    shop.setRating(0);
                                                 shop.setNumberFollowers(countFollower);
                                                 shop.setShopName(s.child("shopName").getValue(String.class));
                                                 for(int i = 0; i < listFavouriteShop.size(); i++)
@@ -114,12 +138,14 @@ public class FavouriteShopsActivity extends AppCompatActivity {
                     @Override
                     public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                         for(int i = 0; i < listFavouriteShop.size(); i++)
-                            if(listFavouriteShop.get(i).getShopID().equals(snapshot.child("shopId").getValue(String.class)))
+                        {
+                            if(listFavouriteShop.get(i).getShopID().equals(snapshot.getValue(String.class)))
                             {
                                 listFavouriteShop.remove(i);
                                 favouriteShopsAdapter.notifyDataSetChanged();
                                 return;
                             }
+                        }
                     }
 
                     @Override
@@ -139,24 +165,13 @@ public class FavouriteShopsActivity extends AppCompatActivity {
                 .child(firebaseAuth.getUid())
                 .child("Customer")
                 .child("Followers");
-
-        dbRef.addValueEventListener(new ValueEventListener() {
+        dbRef.child(favouriteShop.getShopID())
+                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot ds : snapshot.getChildren())
-                            if(ds.getValue(String.class).equals(favouriteShop.getShopID()))
-                                dbRef.child(ds.getKey()).removeValue(new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                        Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(FavouriteShopsActivity.this, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
  }

@@ -1,7 +1,6 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,22 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.nhan.Model.Review;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersAdapter;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReviewAdapter.ReviewViewholder> {
 
@@ -53,7 +43,7 @@ public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReview
         Review review = reviewList.get(position);
         Picasso.get().load(Uri.parse(review.getProductAvatar())).into(holder.iv_ProductAvatar);
         holder.tv_ProductName.setText(review.getProductName());
-        ArrayList<Uri> uriList = review.getUriList();
+        ArrayList<String> uriList = review.getUriList();
         ImageReviewAdapter imageReviewAdapter = new ImageReviewAdapter(context, uriList, new ImageReviewAdapter.IClickImageReview() {
             @Override
             public void RemoveImage(Uri uri) {
@@ -71,7 +61,7 @@ public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReview
         holder.rb_Rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                mClickProductInReviewListener.RatingBarChange(ratingBar, v, b, review);
+                mClickProductInReviewListener.RatingBarChange(ratingBar, (double)v, b, review);
             }
         });
         holder.btn_AddImage.setOnClickListener(new View.OnClickListener() {

@@ -59,6 +59,8 @@ public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.ReviewVi
         holder.cusName.setText(review.getCustomerName());
         holder.rvDate.setText(review.getReviewedDate());
         holder.RatingBar.setRating((float) review.getRating());
+        holder.RatingBar.setFocusable(false);
+        holder.RatingBar.setIsIndicator(true);
         holder.rvContent.setText(review.getContent());
         if(review.getRvResponse() != null){
             holder.rvResponse.setText(review.getRvResponse());

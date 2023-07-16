@@ -29,7 +29,15 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
     public List<RequestShop> mList, filterList;
     private FilterShop filterShop;
 
+    public interface IClickShopItemListener{
+         void sendDataShop(RequestShop shop);
+    }
 
+    public void setiClickShopItemListener(IClickShopItemListener iClickShopItemListener) {
+        this.iClickShopItemListener = iClickShopItemListener;
+    }
+
+    private IClickShopItemListener iClickShopItemListener;
 
     public void setData(List<RequestShop> mList){
         this.mList=mList;
@@ -85,7 +93,6 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
                                 DecimalFormat df = new DecimalFormat();
                                 df.setMaximumFractionDigits(1);
                                 String followersStr;
-                                Log.e("follow",""+ followers[0]);
                                 if (followers[0] <1000) followersStr = String.valueOf(followers[0]);
                                 else followersStr= df.format(followers[0] *1.0/1000);
 
@@ -129,6 +136,14 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
 
                 }
             });
+            holder.mBinding.mainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    iClickShopItemListener.sendDataShop(shop);
+                }
+            });
+            setShopRate(shopId,holder);
+
 
         }
     }
@@ -153,5 +168,43 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ShopViewHolder
             super(mBinding.getRoot());
             this.mBinding = mBinding;
         }
+    }
+    private void setShopRate(String shopId, ShopViewHolder holder) {
+        final float[] rate = {0};
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final int[] temp = {0};
+                final int[] i = {0};
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    DatabaseReference ref2 = dataSnapshot.getRef().child("Customer/Reviews");
+                    ref2.orderByChild("shopId").equalTo(shopId).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                                if (dataSnapshot1.exists()){
+                                    int rating = dataSnapshot1.child("rating").getValue(Integer.class);
+                                    temp[0] +=rating;
+                                    i[0]++;
+                                    rate[0] = (float)temp[0]/i[0];
+                                    holder.mBinding.rating.setText(rate[0]+"");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

@@ -8,14 +8,26 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.chat.ChatScreenActivity;
+import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.databinding.ActivityShopCustomerBinding;
+import com.example.ecommerceshop.qui.cart.CartActivity;
+import com.example.ecommerceshop.utilities.Constants;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -72,45 +84,17 @@ public class ShopActivityCustomer extends AppCompatActivity {
         mActivityShopCustomerBinding.btnFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long followId = Calendar.getInstance().getTimeInMillis();
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Followers");
-                ref.child(followId+"").setValue(shopId, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
-                        mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.VISIBLE);
-                    }
-                });
+                ref.child(shopId).setValue(shopId);
+//                mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
+//                mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.VISIBLE);
             }
         });
         mActivityShopCustomerBinding.btnUnfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Followers");
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                            String value =dataSnapshot.getValue(String.class);
-                            if (value.equals(shopId)){
-                                dataSnapshot.getRef().removeValue(new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                        mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.GONE);
-                                        mActivityShopCustomerBinding.btnFollow.setVisibility(View.VISIBLE);
-
-                                    }
-                                });
-                                break;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                ref.child(shopId).removeValue();
             }
         });
         mActivityShopCustomerBinding.btnBackward.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +112,53 @@ public class ShopActivityCustomer extends AppCompatActivity {
                 intent.putExtra("textSearch",text);
                 intent.putExtra("shopId",shopId);
                 startActivity(intent);
+            }
+        });
+        mActivityShopCustomerBinding.navHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), MainUserActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        mActivityShopCustomerBinding.navCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), CartActivity.class);
+                startActivity(i);
+            }
+        });
+        mActivityShopCustomerBinding.navChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shopId.equals(mCurrentUser.getUid())){
+                    noti("Không thể chat với shop của bạn!");
+                    return;
+                }
+                UserChat user = new UserChat();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+shopId+"/Shop/ShopInfos");
+                ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String shopName = snapshot.child("shopName").getValue(String.class);
+                        user.nameShop = shopName;
+                        user.nameCus="";
+                        String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                        user.imageShop = shopAvt;
+                        user.imageCus="";
+                        user.idShop = shopId+"Shop";
+                        user.idCus="";
+                        Intent intent = new Intent(getApplicationContext(), ChatScreenActivity.class);
+                        intent.putExtra(Constants.KEY_USER ,user);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
     }
@@ -242,6 +273,35 @@ public class ShopActivityCustomer extends AppCompatActivity {
         });
         setVisibleButtonFollow();
     }
+    private void noti(String message) {
+        final Dialog dialog = new Dialog(ShopActivityCustomer.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_ok_cancel);
+        Window window = dialog.getWindow();
+        if (window == null) return;
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+
+        window.setAttributes(windowAttributes);
+        dialog.setCancelable(true);
+        TextView tvContent = dialog.findViewById(R.id.tv_content);
+        tvContent.setText(message);
+        TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
+        tvCancel.setVisibility(View.GONE);
+        TextView tvOk = dialog.findViewById(R.id.tv_ok);
+
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+            }
+        });
+        dialog.show();
+    }
 
     private void setVisibleButtonFollow() {
         if (shopId.equals(mCurrentUser.getUid())){
@@ -250,24 +310,17 @@ public class ShopActivityCustomer extends AppCompatActivity {
             return;
         }
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/Followers");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean flat = false;
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    String value = dataSnapshot.getValue(String.class);
-                    if (value.equals(shopId)){
-                        mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.VISIBLE);
-                        mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
-                        flat=true;
-                        break;
-                    }
+                if (snapshot.child(shopId).exists()){
+                    mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.VISIBLE);
+                    mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
                 }
-                if (flat==false){
+                else {
                     mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.GONE);
                     mActivityShopCustomerBinding.btnFollow.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override

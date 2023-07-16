@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_view"
-    tools:context=".nhan.ProfileCustomer.orders.history_orders.order_detail.OrderDetailActivity">
+    tools:context=".nhan.ProfileCustomer.orders.OrderDetailActivity">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -132,19 +132,12 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:textStyle="bold"
-                                        android:text="Thông tin vận chuyển"
+                                        android:text="Trạng thái đơn hàng"
                                         android:textSize="14sp"/>
+
+
                                     <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Nhanh"
-                                        android:textSize="14sp"/>
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Shopee Xpress - SPXVN037429071185"
-                                        android:textSize="14sp"/>
-                                    <TextView
+                                        android:id="@+id/tv_statusOrder"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:textColor="#00c5a5"
@@ -154,22 +147,14 @@
                                         android:text="Đơn hàng đã được giao thành công"
                                         android:textSize="14sp"/>
                                     <TextView
+                                        android:id="@+id/tv_DateSuccess"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="21-6-2023 14:06"
                                         android:layout_marginLeft="14dp"
                                         android:textSize="12sp"/>
                                 </LinearLayout>
-                                <TextView
-                                    android:id="@+id/btn_detail_shipping"
-                                    android:layout_width="30dp"
-                                    android:layout_height="wrap_content"
-                                    android:text="XEM"
-                                    android:textColor="#00c5a5"
-                                    android:layout_gravity="top"/>
                             </LinearLayout>
-
-
                         </androidx.cardview.widget.CardView>
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"

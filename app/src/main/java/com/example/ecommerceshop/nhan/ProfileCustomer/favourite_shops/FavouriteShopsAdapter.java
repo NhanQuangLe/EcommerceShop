@@ -19,10 +19,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class FavouriteShopsAdapter  extends RecyclerView.Adapter<FavouriteShopsAdapter.FavouriteShopsViewholder> {
-
+public class FavouriteShopsAdapter extends RecyclerView.Adapter<FavouriteShopsAdapter.FavouriteShopsViewholder> {
     private Context context;
-    private ArrayList<Shop> favouriteShops;
+    public ArrayList<Shop> favouriteShops;
     public IClickFavouriteShopListener mClickFavouriteShopListener;
     public FavouriteShopsAdapter(Context context, ArrayList<Shop> shops, IClickFavouriteShopListener listener) {
         this.context = context;
@@ -44,7 +43,7 @@ public class FavouriteShopsAdapter  extends RecyclerView.Adapter<FavouriteShopsA
         holder.tv_ShopName.setText(favouriteShop.getShopName());
         holder.tv_ShopEmail.setText(favouriteShop.getShopEmail());
         holder.tv_ShopAddress.setText(favouriteShop.getShopAddress());
-        holder.tv_ShopRating.setText(Double.toString(0));
+        holder.tv_ShopRating.setText(favouriteShop.getRating() + "");
         holder.tv_NumberFollower.setText(Long.toString(favouriteShop.getNumberFollowers()));
         holder.btn_UnFollow.setOnClickListener(new View.OnClickListener() {
             @Override

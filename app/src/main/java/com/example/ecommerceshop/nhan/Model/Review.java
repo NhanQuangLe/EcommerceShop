@@ -7,15 +7,14 @@ import java.util.ArrayList;
 
 public class Review {
     String avatarCus, content, customerId, customerName, productId, reviewId, reviewDate, shopId, rvResponse;
-    float rating;
-    ArrayList<Uri> uriList;
-
+    Double rating;
+    ArrayList<String> uriList;
     String productAvatar, productName;
 
     public Review() {
     }
 
-    public Review(String avatarCus, String content, String customerId, String customerName, String productId, String reviewId, String reviewDate, String shopId, String rvResponse, float rating, ArrayList<Uri> uriList, String productAvatar, String productName) {
+    public Review(String avatarCus, String content, String customerId, String customerName, String productId, String reviewId, String reviewDate, String shopId, String rvResponse, Double rating, ArrayList<String> uriList, String productAvatar, String productName) {
         this.avatarCus = avatarCus;
         this.content = content;
         this.customerId = customerId;
@@ -103,19 +102,19 @@ public class Review {
         this.rvResponse = rvResponse;
     }
 
-    public float getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
-    public ArrayList<Uri> getUriList() {
+    public ArrayList<String> getUriList() {
         return uriList;
     }
 
-    public void setUriList(ArrayList<Uri> uriList) {
+    public void setUriList(ArrayList<String> uriList) {
         this.uriList = uriList;
     }
 

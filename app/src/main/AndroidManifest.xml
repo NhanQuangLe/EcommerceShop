@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -15,6 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAnfF4VrI9WBsiJPDrPqbwsYAdX5WedDQQ"></meta-data>
+        <activity
+            android:name=".chat.UsersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".qui.shop.AllFilterProductActivity"
+            android:exported="false" />
         <activity
             android:name=".qui.payment.OrderSuccessActivity"
             android:exported="false" />
@@ -26,24 +36,31 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".tinh.Activity.ForgotPasswordActivity"
             android:exported="false" />
         <activity
+            android:name=".chat.MainChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chat.ChatScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".tinh.Activity.SignUpActivity"
-            android:exported="true"></activity>
+            android:exported="false" />
+        <activity
+            android:name=".tinh.Activity.InputInfoActivity"
+            android:exported="false" />
         <activity
             android:name=".tinh.Activity.LoginActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".tinh.Activity.HelpActivity"
@@ -76,9 +93,7 @@
             android:name=".MainUserActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".nhan.ProfileCustomer.orders.UserOrdersActivity"
             android:exported="false" />
@@ -121,7 +136,6 @@
         <activity
             android:name=".Phat.Activity.UpdateProductShopActivity"
             android:exported="false" />
-
         <activity
             android:name=".Phat.Activity.ReviewShopActivity"
             android:exported="false" />
@@ -132,12 +146,20 @@
             android:name=".Phat.Activity.ResponseRVActivity"
             android:exported="false" />
         <activity
-            android:name=".nhan.ProfileCustomer.orders.history_orders.order_detail.OrderDetailActivity"
+            android:name=".nhan.ProfileCustomer.orders.OrderDetailActivity"
             android:exported="false" />
         <activity
             android:name=".nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".nhan.ProfileCustomer.edit_user_info.EditUserInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.vouchers.VoucherCustomerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

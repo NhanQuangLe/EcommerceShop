@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +21,7 @@ import com.example.ecommerceshop.Phat.Fragment.OrderListShopFragment;
 import com.example.ecommerceshop.Phat.Fragment.ProfileShopFragment;
 import com.example.ecommerceshop.Phat.Fragment.VoucherShopFragment;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.chat.MainChatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -28,8 +32,11 @@ public class MainShopActivity extends AppCompatActivity {
 
     ListView listView ;
     TextView textView;
+    ImageView imageChat;
     BottomNavigationView bottomNavigationView;
     FloatingActionButton floatingActionButton;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +45,7 @@ public class MainShopActivity extends AppCompatActivity {
         bottomNavigationView=findViewById(R.id.bottomNavigationView);
         floatingActionButton=findViewById(R.id.fab);
         textView=findViewById(R.id.textView12);
+        imageChat = findViewById(R.id.image_chat);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +83,14 @@ public class MainShopActivity extends AppCompatActivity {
                 return true;
             }
         });
+        imageChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MainChatActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
     private void ReplaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();

@@ -20,12 +20,12 @@ import java.util.ArrayList;
 public class ImageReviewAdapter extends RecyclerView.Adapter<ImageReviewAdapter.ImageReviewViewholder> {
 
     private Context context;
-    private ArrayList<Uri> imageUriList;
+    private ArrayList<String> imageUriList;
     public interface IClickImageReview {
         void RemoveImage(Uri uri);
     }
     private IClickImageReview mClickImageReview;
-    public ImageReviewAdapter(Context context, ArrayList<Uri> imageUriList, IClickImageReview mClickListener) {
+    public ImageReviewAdapter(Context context, ArrayList<String> imageUriList, IClickImageReview mClickListener) {
         this.context = context;
         this.imageUriList = imageUriList;
         this.mClickImageReview = mClickListener;
@@ -39,8 +39,8 @@ public class ImageReviewAdapter extends RecyclerView.Adapter<ImageReviewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ImageReviewAdapter.ImageReviewViewholder holder, int position) {
-        Uri uriImage = imageUriList.get(position);
-        holder.iv_mainImage.setImageURI(uriImage);
+        String uriImage = imageUriList.get(position);
+        holder.iv_mainImage.setImageURI(Uri.parse(uriImage));
         holder.btn_Remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

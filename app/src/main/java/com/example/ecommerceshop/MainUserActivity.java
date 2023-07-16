@@ -6,15 +6,21 @@ import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.ecommerceshop.Phat.Fragment.NotificationFragment;
+import com.example.ecommerceshop.chat.MainChatActivity;
 import com.example.ecommerceshop.databinding.ActivityHomeUserBinding;
 import com.example.ecommerceshop.nhan.ProfileCustomer.UserProfileFragment;
+import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
+import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainUserActivity extends AppCompatActivity {
 
@@ -34,6 +40,8 @@ public class MainUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManagement preferenceManagement = new PreferenceManagement(getApplicationContext());
+        preferenceManagement.putBoolean("roleShop", false);
         mActivityHomeUserBinding = ActivityHomeUserBinding.inflate(getLayoutInflater());
         setContentView(mActivityHomeUserBinding.getRoot());
         homeFragmentUser = new HomeFragmentUser();
@@ -47,20 +55,22 @@ public class MainUserActivity extends AppCompatActivity {
                     case R.id.home:
                         replaceFragment(new HomeFragmentUser());
                         break;
-//                    case R.id.cart:
-//                        ReplaceFragment(new OrderListShopFragment());
-//                        textView.setText("ORDERS");
-//                        break;
+                    case R.id.cart:
+                        Intent i = new Intent(getApplicationContext(), CartActivity.class);
+                        startActivity(i);
+                        break;
                     case R.id.notification:
                         replaceFragment(new NotificationFragment());
                         break;
                     case R.id.profile_user:
                         replaceFragment(new UserProfileFragment());
                         break;
-//                    case R.id.chat:
-//                        ReplaceFragment(new AddProductShopFragment());
-//                        textView.setText("ADD PRODUCT");
-//                        break;
+                    case R.id.chat:
+                    {
+                        Intent i2 = new Intent(getApplicationContext(), MainChatActivity.class);
+                        startActivity(i2);
+                        break;
+                    }
                 }
                 return true;
             }

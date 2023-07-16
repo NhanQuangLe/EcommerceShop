@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,12 +22,12 @@ import java.util.ArrayList;
 public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdapter.OrderViewholder> {
 
     private Context context;
-    private ArrayList<HistoryOrder> historyOrders;
+    private ArrayList<Order> orders;
     private HistoryProductsInOrderAdapter historyProductsInOrderAdapter;
     private IClickHistoryOrderListener mClickHistoryOrderListener;
-    public HistoryOrdersAdapter(Context context, ArrayList<HistoryOrder> historyOrders, IClickHistoryOrderListener a) {
+    public HistoryOrdersAdapter(Context context, ArrayList<Order> orders, IClickHistoryOrderListener a) {
         this.context = context;
-        this.historyOrders = historyOrders;
+        this.orders = orders;
         this.mClickHistoryOrderListener = a;
     }
     @NonNull
@@ -38,35 +39,35 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
 
     @Override
     public void onBindViewHolder(@NonNull HistoryOrdersAdapter.OrderViewholder holder, int position) {
-        HistoryOrder historyOrder = historyOrders.get(position);
-        Picasso.get().load(Uri.parse(historyOrder.getShopAvt())).into(holder.iv_ShopAvatar);
-        holder.tv_ShopName.setText(historyOrder.getShopName());
-        historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, historyOrder.getItems());
+        Order order = orders.get(position);
+        Picasso.get().load(Uri.parse(order.getShopAvt())).into(holder.iv_ShopAvatar);
+        holder.tv_ShopName.setText(order.getShopName());
+        historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, order.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
-        holder.tv_SumMoney.setText(String.valueOf(historyOrder.getTotalPrice()));
+        holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
         holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mClickHistoryOrderListener.GoToOrderDetail(historyOrder);
+                mClickHistoryOrderListener.GoToOrderDetail(order);
             }
         });
         holder.aBtn_ReBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mClickHistoryOrderListener.GotoRebuy(historyOrder);
+                mClickHistoryOrderListener.GotoRebuy(order);
             }
         });
         holder.btn_RatingProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    mClickHistoryOrderListener.GoToReview(historyOrder);
+                    mClickHistoryOrderListener.GoToReview(order);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return historyOrders.size();
+        return orders.size();
     }
 
     public static class OrderViewholder extends RecyclerView.ViewHolder{

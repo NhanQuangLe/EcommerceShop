@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#D0011B"
         android:gravity="center"
-        android:text="Thanh toán"
+        android:text="Mua hàng"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="14sp">

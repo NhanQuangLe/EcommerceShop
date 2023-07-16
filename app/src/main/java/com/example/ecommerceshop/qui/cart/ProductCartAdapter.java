@@ -23,12 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.AdapterItemOnCartBinding;
+import com.example.ecommerceshop.qui.homeuser.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
@@ -62,6 +64,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
         if (productCart!=null){
             Glide.with(holder.mBinding.getRoot()).load(productCart.getUri()).into(holder.mBinding.productImage);
             holder.mBinding.productName.setText(productCart.getProductName());
+
             if (productCart.getProductDiscountPrice()==0){
                 holder.mBinding.productPrice.setVisibility(View.GONE);
                 holder.mBinding.productDiscountPrice.setText(productCart.getProductPriceStr());
@@ -72,6 +75,30 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                 holder.mBinding.productDiscountPrice.setText(productCart.getProductAfterDiscountStr());
             }
             holder.mBinding.productQuantity.setText(String.valueOf(productCart.getProductQuantity()));
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+productCart.getShopId()+"/Shop/Products/"+productCart.getProductId());
+
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Boolean isSold = snapshot.child("sold").getValue(Boolean.class);
+                    holder.mBinding.checkBox.setChecked(false);
+                    if (!isSold){
+                        holder.mBinding.mainLayout.setClickable(false);
+                        holder.mBinding.layoutChangeQuantity.setVisibility(View.GONE);
+                        holder.mBinding.layoutNgungkinhdoanh.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        holder.mBinding.mainLayout.setClickable(true);
+                        holder.mBinding.layoutChangeQuantity.setVisibility(View.VISIBLE);
+                        holder.mBinding.layoutNgungkinhdoanh.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
 
             if (productCart.isChecked()) holder.mBinding.checkBox.setChecked(true);
             else holder.mBinding.checkBox.setChecked(false);

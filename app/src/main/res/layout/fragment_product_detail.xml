@@ -443,7 +443,8 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="4.9"
+                                        android:text="0"
+                                        android:id="@+id/tv_shop_rating"
                                         android:textColor="#EA1C00"
                                         android:textSize="14sp"
                                         android:layout_marginStart="20dp"
@@ -603,7 +604,8 @@ Bộ trưởng Bộ Xây dựng cũng giao nhiệm vụ biên soạn sửa đổ
                                 android:paddingBottom="10dp"
                                 android:paddingStart="15dp"
                                 android:paddingEnd="15dp"
-                                android:gravity="center_vertical">
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="10dp">
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -613,16 +615,15 @@ Bộ trưởng Bộ Xây dựng cũng giao nhiệm vụ biên soạn sửa đổ
                                     android:textStyle="bold"
                                     />
 
-                                <TextView
-                                    android:layout_marginTop="10dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Xem thêm"
-                                    android:layout_gravity="center_horizontal"
-                                    android:textSize="16sp"
-                                    android:textColor="#EA1C00"
-                                    android:drawableRight="@drawable/ic_chevron_down"
-                                    android:drawableTint="#EA1C00"/>
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/listRv"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="10dp"
+                                        tools:listitem="@layout/adapter_review_cus"
+                                        />
+
+
 
                             </LinearLayout>
 
@@ -719,106 +720,7 @@ Bộ trưởng Bộ Xây dựng cũng giao nhiệm vụ biên soạn sửa đổ
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <FrameLayout
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#40000000"
-            android:id="@+id/sub_layout"
 
-            >
-            <LinearLayout
-                android:id="@+id/nav_cart_detail"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-
-                android:background="@color/white"
-                android:layout_gravity="bottom">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_close"
-                    android:backgroundTint="@color/red3"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/ic_close"
-                    android:layout_marginEnd="10dp"/>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="10dp">
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/img_product"
-                        android:id="@+id/img_product_add_cart"/>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="20dp"
-                        android:layout_toEndOf="@id/img_product_add_cart"
-                        android:layout_centerVertical="true">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Số lượng"
-
-                            android:id="@+id/txv_so_luong"
-                            />
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="5dp"
-                            android:background="#f5f5f5f5"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:layout_width="30dp"
-                                android:layout_height="25dp"
-                                android:background="@android:color/transparent"
-                                android:src="@drawable/ic_minus"
-                                android:id="@+id/btn_minus"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/card_quantity"
-                                android:paddingTop="5dp"
-                                android:paddingEnd="10dp"
-                                android:paddingBottom="5dp"
-                                android:paddingStart="10dp"
-                                android:textColor="@color/black"
-                                android:textSize="14sp" />
-                            <ImageButton
-                                android:id="@+id/btn_plus"
-                                android:layout_width="30dp"
-                                android:layout_height="25dp"
-                                android:background="@android:color/transparent"
-                                android:src="@drawable/ic_plus" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-                </RelativeLayout>
-                <android.widget.Button
-                    android:id="@+id/btn_add_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Thêm vào Giỏ hàng"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
-                    android:textAllCaps="false"
-                    android:gravity="center"
-                    android:backgroundTint="#D0011B">
-
-                </android.widget.Button>
-            </LinearLayout>
-        </FrameLayout>
     </RelativeLayout>
 
 
