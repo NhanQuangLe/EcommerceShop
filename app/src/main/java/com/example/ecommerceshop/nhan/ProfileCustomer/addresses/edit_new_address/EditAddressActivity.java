@@ -57,7 +57,7 @@ public class EditAddressActivity extends AppCompatActivity {
     TextView tv_MainAddress;
     SwitchCompat sw_DeFaultAddress;
     SupportMapFragment google_map ;
-   // LinearLayout google_map_layout;
+    Double latitude, longitude;
     AppCompatButton aBtn_DeleteAddress;
     Button btn_UpdateAddress;
     LinearLayout btn_ChooseAddress;
@@ -242,6 +242,8 @@ public class EditAddressActivity extends AppCompatActivity {
             address.setProvince(DisWarDist[2].trim());
             address.setDetail(et_Detail.getText().toString().trim());
             address.setDefault(sw_DeFaultAddress.isChecked());
+            address.setLatitude(latitude);
+            address.setLongitude(longitude);
 
             Intent intent = new Intent(EditAddressActivity.this, UserAddressActivity.class);
             if(status == UserAddressActivity.EDIT_ACTIVITY)
@@ -288,7 +290,9 @@ public class EditAddressActivity extends AppCompatActivity {
     }
     private void loadCurrentAddress(android.location.Address currentAddress){
         if (currentAddress != null) {
-            LatLng end = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
+            longitude = currentAddress.getLongitude();
+            latitude = currentAddress.getLatitude();
+            LatLng end = new LatLng(latitude, longitude);
 
             MarkerOptions markerEnd = new MarkerOptions().position(end).title(currentAddress.getAddressLine(0));
             google_map.getMapAsync(new OnMapReadyCallback() {
@@ -299,6 +303,9 @@ public class EditAddressActivity extends AppCompatActivity {
                 }
             });
         }
+        else{
+            longitude = latitude = Double.valueOf(0);
+        }
     }
     private void loadCurrentAddress(String location){
         List<android.location.Address> addresses = null;
@@ -308,7 +315,9 @@ public class EditAddressActivity extends AppCompatActivity {
                 addresses = geocoder.getFromLocationName(location, 1);
                 if (addresses != null) {
                     android.location.Address address = addresses.get(0);
-                    LatLng end = new LatLng(address.getLatitude(), address.getLongitude());
+                    longitude = address.getLongitude();
+                    latitude = address.getLatitude();
+                    LatLng end = new LatLng(latitude, longitude);
 
                     MarkerOptions markerEnd = new MarkerOptions().position(end).title(location);
                     google_map.getMapAsync(new OnMapReadyCallback() {
@@ -321,6 +330,7 @@ public class EditAddressActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Không tìm ra địa điểm: ", Toast.LENGTH_SHORT).show();
+                longitude = latitude = Double.valueOf(0);
             }
         }
     }

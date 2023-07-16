@@ -5,6 +5,23 @@ import java.io.Serializable;
 public class Address implements Serializable {
     private String addressId, detail, district, fullName, phoneNumber, province, ward;
     private boolean isDefault;
+    private Double latitude, longitude;
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public Address(){}
 
