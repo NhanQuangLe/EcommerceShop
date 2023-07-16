@@ -37,6 +37,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
@@ -46,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class EditAddressActivity extends AppCompatActivity {
     public static final int ACTIVITY_NEW = 1;
@@ -61,8 +64,9 @@ public class EditAddressActivity extends AppCompatActivity {
     AppCompatButton aBtn_DeleteAddress;
     Button btn_UpdateAddress;
     LinearLayout btn_ChooseAddress;
-    Address addressNew;
+    Address addressNew, currentAddress;
     ImageView ic_back;
+    LinearLayout ll_MapOutLine;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -97,6 +101,14 @@ public class EditAddressActivity extends AppCompatActivity {
                             else
                                 Toast.makeText(EditAddressActivity.this, "Fail to get your current address!", Toast.LENGTH_SHORT).show();
                             break;
+                        case GoogleMapLocationActivity.CHOOSE_ADDRESS_MAP:
+                            Log.d("Nhanle", "do 1");
+                            android.location.Address adr = intent.getParcelableExtra("location");
+                            if(adr != null){
+                                loadCurrentAddress(adr);
+                                Log.d("Nhanle", "do r");
+                            }
+                            break;
                     }
                 }
             });
@@ -121,16 +133,12 @@ public class EditAddressActivity extends AppCompatActivity {
         if(status == UserAddressActivity.EDIT_ACTIVITY)
         {
             Address address = (Address)intent.getSerializableExtra("AddressSelected");
+            currentAddress = address;
             SetContent(address, status);
         }
     }
-    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            map = googleMap;
-        }
-    };
     private void InitUI(int status){
+        ll_MapOutLine = findViewById(R.id.ll_MapOutLine);
         et_FullName = findViewById(R.id.et_FullName);
         et_PhoneNumber = findViewById(R.id.et_PhoneNumber);
         et_Detail = findViewById(R.id.et_Detail);
@@ -139,14 +147,16 @@ public class EditAddressActivity extends AppCompatActivity {
         aBtn_DeleteAddress = findViewById(R.id.aBtn_DeleteAddress);
         btn_UpdateAddress = findViewById(R.id.btn_UpdateAddress);
         google_map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
-       // google_map_layout = findViewById(R.id.google_map_layout);
-//        google_map_layout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
-//                mActivityLauncher.launch(intent);
-//            }
-//        });
+        ll_MapOutLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
+                intent.putExtra("status", status);
+                if(status == UserAddressActivity.EDIT_ACTIVITY)
+                    intent.putExtra("location", currentAddress);
+                mActivityLauncher.launch(intent);
+            }
+        });
         btn_ChooseAddress = findViewById(R.id.btn_ChooseAddress);
         btn_ChooseAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +187,16 @@ public class EditAddressActivity extends AppCompatActivity {
         et_Detail.setText(address.getDetail());
         tv_MainAddress.setText(address.GetAddressString());
         sw_DeFaultAddress.setChecked(address.isDefault());
+        LatLng end = new LatLng(address.getLatitude(), address.getLongitude());
+        MarkerOptions markerEnd = new MarkerOptions().position(end).title(address.getDetail()+ "/ "+ address.getWard() + "/ "+ address.getDistrict() + "/ " + address.getProvince());
+        google_map.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                googleMap.addMarker(markerEnd);
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 25));
+                //googleMap.getUiSettings().setZoomControlsEnabled(true);
+            }
+        });
         sw_DeFaultAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -289,23 +309,18 @@ public class EditAddressActivity extends AppCompatActivity {
         return true;
     }
     private void loadCurrentAddress(android.location.Address currentAddress){
-        if (currentAddress != null) {
-            longitude = currentAddress.getLongitude();
-            latitude = currentAddress.getLatitude();
-            LatLng end = new LatLng(latitude, longitude);
+        longitude = currentAddress.getLongitude();
+        latitude = currentAddress.getLatitude();
+        LatLng end = new LatLng(latitude, longitude);
 
-            MarkerOptions markerEnd = new MarkerOptions().position(end).title(currentAddress.getAddressLine(0));
-            google_map.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(@NonNull GoogleMap googleMap) {
-                    googleMap.addMarker(markerEnd);
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 35));
-                }
-            });
-        }
-        else{
-            longitude = latitude = Double.valueOf(0);
-        }
+        MarkerOptions markerEnd = new MarkerOptions().position(end).title(currentAddress.getAddressLine(0));
+        google_map.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                googleMap.addMarker(markerEnd);
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 25));
+            }
+        });
     }
     private void loadCurrentAddress(String location){
         List<android.location.Address> addresses = null;
@@ -324,7 +339,7 @@ public class EditAddressActivity extends AppCompatActivity {
                         @Override
                         public void onMapReady(@NonNull GoogleMap googleMap) {
                             googleMap.addMarker(markerEnd);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 35));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 15));
                         }
                     });
                 }

@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -44,20 +45,22 @@ import java.util.List;
 import java.util.Locale;
 
 public class GoogleMapLocationActivity extends AppCompatActivity {
-    SupportMapFragment supportMapFragment;
+    SupportMapFragment google_map;
     final static int REQUEST_CODE = 100;
     public final static int CHOOSE_ADDRESS_MAP = 1000;
     FusedLocationProviderClient fusedLocationProviderClient;
     Button btnBackward, btn_ConfirmLocation;
-    Address choosenAddress;
+    public static Address choosenAddress;
+    com.example.ecommerceshop.nhan.Model.Address currentAddress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map_location);
         InitUI();
-
-        supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+        Intent intent = getIntent();
+        currentAddress = (com.example.ecommerceshop.nhan.Model.Address) intent.getSerializableExtra("location");
+        google_map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
@@ -75,87 +78,54 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
         btn_ConfirmLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GoogleMapLocationActivity.this, ChooseAddressActivity.class);
-                if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    fusedLocationProviderClient.getLastLocation()
-                        .addOnSuccessListener(new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    Geocoder geocoder = new Geocoder(GoogleMapLocationActivity.this, Locale.getDefault());
-                                    List<Address> addresses = null;
-                                    try {
-                                        addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                        Toast.makeText(getApplicationContext(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
-                                        intent.putExtra("choosenAddress", addresses.get(0));
-                                        setResult(CHOOSE_ADDRESS_MAP, intent);
-                                        finish();
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-                            }
-                        });
+                Log.d("Nhanle", "choosenAddress.getAddressLine(0) + ");
+                Intent intent = new Intent(GoogleMapLocationActivity.this, EditAddressActivity.class);
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if(checkTrueLocation()) {
+                        Log.d("Nhanle", "do2");
+                        intent.putExtra("location", choosenAddress);
+                        setResult(CHOOSE_ADDRESS_MAP, intent);
+                        finish();
 
+                    }
                 }
             }
         });
     }
     void getLastLocation(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            fusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if(location != null){
-                                Geocoder geocoder = new Geocoder(GoogleMapLocationActivity.this, Locale.getDefault());
-                                List<Address> addresses = null;
-                                try {
-                                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    Toast.makeText(getApplicationContext(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+            LatLng end = new LatLng(currentAddress.getLatitude(), currentAddress.getLongitude());
 
-                                supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-                                    @Override
-                                    public void onMapReady(@NonNull GoogleMap googleMap) {
-                                        if(location != null){
-                                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Current location !");
-                                            googleMap.addMarker(markerOptions);
-                                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10)) ;
-                                            googleMap.getUiSettings().setTiltGesturesEnabled(true);
-                                            googleMap.getUiSettings().setCompassEnabled(true);
-                                            googleMap.getUiSettings().setZoomControlsEnabled(true);
-                                            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                                                @Override
-                                                public void onMapClick(@NonNull LatLng latLng) {
-                                                    Geocoder geocoder = new Geocoder(getApplicationContext());
-                                                    try {
-                                                        googleMap.clear();
-                                                        ArrayList<Address> addresses = (ArrayList<Address>) geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-                                                        Toast.makeText(getApplicationContext(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
-                                                        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(addresses.get(0).getAddressLine(0));
-                                                        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                                                        googleMap.addMarker(markerOptions);
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    } catch (Exception e){
-                                                        Toast.makeText(getApplicationContext(), "Không xác định được vị trí", Toast.LENGTH_SHORT).show();
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        else{
-                                            Toast.makeText(GoogleMapLocationActivity.this, "Please turn on your Location App permissions", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+            MarkerOptions markerEnd = new MarkerOptions().position(end).title("Đây là địa chỉ của bạn");
+            google_map.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(@NonNull GoogleMap googleMap) {
+                    googleMap.addMarker(markerEnd);
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 25)) ;
+                    googleMap.getUiSettings().setTiltGesturesEnabled(true);
+                    googleMap.getUiSettings().setCompassEnabled(true);
+                    googleMap.getUiSettings().setZoomControlsEnabled(true);
+                    googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(@NonNull LatLng latLng) {
+                            Geocoder geocoder = new Geocoder(getApplicationContext());
+                            try {
+                                googleMap.clear();
+                                ArrayList<Address> addresses = (ArrayList<Address>) geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Đây là địa chỉ của bạn");
+                                choosenAddress = addresses.get(0);
+                                googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                                googleMap.addMarker(markerOptions);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (Exception e){
+                                Toast.makeText(getApplicationContext(), "Không xác định được vị trí", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
                             }
                         }
                     });
+                }
+            });
         }
         else{
             askPermission();
@@ -164,7 +134,6 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
     void askPermission(){
         ActivityCompat.requestPermissions(GoogleMapLocationActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -176,5 +145,14 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                 Toast.makeText(GoogleMapLocationActivity.this, "Please turn on your Location App permissions", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    public boolean checkTrueLocation(){
+        if(!choosenAddress.getAddressLine(0).contains(currentAddress.getProvince()))
+            return false;
+        if(!choosenAddress.getAddressLine(0).contains(currentAddress.getDistrict()))
+            return false;
+        if(!choosenAddress.getAddressLine(0).contains(currentAddress.getWard()))
+            return false;
+        return true;
     }
 }
