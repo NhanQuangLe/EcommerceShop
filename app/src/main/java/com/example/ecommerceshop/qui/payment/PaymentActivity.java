@@ -66,6 +66,11 @@ public class PaymentActivity extends AppCompatActivity {
                         Intent i = result.getData();
                         Address address = (Address) i.getSerializableExtra("address");
                         setAddress(address);
+                        for (ItemPayment itemPayment : mListItemPayment) {
+                            itemPayment.setAddress(address);
+                        }
+                        itemPaymentAdapter.notifyDataSetChanged();
+
 
                     }
                 }
@@ -92,6 +97,7 @@ public class PaymentActivity extends AppCompatActivity {
     int i = 0;
     int numItemPayment = 0;
     int numCart = 0;
+    private Boolean isHasAddress = false;
     private static final int THREAD_POOL_SIZE = 10;
 
     @Override
@@ -110,7 +116,20 @@ public class PaymentActivity extends AppCompatActivity {
         } else if (clickType.equals("fromProductDetail")) {
             mProduct = (Product) bundle.get("product");
             mQuantity = bundle.getInt("quantity");
-            initIfProductDetail();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("PricePerUnitDistance");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    long priceUnitDistance = snapshot.getValue(Long.class);
+                    initIfProductDetail(priceUnitDistance);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }
 
 
@@ -275,14 +294,13 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         itemPaymentAdapter.notifyDataSetChanged();
-
         listSelectedCart = new ArrayList<>();
 
         setAddressDefault();
-        setInitTotalPayment();
+
     }
 
-    private void initIfProductDetail() {
+    private void initIfProductDetail(long priceUnitDistance) {
         calendar = Calendar.getInstance();
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -314,33 +332,16 @@ public class PaymentActivity extends AppCompatActivity {
         itemPayment.setShopProvince(mProduct.getShopProvince());
         itemPayment.getListProductCart().add(productCart);
         itemPayment.setmContext(getApplicationContext());
-        itemPayment.capNhatTienVanChuyen();
+        itemPayment.priceUnitDistance = priceUnitDistance;
         mListItemPayment.add(itemPayment);
         itemPaymentAdapter.notifyDataSetChanged();
         setAddressDefault();
-        setInitTotalPayment();
-
-//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mProduct.getUid() + "/Shop/ShopInfos/shopName");
-//        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String name = snapshot.getValue(String.class);
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-
     }
 
     private void setInitTotalPayment() {
         long finalPayment = 0;
         for (ItemPayment itemPayment : mListItemPayment) {
-            finalPayment += itemPayment.getTongTienHang();
+            finalPayment += itemPayment.getTongThanhToan();
         }
         mActivityPaymentBinding.tvTotalMoney.setText(itemPaymentAdapter.getPrice(finalPayment));
     }
@@ -355,23 +356,28 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void setAddressDefault() {
         mActivityPaymentBinding.layoutAddress.setVisibility(View.GONE);
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Addresses");
+        Query ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Addresses")
+                .orderByChild("default").equalTo(true);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Address address = dataSnapshot.getValue(Address.class);
-                    if (address != null) {
-                        if (address.isDefault()) {
-                            setAddress(address);
-                            for (ItemPayment itemPayment:mListItemPayment){
-                                itemPayment.setAddress(address);
-                            }
-                            itemPaymentAdapter.notifyDataSetChanged();
-                            mActivityPaymentBinding.layoutAddress.setVisibility(View.VISIBLE);
+                if (snapshot.exists()) {
+                    isHasAddress=true;
+                    mActivityPaymentBinding.layoutAddress.setVisibility(View.VISIBLE);
+                    for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        Address address = dataSnapshot.getValue(Address.class);
+                        setAddress(address);
+                        for (ItemPayment itemPayment : mListItemPayment) {
+                            itemPayment.setAddress(address);
                         }
                     }
+                    itemPaymentAdapter.notifyDataSetChanged();
                 }
+                else {
+                    isHasAddress=false;
+                    mActivityPaymentBinding.layoutAddress.setVisibility(View.GONE);
+                }
+                setInitTotalPayment();
             }
 
             @Override

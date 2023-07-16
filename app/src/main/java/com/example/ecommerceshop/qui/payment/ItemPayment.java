@@ -41,6 +41,7 @@ public class ItemPayment {
     private long tongThanhToan;
     private long tienVanChuyen;
     private Voucher voucher;
+    public long priceUnitDistance;
 
     public Context getmContext() {
         return mContext;
@@ -116,7 +117,7 @@ public class ItemPayment {
         this.tienKhuyenMai = tienKhuyenMai;
     }
     public long getTongThanhToan() {
-        return tongThanhToan;
+        return getTongTienHang() - getTienKhuyenMai() + getTienVanChuyen();
     }
 
     public void setTongThanhToan(long tongThanhToan) {
@@ -124,6 +125,7 @@ public class ItemPayment {
     }
     public long getTongTienHang() {
         long tongTienHang = 0;
+
         for (ProductCart productCart : this.listProductCart) {
             if (productCart.getProductDiscountPrice() == 0)
                 tongTienHang += productCart.getProductPrice() * productCart.getProductQuantity();
@@ -133,24 +135,11 @@ public class ItemPayment {
         return tongTienHang;
     }
 
-    public void setTongTienHang(long tongTienHang) {
-        this.tongTienHang = tongTienHang;
-    }
     public long getTienVanChuyen() {
-        return TienVanChuyen;
-    }
-
-
-
-    public void setTienVanChuyen(long tienVanChuyen) {
-        this.tienVanChuyen = tienVanChuyen;
-    }
-
-    public void capNhatTienVanChuyen(){
+        long tien = 0;
         if (address!=null){
             List<android.location.Address> addresses = null;
             if (shopProvince != null) {
-                Log.e("toi vao","1");
                 Geocoder geocoder = new Geocoder(mContext);
                 try {
                     addresses = geocoder.getFromLocationName(shopProvince, 1);
@@ -159,28 +148,18 @@ public class ItemPayment {
                         LatLng shop = new LatLng(addressTemp.getLatitude(), addressTemp.getLongitude());
                         LatLng user = new LatLng(address.getLatitude(),address.getLongitude());
                         double distance = SphericalUtil.computeDistanceBetween(shop, user);
-                        DatabaseReference tmp = FirebaseDatabase.getInstance().getReference("PricePerUnitDistance");
-                        tmp.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                long priceUnitDistance = snapshot.getValue(Long.class);
-                                TienVanChuyen = (long) (distance/1000 * priceUnitDistance);
-                                Log.e("province",shopProvince);
-                                Log.e("toi vao 2","tien: "+TienVanChuyen);
-                            }
+                        tien = (long) (distance/1000 * priceUnitDistance);
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
                     }
                 } catch (Exception e) {
-                    TienVanChuyen = 30000;
+                    tien = 30000;
                 }
             }
         }
-
+        return tien;
     }
+
+
+
 
 }
