@@ -1,5 +1,6 @@
 package com.example.ecommerceshop.qui.payment;
 
+import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.qui.cart.ProductCart;
 
 import java.util.ArrayList;
@@ -14,6 +15,16 @@ public class ItemPayment {
     private long tongThanhToan;
     private long tienVanChuyen;
     private Voucher voucher;
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    private Address address;
 
     public Voucher getVoucher() {
         return voucher;
@@ -89,7 +100,11 @@ public class ItemPayment {
         this.tongTienHang = tongTienHang;
     }
     public long getTienVanChuyen() {
-        return tienVanChuyen;
+        long tien = 0;
+        if (address!=null){
+            // Hàm tính tiền
+        }
+        return tien;
     }
 
     public void setTienVanChuyen(long tienVanChuyen) {

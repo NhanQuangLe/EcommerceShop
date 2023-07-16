@@ -98,7 +98,7 @@ public class UnProcessdOrderFragment extends Fragment {
                         listOrders.clear();
                         for(DataSnapshot ds : snapshot.getChildren())
                         {
-                            if(ds.child("orderStatus").getValue(String.class).equals("Processing"))
+                            if(ds.child("orderStatus").getValue(String.class).equals("UnProcessed"))
                             {
                                 Order ho = new Order();
                                 ho.setOrderId(ds.child("orderId").getValue(String.class));

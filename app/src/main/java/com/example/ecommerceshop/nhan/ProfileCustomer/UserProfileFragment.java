@@ -41,6 +41,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class UserProfileFragment extends Fragment {
+    public static final int ORDER_UNPROCESSED = 0;
+    public static final int ORDER_DELIVERY = 2;
     public static final int ORDER_HISTORY = 3;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -191,6 +193,23 @@ public class UserProfileFragment extends Fragment {
                 checkUser();
             }
         });
+        mFragmentUserProfileBinding.llUnProcessed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), UserOrdersActivity.class);
+                intent.putExtra("OrderClickType", ORDER_UNPROCESSED);
+                mActivityLauncher.launch(intent);
+            }
+        });
+        mFragmentUserProfileBinding.llDeliveryOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), UserOrdersActivity.class);
+                intent.putExtra("OrderClickType", ORDER_DELIVERY);
+                mActivityLauncher.launch(intent);
+            }
+        });
+
     }
     private void checkUser() {
         FirebaseUser user = firebaseAuth.getCurrentUser();

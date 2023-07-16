@@ -347,8 +347,9 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void setAddressDefault() {
+        mActivityPaymentBinding.layoutAddress.setVisibility(View.GONE);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Addresses");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -356,6 +357,7 @@ public class PaymentActivity extends AppCompatActivity {
                     if (address != null) {
                         if (address.isDefault()) {
                             setAddress(address);
+                            mActivityPaymentBinding.layoutAddress.setVisibility(View.VISIBLE);
                         }
                     }
                 }

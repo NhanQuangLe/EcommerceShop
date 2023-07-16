@@ -122,6 +122,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
 
         addressList = new ArrayList<>();
         mainAddress = "";
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         getDataProvince();
 
@@ -151,7 +152,6 @@ public class ChooseAddressActivity extends AppCompatActivity {
         btn_open_google_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
                 getLastLocation();
             }
         });
@@ -261,22 +261,6 @@ public class ChooseAddressActivity extends AppCompatActivity {
         queue.add(stringRequest);
 
     }
-    void askPermission(){
-        ActivityCompat.requestPermissions(ChooseAddressActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 1){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getLastLocation();
-            }
-            else {
-                Toast.makeText(ChooseAddressActivity.this, "Please turn on your Location App permissions", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
     private void AddressItemChoose(AddressItem addressItem, int status){
         switch (status)
         {
@@ -341,26 +325,36 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 List<Address> addresses = null;
                                 try {
                                     addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    Intent intent = new Intent(getApplicationContext(), EditAddressActivity.class);
-                                    intent.putExtra("choosenAddress",addresses.get(0));
+                                    Intent intent = new Intent(ChooseAddressActivity.this, EditAddressActivity.class);
+                                    intent.putExtra("choosenAddress", addresses.get(0));
                                     setResult(SUCCESS_CREATE_ADDRESS_BY_CURRENT_LOCATION, intent);
                                     finish();
+
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
-                            }else {
-                                Toast.makeText(ChooseAddressActivity.this, "Fail to get location!", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ChooseAddressActivity.this, "Fail", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
         else{
             askPermission();
+        }
+    }
+    void askPermission(){
+        ActivityCompat.requestPermissions(ChooseAddressActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 1){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                getLastLocation();
+            }
+            else {
+                Toast.makeText(ChooseAddressActivity.this, "Please turn on your Location App permissions", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

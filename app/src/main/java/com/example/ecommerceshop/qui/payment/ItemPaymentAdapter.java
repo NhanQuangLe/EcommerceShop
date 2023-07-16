@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.databinding.AdapterShopListProductPaymentBinding;
+import com.example.ecommerceshop.nhan.Model.Address;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
     private Context mContext;
 
     private ISenData iSendData;
+
+
 
     public void setiSendData(ISenData iSendData) {
         this.iSendData = iSendData;
@@ -60,7 +63,6 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
             itemPayment.setTongThanhToan(itemPayment.getTongTienHang());
             holder.adapterShopListProductPaymentBinding.tvTongThanhToan.setText(getPrice(itemPayment.getTongThanhToan()));
             holder.adapterShopListProductPaymentBinding.tvTongTienHang.setText(getPrice(itemPayment.getTongTienHang()));
-
             holder.adapterShopListProductPaymentBinding.tvChooseVoucher.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -109,7 +111,6 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
 
 
             });
-
         }
 
 

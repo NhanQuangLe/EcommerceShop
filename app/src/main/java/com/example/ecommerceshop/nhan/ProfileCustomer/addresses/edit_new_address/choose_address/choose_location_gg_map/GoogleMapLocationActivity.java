@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -85,6 +86,7 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                                     List<Address> addresses = null;
                                     try {
                                         addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                        Toast.makeText(getApplicationContext(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                                         intent.putExtra("choosenAddress", addresses.get(0));
                                         setResult(CHOOSE_ADDRESS_MAP, intent);
                                         finish();
@@ -110,7 +112,7 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                                 List<Address> addresses = null;
                                 try {
                                     addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
+                                    Toast.makeText(getApplicationContext(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -122,9 +124,10 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                                             MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Current location !");
                                             googleMap.addMarker(markerOptions);
-                                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 50)) ;
+                                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10)) ;
                                             googleMap.getUiSettings().setTiltGesturesEnabled(true);
                                             googleMap.getUiSettings().setCompassEnabled(true);
+                                            googleMap.getUiSettings().setZoomControlsEnabled(true);
                                             googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                                                 @Override
                                                 public void onMapClick(@NonNull LatLng latLng) {
@@ -132,6 +135,7 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                                                     try {
                                                         googleMap.clear();
                                                         ArrayList<Address> addresses = (ArrayList<Address>) geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                                                        Toast.makeText(getApplicationContext(), addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                                                         MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(addresses.get(0).getAddressLine(0));
                                                         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                                                         googleMap.addMarker(markerOptions);
