@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
@@ -435,6 +436,9 @@ public class ProductDetailFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (getActivity() == null) {
+                    return;
+                }
                 String name = snapshot.child("ShopInfos").child("shopName").getValue(String.class);
                 mFragmentProductDetailBinding.shopName.setText(name);
                 String address = snapshot.child("ShopInfos").child("shopAddress").getValue(String.class);
@@ -578,4 +582,6 @@ public class ProductDetailFragment extends Fragment {
         intent.putExtras(bundle);
         getContext().startActivity(intent);
     }
+
+
 }

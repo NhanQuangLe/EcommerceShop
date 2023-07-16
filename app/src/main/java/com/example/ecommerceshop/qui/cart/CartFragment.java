@@ -35,6 +35,7 @@ import com.example.ecommerceshop.databinding.AdapterItemOnCartBinding;
 import com.example.ecommerceshop.databinding.FragmentCartBinding;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrder;
 import com.example.ecommerceshop.qui.homeuser.Product;
+import com.example.ecommerceshop.qui.payment.ItemPayment;
 import com.example.ecommerceshop.qui.payment.PaymentActivity;
 import com.example.ecommerceshop.qui.product_detail.Cart;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
@@ -47,6 +48,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.checkerframework.checker.units.qual.A;
@@ -79,7 +81,9 @@ public class CartFragment extends Fragment {
     private List<ProductCart> listSelectedProductCart;
     int numSelectedCart = 0;
     private HistoryOrder historyOrder;
-    public CartFragment() {}
+
+    public CartFragment() {
+    }
 
     public CartFragment(HistoryOrder ho) {
         historyOrder = ho;
@@ -136,10 +140,11 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.rcvCart.setAdapter(shopProductCartAdapter);
         mShopListProductCarts = new ArrayList<>();
         shopProductCartAdapter.setData(mShopListProductCarts);
-        if(historyOrder != null)
+        if (historyOrder != null)
             loadHistoryOrderToCart(historyOrder);
         setListShopProductCarts();
     }
+
     private void showActivityProductDetail(ProductCart productCart) {
         String shopId = productCart.getShopId();
         String productId = productCart.getProductId();
@@ -161,6 +166,7 @@ public class CartFragment extends Fragment {
             }
         });
     }
+
     private void addSelectedItemCart(ProductCart productCart) {
         listSelectedProductCart.add(productCart);
         addTotalMoney(productCart);
@@ -173,6 +179,7 @@ public class CartFragment extends Fragment {
             showButtonDelete();
         }
     }
+
     private void removeSelectedItemCart(ProductCart productCart) {
         listSelectedProductCart.remove(productCart);
         subTotalMoney(productCart);
@@ -180,6 +187,7 @@ public class CartFragment extends Fragment {
             hideButtonDelete();
         }
     }
+
     private void setListShopProductCarts() {
         List<String> listShopId = new ArrayList<>();
         Map<String, ArrayList<ProductCart>> mapProductCart = new HashMap<>();
@@ -216,12 +224,10 @@ public class CartFragment extends Fragment {
                                             mapProductCart.get(cart.getShopId()).add(productCart);
                                             mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId())));
                                             shopProductCartAdapter.notifyDataSetChanged();
-                                            if(historyOrder != null)
-                                            {
+                                            if (historyOrder != null) {
                                                 ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
-                                                for(int i = 0; i < listProduct.size();i++)
-                                                    if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
-                                                    {
+                                                for (int i = 0; i < listProduct.size(); i++)
+                                                    if (listProduct.get(i).getProductID().equals(productCart.getProductId())) {
                                                         productCart.setChecked(true);
                                                         addSelectedItemCart(productCart);
                                                         shopProductCartAdapter.notifyDataSetChanged();
@@ -270,12 +276,10 @@ public class CartFragment extends Fragment {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
                                                     Log.e("qui", "Giong");
                                                     shopProductCart.getProductCarts().add(productCart);
-                                                    if(historyOrder != null)
-                                                    {
+                                                    if (historyOrder != null) {
                                                         ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = historyOrder.getItems();
-                                                        for(int i = 0; i < listProduct.size();i++)
-                                                            if(listProduct.get(i).getProductID().equals(productCart.getProductId()))
-                                                            {
+                                                        for (int i = 0; i < listProduct.size(); i++)
+                                                            if (listProduct.get(i).getProductID().equals(productCart.getProductId())) {
                                                                 productCart.setChecked(true);
                                                                 addSelectedItemCart(productCart);
                                                                 shopProductCartAdapter.notifyDataSetChanged();
@@ -371,6 +375,7 @@ public class CartFragment extends Fragment {
 
 
     }
+
     private void iListener() {
 
         mFragmentCartBinding.btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -422,7 +427,7 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listSelectedProductCart==null || listSelectedProductCart.size()==0){
+                if (listSelectedProductCart == null || listSelectedProductCart.size() == 0) {
                     final Dialog dialog = new Dialog(getContext());
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.layout_dialog_ok_cancel);
@@ -452,47 +457,57 @@ public class CartFragment extends Fragment {
                     dialog.show();
                     return;
                 }
-                for (ProductCart productCart:listSelectedProductCart){
-                    if (productCart.getShopId().equals(mCurrentUser.getUid())){
-                        final Dialog dialog = new Dialog(getContext());
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setContentView(R.layout.layout_dialog_ok_cancel);
-                        Window window = dialog.getWindow();
-                        if (window == null) return;
-                        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                        WindowManager.LayoutParams windowAttributes = window.getAttributes();
-                        windowAttributes.gravity = Gravity.CENTER;
-
-                        window.setAttributes(windowAttributes);
-                        dialog.setCancelable(true);
-                        TextView tvContent = dialog.findViewById(R.id.tv_content);
-                        tvContent.setText("Không thể mua hàng thuộc Shop của bạn");
-                        TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
-                        tvCancel.setVisibility(View.GONE);
-                        TextView tvOk = dialog.findViewById(R.id.tv_ok);
-
-                        tvOk.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dialog.dismiss();
-
-                            }
-                        });
-                        dialog.show();
+                for (ProductCart productCart : listSelectedProductCart) {
+                    if (productCart.getShopId().equals(mCurrentUser.getUid())) {
+                        noti("Không thể mua hàng thuộc Shop của bạn");
                         return;
                     }
+
                 }
-                Intent intent = new Intent(getContext(), PaymentActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("clickType","fromCart");
-                bundle.putParcelableArrayList("listSelectedCart", (ArrayList<? extends Parcelable>) listSelectedProductCart);
-                intent.putExtras(bundle);
-                getContext().startActivity(intent);
+                final Boolean[] isHasNoSold = {false};
+                int index = -1;
+                for (ProductCart productCart : listSelectedProductCart) {
+                    index++;
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + productCart.getShopId() + "/Shop/Products/"+productCart.getProductId());
+                    int finalIndex = index;
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                Boolean isSold = snapshot.child("sold").getValue(Boolean.class);
+                                if (!isSold) {
+                                    isHasNoSold[0] = true;
+                                }
+                            if (finalIndex == listSelectedProductCart.size()-1){
+                                if (isHasNoSold[0]) {
+                                    noti("Xin lỗi, vì đơn hàng có sản phẩm đã ngừng kinh doanh");
+                                } else {
+                                    Intent intent = new Intent(getContext(), PaymentActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("clickType", "fromCart");
+                                    bundle.putParcelableArrayList("listSelectedCart", (ArrayList<? extends Parcelable>) listSelectedProductCart);
+                                    intent.putExtras(bundle);
+                                    getContext().startActivity(intent);
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+
+
+
+
             }
         });
     }
+
     private void showButtonDelete() {
         mFragmentCartBinding.btnDelete.setVisibility(View.VISIBLE);
         mFragmentCartBinding.btnDelete.startAnimation(AnimationUtils.loadAnimation(
@@ -500,6 +515,7 @@ public class CartFragment extends Fragment {
                 R.anim.move_left
         ));
     }
+
     private void hideButtonDelete() {
         mFragmentCartBinding.btnDelete.startAnimation(AnimationUtils.loadAnimation(
                 getContext(),
@@ -507,6 +523,7 @@ public class CartFragment extends Fragment {
         ));
         mFragmentCartBinding.btnDelete.setVisibility(View.GONE);
     }
+
     private void deleteCart() {
         if (numSelectedCart == listSelectedProductCart.size()) {
             hideButtonDelete();
@@ -524,6 +541,7 @@ public class CartFragment extends Fragment {
             }
         });
     }
+
     public String getPrice(long price) {
         long res = price;
         Locale localeVN = new Locale("vi", "VN");
@@ -531,6 +549,7 @@ public class CartFragment extends Fragment {
         String str1 = currencyVN.format(res);
         return str1;
     }
+
     public void addTotalMoney(ProductCart productCart) {
 //        totalMoney = 0;
 //        mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
@@ -555,6 +574,7 @@ public class CartFragment extends Fragment {
         }
         mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
     }
+
     public void subTotalMoney(ProductCart productCart) {
 //        totalMoney = 0;
 //        mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
@@ -579,6 +599,7 @@ public class CartFragment extends Fragment {
         }
         mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
     }
+
     //    public void checkUI(ShopProductCart shopProductCart) {
 //        List<String> cartIds = new ArrayList<>();
 //        for (ProductCart productCart:listSelectedProductCart){
@@ -591,8 +612,7 @@ public class CartFragment extends Fragment {
 //            }
 //        }
 //    }
-    public void loadHistoryOrderToCart(HistoryOrder ho)
-    {
+    public void loadHistoryOrderToCart(HistoryOrder ho) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
         ArrayList<String> listProductCartId = new ArrayList<>();
         ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -600,38 +620,64 @@ public class CartFragment extends Fragment {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    for(DataSnapshot snapshot : task.getResult().getChildren())
-                    {
+                } else {
+                    for (DataSnapshot snapshot : task.getResult().getChildren()) {
                         listProductCartId.add(snapshot.child("productId").getValue(String.class));
                     }
                     ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = new ArrayList<>();
                     listProduct = ho.getItems();
 
                     int n = listProduct.size();
-                    pushItemsCart(ho, listProductCartId, listProduct,0 , n);
+                    pushItemsCart(ho, listProductCartId, listProduct, 0, n);
                 }
             }
         });
     }
-    public void pushItemsCart(HistoryOrder ho, ArrayList<String> listProductCartId, ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct, int check, int n)
-    {
-        if(check >= n) return;
 
-        if(!listProductCartId.contains(listProduct.get(check).getProductID()))
-        {
+    public void pushItemsCart(HistoryOrder ho, ArrayList<String> listProductCartId, ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct, int check, int n) {
+        if (check >= n) return;
+
+        if (!listProductCartId.contains(listProduct.get(check).getProductID())) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Cart");
             String key = String.valueOf((int) new Date().getTime());
-            Cart cart = new Cart(key, listProduct.get(check).getProductID(),1, ho.getShopId());
+            Cart cart = new Cart(key, listProduct.get(check).getProductID(), 1, ho.getShopId());
             ref.child(cart.getCartId()).setValue(cart, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                    pushItemsCart(ho, listProductCartId, listProduct, check + 1,  n);
+                    pushItemsCart(ho, listProductCartId, listProduct, check + 1, n);
                 }
             });
-        }
-        else
-            pushItemsCart(ho, listProductCartId, listProduct, check + 1,  n);
+        } else
+            pushItemsCart(ho, listProductCartId, listProduct, check + 1, n);
+    }
+
+    private void noti(String message) {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_ok_cancel);
+        Window window = dialog.getWindow();
+        if (window == null) return;
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+
+        window.setAttributes(windowAttributes);
+        dialog.setCancelable(true);
+        TextView tvContent = dialog.findViewById(R.id.tv_content);
+        tvContent.setText(message);
+        TextView tvCancel = dialog.findViewById(R.id.tv_cancel);
+        tvCancel.setVisibility(View.GONE);
+        TextView tvOk = dialog.findViewById(R.id.tv_ok);
+
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+            }
+        });
+        dialog.show();
     }
 }
