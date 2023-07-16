@@ -21,6 +21,26 @@ public class Product implements Serializable {
     private int productQuantity;
     private String productSite;
     private String uid;
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    private String shopName;
+
+    public String getShopProvince() {
+        return shopProvince;
+    }
+
+    public void setShopProvince(String shopProvince) {
+        this.shopProvince = shopProvince;
+    }
+
+    private String shopProvince;
     private int psoldQuantity;
     private boolean sold;
 

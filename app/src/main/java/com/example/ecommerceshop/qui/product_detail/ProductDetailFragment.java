@@ -115,6 +115,21 @@ public class ProductDetailFragment extends Fragment {
     private void unit() {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         product = (Product) getArguments().get("product");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+product.getUid()+"/Shop/ShopInfos");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String shopName = snapshot.child("shopName").getValue(String.class);
+                String shopProvince =snapshot.child("shopAddress").getValue(String.class);
+                product.setShopName(shopName);
+                product.setShopProvince(shopProvince);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         setInfoProduct(product);
         setInfoShop(product.getUid());
         setListShopProductFromFireBase(product.getUid());
