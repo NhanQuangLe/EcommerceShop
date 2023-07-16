@@ -42,7 +42,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
 
     ImageView backbtn;
     CircleImageView avatarShop;
-    TextView shopName, shopDescription, shopEmail, shopPhone, shopAddress,regisDate,noti;
+    TextView shopName, shopDescription, shopEmail, shopPhone, shopAddress,regisDate;
     AppCompatButton btnRefuse;
     Button btnAllow;
     ProgressDialog progressDialog;
@@ -96,40 +96,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
         });
     }
 
-    private void checkExist() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds: snapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-                    ref.child(uid).child("Shop")
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if(snapshot.exists()){
-                                        String sid = snapshot.child("shopId").getValue(String.class);
-                                        if(sid.equals(id)){
-                                            noti.setVisibility(View.VISIBLE);
-                                        }
 
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     private void uploadData() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -139,7 +106,6 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
 
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("shopId", id);
-                hashMap.put("active", true);
 
                 DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Users");
                 databaseReference1.child(id).child("Shop").updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -215,7 +181,6 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
     }
 
     private void LoadRequestDetail() {
-        checkExist();
         DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Requests");
         databaseReference.child(id).addValueEventListener(new ValueEventListener() {
             @Override
@@ -250,7 +215,6 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
         shopAddress=findViewById(R.id.shopAddress);
         regisDate=findViewById(R.id.regisDate);
         btnRefuse=findViewById(R.id.btnRefuse);
-        noti=findViewById(R.id.noti);
         btnAllow=findViewById(R.id.btnAllow);
         progressDialog=new ProgressDialog(RegistrationToShopInAdminActivity.this);
         progressDialog.setTitle("Please wait...");
