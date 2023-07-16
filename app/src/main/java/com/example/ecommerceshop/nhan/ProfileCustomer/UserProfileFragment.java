@@ -29,8 +29,13 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.Favouri
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
+import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,6 +60,8 @@ public class UserProfileFragment extends Fragment {
     FragmentUserProfileBinding mFragmentUserProfileBinding;
     private FirebaseAuth firebaseAuth;
     private Customer currentCustomer;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
     public UserProfileFragment() {
         // Required empty public constructor
     }
@@ -76,6 +83,11 @@ public class UserProfileFragment extends Fragment {
         mFragmentUserProfileBinding = FragmentUserProfileBinding.inflate(inflater,container,false);
         mView = mFragmentUserProfileBinding.getRoot();
         firebaseAuth = FirebaseAuth.getInstance();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        gsc = GoogleSignIn.getClient(getContext(), gso);
         currentCustomer = new Customer();
         LoadData();
         setEventInteract();
@@ -186,10 +198,18 @@ public class UserProfileFragment extends Fragment {
                 mActivityLauncher.launch(intent);
             }
         });
+        mFragmentUserProfileBinding.llUserPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), HelpActivity.class);
+                mActivityLauncher.launch(intent);
+            }
+        });
         mFragmentUserProfileBinding.llLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 firebaseAuth.signOut();
+                gsc.signOut();
                 checkUser();
             }
         });
