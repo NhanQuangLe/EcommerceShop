@@ -205,7 +205,7 @@ public class CartFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String shopName = snapshot.child("ShopInfos").child("shopName").getValue(String.class);
-                                Log.e("name", shopName);
+                                String shopProvince = snapshot.child("ShopInfos").child("shopAddress").getValue(String.class);
                                 mapProductCart.put(cart.getShopId(), new ArrayList<ProductCart>());
                                 DatabaseReference refProduct = snapshot.child("Products/" + cart.getProductId()).getRef();
                                 refProduct.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -222,7 +222,7 @@ public class CartFragment extends Fragment {
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(),
                                                     productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
                                             mapProductCart.get(cart.getShopId()).add(productCart);
-                                            mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, mapProductCart.get(cart.getShopId())));
+                                            mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, shopProvince, mapProductCart.get(cart.getShopId())));
                                             shopProductCartAdapter.notifyDataSetChanged();
                                             if (order != null) {
                                                 ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = order.getItems();
@@ -274,7 +274,6 @@ public class CartFragment extends Fragment {
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(), productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
                                             for (ShopProductCart shopProductCart : mShopListProductCarts) {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
-                                                    Log.e("qui", "Giong");
                                                     shopProductCart.getProductCarts().add(productCart);
                                                     if (order != null) {
                                                         ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = order.getItems();
@@ -482,10 +481,15 @@ public class CartFragment extends Fragment {
                                 if (isHasNoSold[0]) {
                                     noti("Xin lỗi, vì đơn hàng có sản phẩm đã ngừng kinh doanh");
                                 } else {
+                                    Map<String,String> IdProvinceShop = new HashMap<>();
+                                    for (ShopProductCart shopProductCart: mShopListProductCarts){
+                                        IdProvinceShop.put(shopProductCart.getShopId(),shopProductCart.getShopProvince());
+                                    }
                                     Intent intent = new Intent(getContext(), PaymentActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putString("clickType", "fromCart");
                                     bundle.putParcelableArrayList("listSelectedCart", (ArrayList<? extends Parcelable>) listSelectedProductCart);
+                                    bundle.putSerializable("map", (Serializable) IdProvinceShop);
                                     intent.putExtras(bundle);
                                     getContext().startActivity(intent);
                                 }

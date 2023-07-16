@@ -50,7 +50,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +72,7 @@ public class PaymentActivity extends AppCompatActivity {
                             itemPayment.setAddress(address);
                         }
                         itemPaymentAdapter.notifyDataSetChanged();
+                        setTotalPayment();
 
 
                     }
@@ -97,6 +100,7 @@ public class PaymentActivity extends AppCompatActivity {
     int i = 0;
     int numItemPayment = 0;
     int numCart = 0;
+    private Map<String,String> IdProvinceShop = new HashMap<>();
     private Boolean isHasAddress = false;
     private static final int THREAD_POOL_SIZE = 10;
 
@@ -112,7 +116,21 @@ public class PaymentActivity extends AppCompatActivity {
         String clickType = bundle.getString("clickType");
         if (clickType.equals("fromCart")) {
             listSelectedCart = bundle.getParcelableArrayList("listSelectedCart");
-            initIfCart();
+            IdProvinceShop = (Map<String, String>) bundle.getSerializable("map");
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("PricePerUnitDistance");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    long priceUnitDistance = snapshot.getValue(Long.class);
+                    initIfCart(priceUnitDistance);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         } else if (clickType.equals("fromProductDetail")) {
             mProduct = (Product) bundle.get("product");
             mQuantity = bundle.getInt("quantity");
@@ -155,6 +173,10 @@ public class PaymentActivity extends AppCompatActivity {
         mActivityPaymentBinding.btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isHasAddress){
+                    noti("Vui lòng chọn địa chỉ để nhận hàng!");
+                    return;
+                }
                 final Boolean[] isHasNoSold = {false};
                 int index1 = -1;
                 for (ItemPayment itemPayment : mListItemPayment) {
@@ -241,7 +263,7 @@ public class PaymentActivity extends AppCompatActivity {
         transaction.commitAllowingStateLoss();
     }
 
-    private void initIfCart() {
+    private void initIfCart(long priceUnitDistance) {
         calendar = Calendar.getInstance();
         TempDialog = new ProgressDialog(PaymentActivity.this);
         TempDialog.setMessage("Đơn hàng của bạn đang được tạo");
@@ -260,8 +282,8 @@ public class PaymentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void senDataToPaymentActivity(List<ItemPayment> itemPaymentList) {
-                setTotalPayment(itemPaymentList);
+            public void senDataToPaymentActivity() {
+                setTotalPayment();
 
             }
         });
@@ -277,14 +299,19 @@ public class PaymentActivity extends AppCompatActivity {
                 listShopName.add(productCart.getShopName());
             }
         }
+
+
+
         for (int i = 0; i < listShopId.size(); i++) {
             String shopId = listShopId.get(i);
             ItemPayment itemPayment = new ItemPayment();
             itemPayment.setShopId(shopId);
             itemPayment.setListProductCart(new ArrayList<>());
             itemPayment.setShopName(listShopName.get(i));
-
             itemPayment.setmContext(getApplicationContext());
+            String shopProvince = IdProvinceShop.get(shopId);
+            itemPayment.setShopProvince(shopProvince);
+            itemPayment.priceUnitDistance = priceUnitDistance;
             for (ProductCart productCart : listSelectedCart) {
                 if (productCart.getShopId().equals(shopId)) {
                     itemPayment.getListProductCart().add(productCart);
@@ -292,6 +319,7 @@ public class PaymentActivity extends AppCompatActivity {
             }
             mListItemPayment.add(itemPayment);
         }
+
 
         itemPaymentAdapter.notifyDataSetChanged();
         listSelectedCart = new ArrayList<>();
@@ -313,8 +341,8 @@ public class PaymentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void senDataToPaymentActivity(List<ItemPayment> itemPaymentList) {
-                setTotalPayment(itemPaymentList);
+            public void senDataToPaymentActivity() {
+                setTotalPayment();
 
             }
         });
@@ -338,17 +366,11 @@ public class PaymentActivity extends AppCompatActivity {
         setAddressDefault();
     }
 
-    private void setInitTotalPayment() {
+
+
+    private void setTotalPayment() {
         long finalPayment = 0;
         for (ItemPayment itemPayment : mListItemPayment) {
-            finalPayment += itemPayment.getTongThanhToan();
-        }
-        mActivityPaymentBinding.tvTotalMoney.setText(itemPaymentAdapter.getPrice(finalPayment));
-    }
-
-    private void setTotalPayment(List<ItemPayment> itemPaymentList) {
-        long finalPayment = 0;
-        for (ItemPayment itemPayment : itemPaymentList) {
             finalPayment += itemPayment.getTongThanhToan();
         }
         mActivityPaymentBinding.tvTotalMoney.setText(itemPaymentAdapter.getPrice(finalPayment));
@@ -377,7 +399,7 @@ public class PaymentActivity extends AppCompatActivity {
                     isHasAddress=false;
                     mActivityPaymentBinding.layoutAddress.setVisibility(View.GONE);
                 }
-                setInitTotalPayment();
+                setTotalPayment();
             }
 
             @Override

@@ -94,11 +94,12 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
                                 holder.adapterShopListProductPaymentBinding.tvTongThanhToan.setText(tmp);
 
                             }
-                            iSendData.senDataToPaymentActivity(mListItemPayment);
+
+                            iSendData.senDataToPaymentActivity();
                         }
 
                         @Override
-                        public void senDataToPaymentActivity(List<ItemPayment> itemPaymentList) {
+                        public void senDataToPaymentActivity() {
 
                         }
                     });
