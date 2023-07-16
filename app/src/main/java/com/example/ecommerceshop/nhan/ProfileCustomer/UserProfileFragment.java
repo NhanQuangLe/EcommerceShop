@@ -29,6 +29,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.Favouri
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
+import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.firebase.auth.FirebaseAuth;
@@ -181,6 +182,13 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), VoucherCustomerActivity.class);
+                mActivityLauncher.launch(intent);
+            }
+        });
+        mFragmentUserProfileBinding.llUserPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), HelpActivity.class);
                 mActivityLauncher.launch(intent);
             }
         });

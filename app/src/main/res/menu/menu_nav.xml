@@ -18,6 +18,7 @@
             <item android:id="@+id/promotion" android:title="Tổng hợp khuyến mãi" android:icon="@drawable/ic_promotion"/>
             <item android:id="@+id/paymentInstruction" android:title="Hướng dẫn thanh toán" android:icon="@drawable/ic_payment_instruction"/>
             <item android:id="@+id/cart" android:title="Giỏ hàng của bạn" android:icon="@drawable/ic_shopping_cart"/>
+            <item android:id="@+id/logout" android:title="Đăng xuất" android:icon="@drawable/ic_logout_gray"/>
         </menu>
     </item>
 
