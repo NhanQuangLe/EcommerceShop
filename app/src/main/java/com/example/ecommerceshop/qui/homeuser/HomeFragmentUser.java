@@ -20,6 +20,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.ecommerceshop.MainUserActivity;
@@ -32,6 +33,8 @@ import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.example.ecommerceshop.qui.spinner.SpinnerItem;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -48,6 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class HomeFragmentUser extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -55,7 +60,7 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
     private FragmentHomeUserBinding mFragmentHomeUserBinding;
     private Spinner spinner;
     private SpinnerAdapter spinnerAdapter;
-
+    private PreferenceManagement preferenceManagement;
     private View viewFragment;
     private ProductAdapter productAdapterLaptop;
     private ProductAdapter productAdapterPhone;
@@ -75,6 +80,7 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
         viewFragment = mFragmentHomeUserBinding.getRoot();
         mMainUserActivity = (MainUserActivity) getActivity();
 
+        preferenceManagement = new PreferenceManagement(getContext());
         mMainUserActivity.setSupportActionBar(mFragmentHomeUserBinding.toolbarHomeUser);
         mFragmentHomeUserBinding.navView.setItemIconTintList(null);
         mFragmentHomeUserBinding.navView.setNavigationItemSelectedListener(this);
@@ -88,12 +94,21 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
 
         View headerView = mFragmentHomeUserBinding.navView.inflateHeaderView(R.layout.header_view);
         TextView tvCustomerName = headerView.findViewById(R.id.customer_name);
+        TextView tvCustomerEmail = headerView.findViewById(R.id.customer_email);
+        CircleImageView imageViewCustomer = headerView.findViewById(R.id.profile_image);
+
+
         // set name drawer
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/CustomerInfos/name");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+mCurrentUser.getUid()+"/Customer/CustomerInfos");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tvCustomerName.setText(snapshot.getValue(String.class));
+                String name = snapshot.child("name").getValue(String.class);
+                String avt = snapshot.child("avatar").getValue(String.class);
+                String email = snapshot.child("email").getValue(String.class);
+                tvCustomerName.setText(name);
+                tvCustomerEmail.setText(email);
+                Glide.with(getContext()).load(avt).into(imageViewCustomer);
             }
 
             @Override
@@ -435,6 +450,7 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user==null){
             startActivity(new Intent(getContext(), LoginActivity.class));
+            preferenceManagement.putBoolean(Constants.KEY_USER_ADMIN,false);
             getActivity().finish();
         }
     }

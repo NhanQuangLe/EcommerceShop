@@ -31,6 +31,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -235,6 +236,7 @@ public class UserProfileFragment extends Fragment {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if(user==null){
             startActivity(new Intent(getContext(), LoginActivity.class));
+            (new PreferenceManagement(getContext())).putBoolean(Constants.KEY_USER_ADMIN,false);
             getActivity().finish();
         }
     }

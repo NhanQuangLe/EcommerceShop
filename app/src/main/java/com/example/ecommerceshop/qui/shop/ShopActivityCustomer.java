@@ -22,12 +22,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.MainUserActivity;
+import com.example.ecommerceshop.Phat.Activity.AdminActivity;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.chat.ChatScreenActivity;
 import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.databinding.ActivityShopCustomerBinding;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,7 +50,7 @@ public class ShopActivityCustomer extends AppCompatActivity {
     private ViewPager mViewPager;
     private ViewPagerShopAdapter mViewPagerAdapter;
     private String shopId;
-
+    private Boolean iSAdmin;
 
 
     private String tag;
@@ -68,7 +70,15 @@ public class ShopActivityCustomer extends AppCompatActivity {
 
 
     public void init() {
-
+         iSAdmin = (new PreferenceManagement(getApplicationContext())).getBoolean(Constants.KEY_USER_ADMIN);
+        if (iSAdmin){
+            mActivityShopCustomerBinding.menuBottom.setVisibility(View.GONE);
+            mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
+            mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.GONE);
+        }
+        else {
+            mActivityShopCustomerBinding.menuBottom.setVisibility(View.VISIBLE);
+        }
         mViewPagerAdapter = new ViewPagerShopAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mActivityShopCustomerBinding.viewPager.setAdapter(mViewPagerAdapter);
         mActivityShopCustomerBinding.tabLayout.setupWithViewPager(mActivityShopCustomerBinding.viewPager);
@@ -161,6 +171,8 @@ public class ShopActivityCustomer extends AppCompatActivity {
                 });
             }
         });
+
+
     }
 
 
@@ -304,6 +316,11 @@ public class ShopActivityCustomer extends AppCompatActivity {
     }
 
     private void setVisibleButtonFollow() {
+        if (iSAdmin){
+            mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);
+            mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.GONE);
+            return;
+        }
         if (shopId.equals(mCurrentUser.getUid())){
             mActivityShopCustomerBinding.btnUnfollow.setVisibility(View.GONE);
             mActivityShopCustomerBinding.btnFollow.setVisibility(View.GONE);

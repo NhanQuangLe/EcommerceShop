@@ -47,6 +47,7 @@ import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -113,6 +114,16 @@ public class ProductDetailFragment extends Fragment {
 
 
     private void unit() {
+        PreferenceManagement preferenceManagement = new PreferenceManagement(getContext());
+        Boolean isAdmin = preferenceManagement.getBoolean(Constants.KEY_USER_ADMIN);
+        if (isAdmin) {
+            mFragmentProductDetailBinding.menuBottom.setVisibility(View.GONE);
+//            mFragmentProductDetailBinding.cartToolbar.setVisibility(View.GONE);
+        }
+        else {
+            mFragmentProductDetailBinding.menuBottom.setVisibility(View.VISIBLE);
+//            mFragmentProductDetailBinding.cartToolbar.setVisibility(View.VISIBLE);
+        }
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         product = (Product) getArguments().get("product");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+product.getUid()+"/Shop/ShopInfos");
