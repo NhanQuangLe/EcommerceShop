@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.Phat.Activity.AdminActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -333,7 +334,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(authResult -> {
                 loading(false);
-                Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(), "Login Successful!", CustomToast.SHORT,CustomToast.SUCCESS).show();
                 preferenceManagement.putString(Constants.KEY_COLLECTION_USER,auth.getCurrentUser().getUid());
                 startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
                 finish();

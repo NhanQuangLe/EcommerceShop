@@ -39,6 +39,8 @@ import com.example.ecommerceshop.qui.payment.ItemPayment;
 import com.example.ecommerceshop.qui.payment.PaymentActivity;
 import com.example.ecommerceshop.qui.product_detail.Cart;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -374,6 +376,7 @@ public class CartFragment extends Fragment {
     }
 
     private void iListener() {
+
 
         mFragmentCartBinding.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
