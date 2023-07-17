@@ -5,8 +5,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -17,8 +18,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAnfF4VrI9WBsiJPDrPqbwsYAdX5WedDQQ"></meta-data>
+        <activity
+            android:name=".tinh.Activity.dialog_notification_activity"
+            android:exported="false" />
+        <activity
+            android:name=".tinh.Activity.dialog_error_activity"
+            android:exported="false" />
+        <activity
+            android:name=".tinh.Activity.dialog_success_activity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAnfF4VrI9WBsiJPDrPqbwsYAdX5WedDQQ" />
+
         <activity
             android:name=".chat.UsersActivity"
             android:exported="false" />
@@ -54,8 +67,8 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.LoginActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

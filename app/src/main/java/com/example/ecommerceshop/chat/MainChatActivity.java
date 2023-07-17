@@ -186,8 +186,10 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                                     }
                                     String name = snapshot.child("name").getValue(String.class);
                                     String shopAvt = snapshot.child("avatar").getValue(String.class);
+                                    String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
                                     chatMessage.conversionImage = shopAvt;
                                     chatMessage.conversionName = name;
+                                    chatMessage.phoneNumber =phoneNumber;
                                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                                     conversationsList.add(chatMessage);
@@ -215,8 +217,10 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                                     }
                                     String name = snapshot.child("shopName").getValue(String.class);
                                     String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                                    String phoneNumber = snapshot.child("shopPhone").getValue(String.class);
                                     chatMessage.conversionImage = shopAvt;
                                     chatMessage.conversionName = name;
+                                    chatMessage.phoneNumber =phoneNumber;
                                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                                     conversationsList.add(chatMessage);
@@ -249,8 +253,10 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                                     }
                                     String name = snapshot.child("name").getValue(String.class);
                                     String shopAvt = snapshot.child("avatar").getValue(String.class);
+                                    String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
                                     chatMessage.conversionImage = shopAvt;
                                     chatMessage.conversionName = name;
+                                    chatMessage.phoneNumber = phoneNumber;
                                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                                     conversationsList.add(chatMessage);
@@ -278,8 +284,10 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
                                     }
                                     String name = snapshot.child("shopName").getValue(String.class);
                                     String shopAvt = snapshot.child("shopAvt").getValue(String.class);
+                                    String phoneNumber = snapshot.child("shopPhone").getValue(String.class);
                                     chatMessage.conversionImage = shopAvt;
                                     chatMessage.conversionName = name;
+                                    chatMessage.phoneNumber = phoneNumber;
                                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                                     conversationsList.add(chatMessage);
