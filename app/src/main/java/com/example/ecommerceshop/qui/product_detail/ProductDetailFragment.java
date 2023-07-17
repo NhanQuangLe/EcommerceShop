@@ -570,49 +570,18 @@ public class ProductDetailFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Query ref = snapshot.getRef().child("Customer").child("Reviews").orderByChild("productId")
                         .equalTo(product.getProductId());
-                ref.addChildEventListener(new ChildEventListener() {
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        if (snapshot.exists()) {
-                            Review review = snapshot.getValue(Review.class);
-                            if (review != null) {
-                                reviews.add(review);
-                                adapterReviews.notifyDataSetChanged();
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                Review review = dataSnapshot.getValue(Review.class);
+                                if (review != null) {
+                                    reviews.add(review);
+                                    adapterReviews.notifyDataSetChanged();
+                                }
                             }
                         }
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Review review = snapshot.getValue(Review.class);
-                        if (review ==null || reviews ==null || reviews.isEmpty()){
-                            return;
-                        }
-                        for (int i =0; i<reviews.size(); i++){
-                            if (reviews.get(i).getProductId().equals(review.getProductId())){
-                                reviews.set(i,review);
-                            }
-                        }
-                        adapterReviews.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                        Review review = snapshot.getValue(Review.class);
-                        if (review ==null || reviews ==null || reviews.isEmpty()){
-                            return;
-                        }
-                        for (int i =0; i<reviews.size(); i++){
-                            if (reviews.get(i).getProductId().equals(review.getProductId())){
-                                reviews.remove(i);
-                            }
-                        }
-                        adapterReviews.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
                     }
 
                     @Override
@@ -624,7 +593,31 @@ public class ProductDetailFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-               
+                Query ref = snapshot.getRef().child("Customer").child("Reviews").orderByChild("productId")
+                        .equalTo(product.getProductId());
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                Review review = dataSnapshot.getValue(Review.class);
+                                if (review != null) {
+                                    for (int i=0; i<reviews.size(); i++){
+                                        if (reviews.get(i).getReviewId().equals(review.getReviewId())){
+                                            reviews.set(i,review);
+                                        }
+                                    }
+                                    adapterReviews.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
