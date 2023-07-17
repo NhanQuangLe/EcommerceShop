@@ -51,6 +51,12 @@ public class DeliveryOrderAdapter extends RecyclerView.Adapter<DeliveryOrderAdap
         holder.aBtn_DetailOrder.setVisibility(View.GONE);
         holder.aBtn_ReBuy.setVisibility(View.GONE);
         holder.btn_RatingProduct.setVisibility(View.GONE);
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mClickHistoryOrderListener.GoToOrderDetail(order);
+            }
+        });
     }
 
     @Override
@@ -64,7 +70,7 @@ public class DeliveryOrderAdapter extends RecyclerView.Adapter<DeliveryOrderAdap
         RecyclerView rv_ProductList;
         TextView tv_SumMoney;
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
-        LinearLayout btn_RatingProduct;
+        LinearLayout btn_RatingProduct, container;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -75,6 +81,7 @@ public class DeliveryOrderAdapter extends RecyclerView.Adapter<DeliveryOrderAdap
             aBtn_DetailOrder = itemView.findViewById(R.id.aBtn_DetailOrder);
             aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
             btn_RatingProduct = itemView.findViewById(R.id.btn_RatingProduct);
+            container = itemView.findViewById(R.id.container);
         }
     }
 }

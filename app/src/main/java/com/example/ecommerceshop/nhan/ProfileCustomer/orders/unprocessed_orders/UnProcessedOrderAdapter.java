@@ -53,6 +53,13 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
         holder.aBtn_ReBuy.setVisibility(View.GONE);
         holder.btn_Rate.setText("Chở xác nhận");
         holder.btn_Rate.setTextColor(Color.parseColor("#4c4b4b"));
+        holder.bottomButtons.setVisibility(View.GONE);
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mClickHistoryOrderListener.GoToOrderDetail(order);
+            }
+        });
     }
 
     @Override
@@ -67,6 +74,7 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
         TextView tv_SumMoney;
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
         TextView btn_Rate;
+        LinearLayout bottomButtons, container;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +85,8 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
             aBtn_DetailOrder = itemView.findViewById(R.id.aBtn_DetailOrder);
             aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
             btn_Rate = itemView.findViewById(R.id.btn_Rate);
+            bottomButtons = itemView.findViewById(R.id.bottomButtons);
+            container = itemView.findViewById(R.id.container);
         }
     }
 }
