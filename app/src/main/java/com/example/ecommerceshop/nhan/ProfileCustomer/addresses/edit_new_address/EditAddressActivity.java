@@ -69,7 +69,9 @@ public class EditAddressActivity extends AppCompatActivity {
     Address addressNew, currentAddress;
     android.location.Address currentAddressMap;
     ImageView ic_back;
+    String stringAddress;
     LinearLayout ll_MapOutLine;
+    boolean check = false;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -81,6 +83,8 @@ public class EditAddressActivity extends AppCompatActivity {
                             String mainAddress = intent.getStringExtra("Address");
                             tv_MainAddress.setText(mainAddress);
                             ct_OutMap.setVisibility(View.VISIBLE);
+                            stringAddress = mainAddress;
+                            check = true;
                             loadCurrentAddress(mainAddress);
                             break;
                         case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS_BY_CURRENT_LOCATION:
@@ -111,8 +115,14 @@ public class EditAddressActivity extends AppCompatActivity {
                             if(adr != null){
                                 loadCurrentAddress(adr);
                             }
-                            else
-                                Toast.makeText(EditAddressActivity.this, "Không tìm thấy địa chỉ", Toast.LENGTH_SHORT).show();
+                            break;
+                        case GoogleMapLocationActivity.CHOOSE_ADDRESS_MAP_BY_STRING_ADDRESS:
+                            if(intent.getBooleanExtra("isChoose", false)){
+                                android.location.Address address = intent.getParcelableExtra("location");
+                                if(address != null){
+                                    loadCurrentAddress(address);
+                                }
+                            }
                             break;
                     }
                 }
@@ -163,8 +173,16 @@ public class EditAddressActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
                 intent.putExtra("status", status);
-                if(status == UserAddressActivity.EDIT_ACTIVITY)
-                    intent.putExtra("location", currentAddress);
+                if(status == UserAddressActivity.EDIT_ACTIVITY){
+                    if(check){
+                        intent.putExtra("latitude", latitude);
+                        intent.putExtra("longitude", longitude);
+                        intent.putExtra("check", check);
+                        intent.putExtra("stringAddress", stringAddress);
+                    }else{
+                        intent.putExtra("location", currentAddress);
+                    }
+                }
                 mActivityLauncher.launch(intent);
             }
         });
@@ -207,10 +225,9 @@ public class EditAddressActivity extends AppCompatActivity {
         google_map.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
+                googleMap.clear();
                 googleMap.addMarker(markerEnd);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 25));
-                Geocoder geocoder = new Geocoder(getApplicationContext());
-
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20));
             }
         });
         sw_DeFaultAddress.setOnClickListener(new View.OnClickListener() {
@@ -333,6 +350,7 @@ public class EditAddressActivity extends AppCompatActivity {
         google_map.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
+                googleMap.clear();
                 googleMap.addMarker(markerEnd);
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20));
             }
@@ -356,12 +374,12 @@ public class EditAddressActivity extends AppCompatActivity {
                         public void onMapReady(@NonNull GoogleMap googleMap) {
                             googleMap.clear();
                             googleMap.addMarker(markerEnd);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 5));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20));
                         }
                     });
                 }
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Không tìm ra địa điểm: ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Không tìm ra địa điểm", Toast.LENGTH_SHORT).show();
                 longitude = latitude = Double.valueOf(0);
             }
         }
