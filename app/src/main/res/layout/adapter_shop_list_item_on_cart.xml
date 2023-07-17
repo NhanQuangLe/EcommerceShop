@@ -18,13 +18,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:background="@android:color/transparent"
-            android:button="@drawable/custom_checkbox" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/imageShop"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"/>
 
       <LinearLayout
           android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
               android:maxWidth="160dp"
               android:singleLine="true"
               android:ellipsize="end"
-              android:layout_gravity="center_vertical"
+              android:layout_marginBottom="5dp"
               android:fontFamily="sans-serif-medium"
               android:text="shopcr7qn"
               android:textColor="#444444"
@@ -53,7 +53,7 @@
               android:layout_height="wrap_content"
               android:layout_gravity="center_vertical"
               android:layout_marginStart="3dp"
-              android:layout_marginTop="1dp"
+              android:layout_marginBottom="4dp"
               android:background="@android:color/transparent"
               android:hapticFeedbackEnabled="true"
               app:srcCompat="@drawable/ic_chevron_right" />
@@ -68,16 +68,17 @@
             android:backgroundTint="#FF9C9C"
             app:cardElevation="0dp"
             app:cardCornerRadius="15dp"
-            android:layout_marginStart="20dp"
-            android:layout_gravity="center_vertical"
-            android:visibility="gone">
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone"
+            >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="25dp"
+                android:paddingStart="20dp"
                 android:paddingBottom="3dp"
                 android:paddingTop="3dp"
-                android:paddingEnd="25dp"
+                android:paddingEnd="20dp"
                 android:gravity="center">
                 <TextView
                     android:layout_width="wrap_content"

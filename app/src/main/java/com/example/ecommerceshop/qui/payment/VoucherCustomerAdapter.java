@@ -17,56 +17,80 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class VoucherCustomerAdapter extends RecyclerView.Adapter<VoucherCustomerAdapter.VoucherCustomerViewHolder>{
+public class VoucherCustomerAdapter extends RecyclerView.Adapter<VoucherCustomerAdapter.VoucherCustomerViewHolder> {
 
     private List<Voucher> mListVoucher;
 
-    public interface ICheckedChangeListener{
+    public interface ICheckedChangeListener {
         void sendStatus(boolean b, Voucher voucher);
     }
+
     private ICheckedChangeListener iCheckedChangeListener;
 
     public VoucherCustomerAdapter(ICheckedChangeListener iCheckedChangeListener) {
         this.iCheckedChangeListener = iCheckedChangeListener;
     }
 
-    public void setData(List<Voucher> list){
-        this.mListVoucher=list;
+    public void setData(List<Voucher> list) {
+        this.mListVoucher = list;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public VoucherCustomerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        AdapterItemVoucherCustomerBinding mBinding = AdapterItemVoucherCustomerBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
+        AdapterItemVoucherCustomerBinding mBinding = AdapterItemVoucherCustomerBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new VoucherCustomerViewHolder(mBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull VoucherCustomerViewHolder holder, int position) {
         Voucher voucher = mListVoucher.get(position);
-        if (voucher!=null){
+        if (voucher != null) {
             holder.mBinding.tvVoucherCode.setText(voucher.getVouchercode());
             holder.mBinding.tvVoucherDes.setText(voucher.getVoucherdes());
             holder.mBinding.tvVoucherExpired.setText(voucher.getExpiredDate());
             holder.mBinding.discountPrice.setText(getPrice(voucher.getDiscountPrice()));
-            if (voucher.isCanUse()){
+            if (voucher.isCanUse()) {
                 holder.mBinding.layoutVoucher.setBackgroundColor(Color.parseColor("#ECE8E8"));
-            }
-            else {
+                holder.mBinding.checkbox.setVisibility(View.VISIBLE);
+                holder.mBinding.checkbox.setEnabled(true);
+            } else {
                 holder.mBinding.layoutVoucher.setBackgroundColor(Color.parseColor("#D9D9D9"));
+                holder.mBinding.checkbox.setVisibility(View.GONE);
                 holder.mBinding.checkbox.setEnabled(false);
+
             }
-            if (voucher.isCheck()){
-                holder.mBinding.checkbox.setChecked(true);
+
+            if (!voucher.isValidMinPrice()) {
+                holder.mBinding.tvGiaToiThieu.setVisibility(View.VISIBLE);
+                holder.mBinding.tvShopKhac.setVisibility(View.GONE);
+                holder.mBinding.checkbox.setVisibility(View.GONE);
+                String textTT = "Giá tối thiểu: " + getPrice(voucher.getMinimumPrice());
+                holder.mBinding.tvGiaToiThieu.setText(textTT);
+            } else {
+                holder.mBinding.tvGiaToiThieu.setVisibility(View.GONE);
+            }
+
+            if (!voucher.isValidShop()){
+                holder.mBinding.tvShopKhac.setVisibility(View.VISIBLE);
+                holder.mBinding.tvGiaToiThieu.setVisibility(View.GONE);
+                holder.mBinding.checkbox.setVisibility(View.GONE);
+                String textTT = "Thuộc shop khác";
+                holder.mBinding.tvShopKhac.setText(textTT);
             }
             else {
+                holder.mBinding.tvShopKhac.setVisibility(View.GONE);
+            }
+            if (voucher.isCheck()) {
+                holder.mBinding.checkbox.setChecked(true);
+            } else {
                 holder.mBinding.checkbox.setChecked(false);
             }
             holder.mBinding.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        iCheckedChangeListener.sendStatus(b,voucher);
+                    iCheckedChangeListener.sendStatus(b, voucher);
                 }
             });
 
@@ -75,17 +99,19 @@ public class VoucherCustomerAdapter extends RecyclerView.Adapter<VoucherCustomer
 
     @Override
     public int getItemCount() {
-        if (mListVoucher!=null) return mListVoucher.size();
+        if (mListVoucher != null) return mListVoucher.size();
         return 0;
     }
 
-    public class VoucherCustomerViewHolder extends RecyclerView.ViewHolder{
+    public class VoucherCustomerViewHolder extends RecyclerView.ViewHolder {
         AdapterItemVoucherCustomerBinding mBinding;
+
         public VoucherCustomerViewHolder(@NonNull AdapterItemVoucherCustomerBinding mBinding) {
             super(mBinding.getRoot());
-            this.mBinding=mBinding;
+            this.mBinding = mBinding;
         }
     }
+
     public String getPrice(long money) {
         long res = money;
         Locale localeVN = new Locale("vi", "VN");

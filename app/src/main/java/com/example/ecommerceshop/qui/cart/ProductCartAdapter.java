@@ -106,9 +106,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     iClickProductCartItemListener.sendParentAdapter(b,productCart);
-                    if (!b){
-                        iClickProductCartItemListener.checkAllCheckbox();
-                    }
+
                 }
             });
             holder.mBinding.mainLayout.setOnClickListener(new View.OnClickListener() {

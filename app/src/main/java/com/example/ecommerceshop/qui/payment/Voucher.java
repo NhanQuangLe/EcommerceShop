@@ -27,6 +27,26 @@ public class Voucher {
 
     private boolean isCheck;
 
+    public boolean isValidShop() {
+        return isValidShop;
+    }
+
+    public void setValidShop(boolean validShop) {
+        isValidShop = validShop;
+    }
+
+    private boolean isValidShop;
+
+    public boolean isValidMinPrice() {
+        return isValidMinPrice;
+    }
+
+
+    public void setValidMinPrice(boolean validMinPrice) {
+        isValidMinPrice = validMinPrice;
+    }
+
+    private boolean isValidMinPrice;
 
 
     public Voucher() {

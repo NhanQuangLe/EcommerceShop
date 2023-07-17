@@ -47,12 +47,15 @@ import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.example.ecommerceshop.Phat.Model.Review;
 
@@ -113,6 +116,16 @@ public class ProductDetailFragment extends Fragment {
 
 
     private void unit() {
+        PreferenceManagement preferenceManagement = new PreferenceManagement(getContext());
+        Boolean isAdmin = preferenceManagement.getBoolean(Constants.KEY_USER_ADMIN);
+        if (isAdmin) {
+            mFragmentProductDetailBinding.menuBottom.setVisibility(View.GONE);
+//            mFragmentProductDetailBinding.cartToolbar.setVisibility(View.GONE);
+        }
+        else {
+            mFragmentProductDetailBinding.menuBottom.setVisibility(View.VISIBLE);
+//            mFragmentProductDetailBinding.cartToolbar.setVisibility(View.VISIBLE);
+        }
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         product = (Product) getArguments().get("product");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+product.getUid()+"/Shop/ShopInfos");
@@ -552,40 +565,74 @@ public class ProductDetailFragment extends Fragment {
         mFragmentProductDetailBinding.listRv.setLayoutManager(linearLayoutManager);
         mFragmentProductDetailBinding.listRv.setAdapter(adapterReviews);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (reviews!=null) reviews.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-                    ref.child(uid).child("Customer").child("Reviews").orderByChild("productId")
-                            .equalTo(product.getProductId()).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        for (DataSnapshot ds : snapshot.getChildren()) {
-                                            Review review = ds.getValue(Review.class);
-                                            if (review != null) {
-                                                reviews.add(review);
-                                            }
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Query ref = snapshot.getRef().child("Customer").child("Reviews").orderByChild("productId")
+                        .equalTo(product.getProductId());
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                Review review = dataSnapshot.getValue(Review.class);
+                                if (review != null) {
+                                    reviews.add(review);
+                                    adapterReviews.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Query ref = snapshot.getRef().child("Customer").child("Reviews").orderByChild("productId")
+                        .equalTo(product.getProductId());
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                Review review = dataSnapshot.getValue(Review.class);
+                                if (review != null) {
+                                    for (int i=0; i<reviews.size(); i++){
+                                        if (reviews.get(i).getReviewId().equals(review.getReviewId())){
+                                            reviews.set(i,review);
                                         }
-                                        adapterReviews.notifyDataSetChanged();
-
                                     }
+                                    adapterReviews.notifyDataSetChanged();
                                 }
+                            }
+                        }
+                    }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Toast.makeText(getContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         });
     }

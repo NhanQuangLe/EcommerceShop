@@ -1,5 +1,6 @@
 package com.example.ecommerceshop.qui.shop;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.databinding.AdapterItemVoucherShopBinding;
 import com.example.ecommerceshop.qui.payment.Voucher;
+import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,8 +24,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 public class VoucherShopAdapter extends RecyclerView.Adapter<VoucherShopAdapter.VoucherShopViewHolder> {
-
+    private Context mContext;
     private List<Voucher> mList;
+
+    public VoucherShopAdapter(Context mContext) {
+        this.mContext = mContext;
+    }
 
     public String getShopId() {
         return shopId;
@@ -64,38 +71,46 @@ public class VoucherShopAdapter extends RecyclerView.Adapter<VoucherShopAdapter.
             holder.mBinding.voucherDes.setText(voucher.getVoucherdes());
             holder.mBinding.voucherExpired.setText(voucher.getExpiredDate());
             FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (shopId.equals(mCurrentUser.getUid())){
+            Boolean isAdmin = (new PreferenceManagement(mContext)).getBoolean(Constants.KEY_USER_ADMIN);
+            if (isAdmin){
                 holder.mBinding.btnSave.setVisibility(View.GONE);
                 holder.mBinding.tvFollowed.setVisibility(View.GONE);
             }
             else {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Vouchers");
-                final boolean[] flat = {false};
+                if (shopId.equals(mCurrentUser.getUid())){
+                    holder.mBinding.btnSave.setVisibility(View.GONE);
+                    holder.mBinding.tvFollowed.setVisibility(View.GONE);
+                }
+                else {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Vouchers");
+                    final boolean[] flat = {false};
 
-                ref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Voucher voucher1 = dataSnapshot.getValue(Voucher.class);
-                            String voucherId = voucher1.getVoucherid();
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                Voucher voucher1 = dataSnapshot.getValue(Voucher.class);
+                                String voucherId = voucher1.getVoucherid();
 
-                            if (voucher.getVoucherid().equals(voucherId)) {
-                                holder.mBinding.btnSave.setVisibility(View.GONE);
-                                holder.mBinding.tvFollowed.setVisibility(View.VISIBLE);
-                                flat[0] = true;
-                                break;
+                                if (voucher.getVoucherid().equals(voucherId)) {
+                                    holder.mBinding.btnSave.setVisibility(View.GONE);
+                                    holder.mBinding.tvFollowed.setVisibility(View.VISIBLE);
+                                    flat[0] = true;
+                                    break;
+                                }
+                            }
+                            if (flat[0]==false) {
+                                holder.mBinding.tvFollowed.setVisibility(View.GONE);
+                                holder.mBinding.btnSave.setVisibility(View.VISIBLE);
                             }
                         }
-                        if (flat[0]==false) {
-                            holder.mBinding.tvFollowed.setVisibility(View.GONE);
-                            holder.mBinding.btnSave.setVisibility(View.VISIBLE);
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
                         }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
+                    });
+                }
             }
+
 
             holder.mBinding.btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override

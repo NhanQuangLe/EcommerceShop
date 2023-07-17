@@ -170,6 +170,14 @@ public class PaymentActivity extends AppCompatActivity {
                 mActivityResultLauncher.launch(i);
             }
         });
+        mActivityPaymentBinding.btnChooseNoAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent();
+                i.setClass(getApplicationContext(), UserAddressActivity.class);
+                mActivityResultLauncher.launch(i);
+            }
+        });
 
         mActivityPaymentBinding.btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -387,6 +395,9 @@ public class PaymentActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     isHasAddress=true;
                     mActivityPaymentBinding.layoutAddress.setVisibility(View.VISIBLE);
+                    mActivityPaymentBinding.btnChooseAddress.setVisibility(View.VISIBLE);
+                    mActivityPaymentBinding.layoutNoAddress.setVisibility(View.GONE);
+                    mActivityPaymentBinding.btnChooseNoAddress.setVisibility(View.GONE);
                     for (DataSnapshot dataSnapshot:snapshot.getChildren()){
                         Address address = dataSnapshot.getValue(Address.class);
                         setAddress(address);
@@ -399,6 +410,9 @@ public class PaymentActivity extends AppCompatActivity {
                 else {
                     isHasAddress=false;
                     mActivityPaymentBinding.layoutAddress.setVisibility(View.GONE);
+                    mActivityPaymentBinding.btnChooseAddress.setVisibility(View.GONE);
+                    mActivityPaymentBinding.layoutNoAddress.setVisibility(View.VISIBLE);
+                    mActivityPaymentBinding.btnChooseNoAddress.setVisibility(View.VISIBLE);
                 }
                 setTotalPayment();
             }

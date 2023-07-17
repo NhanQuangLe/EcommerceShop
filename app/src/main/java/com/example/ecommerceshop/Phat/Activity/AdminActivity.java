@@ -15,6 +15,8 @@ import com.example.ecommerceshop.Phat.Fragment.ProfileAdminFragment;
 import com.example.ecommerceshop.Phat.Fragment.listShopFragment;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.qui.homeuser.HomeFragmentUser;
+import com.example.ecommerceshop.utilities.Constants;
+import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -27,7 +29,7 @@ public class AdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         ReplaceFragment(new listShopFragment());
-
+        (new PreferenceManagement(getApplicationContext())).putBoolean(Constants.KEY_USER_ADMIN,true);
         bottomNavigationView =findViewById(R.id.bottomNavigationView);
         textView12=findViewById(R.id.textView12);
         textView12.setText("SHOPS");

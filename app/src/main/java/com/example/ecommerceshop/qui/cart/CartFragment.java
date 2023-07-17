@@ -120,10 +120,7 @@ public class CartFragment extends Fragment {
                 removeSelectedItemCart(productCart);
             }
 
-            @Override
-            public void checkAllCheckbox() {
 
-            }
 
             @Override
             public void sendInfoProduct(ProductCart productCart) {
@@ -318,7 +315,8 @@ public class CartFragment extends Fragment {
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 mFragmentCartBinding.btnDelete.setVisibility(View.GONE);
                 listSelectedProductCart.clear();
-                mFragmentCartBinding.tvTotalMoney.setText(getPrice(0));
+                totalMoney = 0;
+                mFragmentCartBinding.tvTotalMoney.setText(getPrice(totalMoney));
                 Cart cart = snapshot.getValue(Cart.class);
                 if (cart == null || mShopListProductCarts == null || mShopListProductCarts.isEmpty())
                     return;

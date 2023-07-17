@@ -162,7 +162,7 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
 
     private void setUIVoucher() {
         mListVoucher = new ArrayList<>();
-        mVoucherShopAdapter = new VoucherShopAdapter();
+        mVoucherShopAdapter = new VoucherShopAdapter(getContext());
         mVoucherShopAdapter.setShopId(this.shopId);
         mVoucherShopAdapter.setData(mListVoucher);
         mVoucherShopAdapter.setiCickListener(this::clickSaveVoucher);

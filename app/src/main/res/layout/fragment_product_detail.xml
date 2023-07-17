@@ -27,6 +27,7 @@
                 <androidx.appcompat.widget.Toolbar
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:minHeight="?attr/actionBarSize"
                     android:id="@+id/toolbar_home_user">
                     <LinearLayout
@@ -88,6 +89,8 @@
                             android:gravity="center_vertical"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
+                            android:id="@+id/cart_toolbar"
+
                             >
                             <RelativeLayout
                                 android:layout_width="30dp"
@@ -157,7 +160,7 @@
                                     android:maxLines="2"
                                     android:textStyle="bold"
                                     android:textColor="#444444"
-                                    android:textSize="20sp" />
+                                    android:textSize="18sp" />
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -176,7 +179,7 @@
                                     android:textStyle="bold"
                                     android:textColor="#444444"
                                     android:layout_marginStart="10dp"
-                                    android:textSize="20sp" />
+                                    android:textSize="18sp" />
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -214,7 +217,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text="10"
+                                    android:text="0"
 
                                     android:textSize="16sp" />
 

@@ -5,7 +5,7 @@ public interface IClickProductCartItemListener {
     public void addListSelectedItem(ProductCart productCart);
     public void removeListSelectedItem(ProductCart productCart);
 
-    public void checkAllCheckbox();
+
     public void sendInfoProduct(ProductCart productCart);
     public void showProductDetail(ProductCart productCart);
 }

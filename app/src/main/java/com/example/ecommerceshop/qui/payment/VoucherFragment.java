@@ -104,6 +104,18 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
                                                     )
                                                 voucher.setCanUse(true);
                                             else voucher.setCanUse(false);
+                                            if (voucher2.getMinimumPrice() <= money){
+                                                voucher.setValidMinPrice(true);
+                                            }
+                                            else {
+                                                voucher.setValidMinPrice(false);
+                                            }
+                                            if (voucher.getShopId().equals(shopId)){
+                                                voucher.setValidShop(true);
+                                            }
+                                            else {
+                                                voucher.setValidShop(false);
+                                            }
                                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                                             Date dateExpired = new Date();
                                             try {
@@ -124,6 +136,7 @@ public class VoucherFragment extends Fragment implements VoucherCustomerAdapter.
                                                 voucher.setVoucherdes(voucher2.getVoucherdes());
                                                 voucher.setExpiredDate(voucher2.getExpiredDate());
                                                 voucher.setDiscountPrice(voucher2.getDiscountPrice());
+                                                voucher.setMinimumPrice(voucher2.getMinimumPrice());
 
                                                 mListVoucher.add(voucher);
 
