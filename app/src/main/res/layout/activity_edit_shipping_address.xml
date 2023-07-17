@@ -229,24 +229,26 @@
 
         </LinearLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ct_OutMap"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp">
 
             <fragment
                 android:id="@+id/google_map"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="150dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:name="com.google.android.gms.maps.SupportMapFragment"/>
             <LinearLayout
                 android:id="@+id/ll_MapOutLine"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="150dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:orientation="horizontal">
 
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

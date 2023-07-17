@@ -78,15 +78,16 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
         btn_ConfirmLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Nhanle", "choosenAddress.getAddressLine(0) + ");
                 Intent intent = new Intent(GoogleMapLocationActivity.this, EditAddressActivity.class);
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if(checkTrueLocation()) {
-                        Log.d("Nhanle", "do2");
                         intent.putExtra("location", choosenAddress);
                         setResult(CHOOSE_ADDRESS_MAP, intent);
                         finish();
-
+                    }
+                    else{
+                        Toast.makeText(GoogleMapLocationActivity.this, "Vui lòng chọn địa chỉ nằm trong vùng "
+                                + currentAddress.GetAddressString(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -101,7 +102,10 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                 @Override
                 public void onMapReady(@NonNull GoogleMap googleMap) {
                     googleMap.addMarker(markerEnd);
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 25)) ;
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20)) ;
+                    googleMap.setMaxZoomPreference(20);
+                    googleMap.setMinZoomPreference(16);
+                    googleMap.isMyLocationEnabled();
                     googleMap.getUiSettings().setTiltGesturesEnabled(true);
                     googleMap.getUiSettings().setCompassEnabled(true);
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
@@ -116,9 +120,8 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                                 choosenAddress = addresses.get(0);
                                 googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                                 googleMap.addMarker(markerOptions);
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             } catch (Exception e){
+
                                 Toast.makeText(getApplicationContext(), "Không xác định được vị trí", Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
@@ -147,11 +150,11 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
         }
     }
     public boolean checkTrueLocation(){
-        if(!choosenAddress.getAddressLine(0).contains(currentAddress.getProvince()))
+//        if(!choosenAddress.getAddressLine(0).contains(currentAddress.getProvince()))
+//            return false;
+        if(!choosenAddress.getAddressLine(0).contains(currentAddress.GetDistrictRemoveHeader()))
             return false;
-        if(!choosenAddress.getAddressLine(0).contains(currentAddress.getDistrict()))
-            return false;
-        if(!choosenAddress.getAddressLine(0).contains(currentAddress.getWard()))
+        if(!choosenAddress.getAddressLine(0).contains(currentAddress.GetWardRemoveHeader()))
             return false;
         return true;
     }

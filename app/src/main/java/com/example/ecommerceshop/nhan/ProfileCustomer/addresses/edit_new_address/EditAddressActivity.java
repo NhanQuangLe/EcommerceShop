@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import com.example.ecommerceshop.R;
@@ -63,8 +64,10 @@ public class EditAddressActivity extends AppCompatActivity {
     Double latitude, longitude;
     AppCompatButton aBtn_DeleteAddress;
     Button btn_UpdateAddress;
+    ConstraintLayout ct_OutMap;
     LinearLayout btn_ChooseAddress;
     Address addressNew, currentAddress;
+    android.location.Address currentAddressMap;
     ImageView ic_back;
     LinearLayout ll_MapOutLine;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -77,9 +80,11 @@ public class EditAddressActivity extends AppCompatActivity {
                         case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS:
                             String mainAddress = intent.getStringExtra("Address");
                             tv_MainAddress.setText(mainAddress);
+                            ct_OutMap.setVisibility(View.VISIBLE);
                             loadCurrentAddress(mainAddress);
                             break;
                         case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS_BY_CURRENT_LOCATION:
+                            ct_OutMap.setVisibility(View.VISIBLE);
                             android.location.Address ad = intent.getParcelableExtra("choosenAddress");
                             if(ad != null && ad.getAddressLine(0) != null)
                             {
@@ -102,12 +107,12 @@ public class EditAddressActivity extends AppCompatActivity {
                                 Toast.makeText(EditAddressActivity.this, "Fail to get your current address!", Toast.LENGTH_SHORT).show();
                             break;
                         case GoogleMapLocationActivity.CHOOSE_ADDRESS_MAP:
-                            Log.d("Nhanle", "do 1");
                             android.location.Address adr = intent.getParcelableExtra("location");
                             if(adr != null){
                                 loadCurrentAddress(adr);
-                                Log.d("Nhanle", "do r");
                             }
+                            else
+                                Toast.makeText(EditAddressActivity.this, "Không tìm thấy địa chỉ", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
@@ -136,6 +141,11 @@ public class EditAddressActivity extends AppCompatActivity {
             currentAddress = address;
             SetContent(address, status);
         }
+        else{
+            if(intent.getBooleanExtra("IsBlank", false)){
+                sw_DeFaultAddress.setChecked(true);
+            }
+        }
     }
     private void InitUI(int status){
         ll_MapOutLine = findViewById(R.id.ll_MapOutLine);
@@ -146,6 +156,7 @@ public class EditAddressActivity extends AppCompatActivity {
         sw_DeFaultAddress = findViewById(R.id.sw_DefaultAddress);
         aBtn_DeleteAddress = findViewById(R.id.aBtn_DeleteAddress);
         btn_UpdateAddress = findViewById(R.id.btn_UpdateAddress);
+        ct_OutMap = findViewById(R.id.ct_OutMap);
         google_map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         ll_MapOutLine.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +182,7 @@ public class EditAddressActivity extends AppCompatActivity {
         if(status == UserAddressActivity.NEW_ACTIVITY){
             aBtn_DeleteAddress.setVisibility(View.INVISIBLE);
             btn_UpdateAddress.setText("Thêm địa chỉ");
+            ct_OutMap.setVisibility(View.GONE);
             addressNew = new Address();
             btn_UpdateAddress.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -187,14 +199,18 @@ public class EditAddressActivity extends AppCompatActivity {
         et_Detail.setText(address.getDetail());
         tv_MainAddress.setText(address.GetAddressString());
         sw_DeFaultAddress.setChecked(address.isDefault());
-        LatLng end = new LatLng(address.getLatitude(), address.getLongitude());
+        latitude = address.getLatitude();
+        longitude = address.getLongitude();
+        LatLng end = new LatLng(latitude, longitude);
         MarkerOptions markerEnd = new MarkerOptions().position(end).title(address.getDetail()+ "/ "+ address.getWard() + "/ "+ address.getDistrict() + "/ " + address.getProvince());
+        Geocoder geocoder = new Geocoder(getApplicationContext());
         google_map.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
                 googleMap.addMarker(markerEnd);
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 25));
-                //googleMap.getUiSettings().setZoomControlsEnabled(true);
+                Geocoder geocoder = new Geocoder(getApplicationContext());
+
             }
         });
         sw_DeFaultAddress.setOnClickListener(new View.OnClickListener() {
@@ -308,17 +324,17 @@ public class EditAddressActivity extends AppCompatActivity {
         }
         return true;
     }
-    private void loadCurrentAddress(android.location.Address currentAddress){
-        longitude = currentAddress.getLongitude();
-        latitude = currentAddress.getLatitude();
+    private void loadCurrentAddress(android.location.Address ca){
+        longitude = ca.getLongitude();
+        latitude = ca.getLatitude();
         LatLng end = new LatLng(latitude, longitude);
 
-        MarkerOptions markerEnd = new MarkerOptions().position(end).title(currentAddress.getAddressLine(0));
+        MarkerOptions markerEnd = new MarkerOptions().position(end).title(ca.getAddressLine(0));
         google_map.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
                 googleMap.addMarker(markerEnd);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 25));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20));
             }
         });
     }
@@ -329,17 +345,18 @@ public class EditAddressActivity extends AppCompatActivity {
             try {
                 addresses = geocoder.getFromLocationName(location, 1);
                 if (addresses != null) {
-                    android.location.Address address = addresses.get(0);
-                    longitude = address.getLongitude();
-                    latitude = address.getLatitude();
+                    currentAddressMap = addresses.get(0);
+                    longitude = currentAddressMap.getLongitude();
+                    latitude = currentAddressMap.getLatitude();
                     LatLng end = new LatLng(latitude, longitude);
 
                     MarkerOptions markerEnd = new MarkerOptions().position(end).title(location);
                     google_map.getMapAsync(new OnMapReadyCallback() {
                         @Override
                         public void onMapReady(@NonNull GoogleMap googleMap) {
+                            googleMap.clear();
                             googleMap.addMarker(markerEnd);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 15));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 5));
                         }
                     });
                 }

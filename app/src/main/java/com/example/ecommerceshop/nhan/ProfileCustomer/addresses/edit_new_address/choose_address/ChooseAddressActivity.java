@@ -294,7 +294,6 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 mainAddress = "";
                 finish();
                 break;
-
         }
     }
     void SortAndSetHeader(){
@@ -333,6 +332,9 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
+                            }
+                            else{
+                                Toast.makeText(ChooseAddressActivity.this, "Lỗi khi tìm địa chỉ của bạn, hãy thử lại sau", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

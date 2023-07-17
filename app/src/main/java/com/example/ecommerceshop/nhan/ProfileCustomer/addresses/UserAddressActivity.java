@@ -2,6 +2,7 @@ package com.example.ecommerceshop.nhan.ProfileCustomer.addresses;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -114,10 +115,13 @@ public class UserAddressActivity extends AppCompatActivity {
 
             @Override
             public void ReturnAddressForPayment(Address address) {
-                Intent i = new Intent();
-                i.putExtra("address",address);
-                setResult(TRA_VE_TU_USER_ADDRESS_ACTIVITY,i);
-                finish();
+                Intent tmp = getIntent();
+                if(tmp.getBooleanExtra("isPayment", false)){
+                    Intent i = new Intent();
+                    i.putExtra("address",address);
+                    setResult(TRA_VE_TU_USER_ADDRESS_ACTIVITY,i);
+                    finish();
+                }
             }
         });
         listAddressView.setAdapter(userAddressAdapter);
@@ -194,6 +198,8 @@ public class UserAddressActivity extends AppCompatActivity {
     private void AddAddress(){
         Intent intent = new Intent(UserAddressActivity.this, EditAddressActivity.class);
         intent.putExtra("Status", NEW_ACTIVITY);
+        if(listAddress.size() == 0)
+            intent.putExtra("IsBlank", true);
         mActivityLauncher.launch(intent);
     }
     private void UpdateAddressFirebase(Address address){
@@ -216,15 +222,20 @@ public class UserAddressActivity extends AppCompatActivity {
                 .updateChildren(map, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                        if(address.isDefault()){
+                            if (deFaultId!="" && deFaultId != address.getAddressId()){
+                                dbRef.child(deFaultId).child("default").setValue(false);
+                                deFaultId = address.getAddressId();
+                            }
+                        }
                         Toast.makeText(UserAddressActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                     }
                 });
-        if(address.isDefault()){
-            dbRef.child(deFaultId).child("default").setValue(false);
-            deFaultId = address.getAddressId();
-        }
+
     }
     private void AddAddressFirebase(Address address){
+        if(listAddress.size() == 0)
+            address.setDefault(true);
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference()
                 .child("Users")
                 .child(firebaseAuth.getUid())
@@ -237,11 +248,10 @@ public class UserAddressActivity extends AppCompatActivity {
             }
         });
         if(address.isDefault()){
-            if (deFaultId!=""){
+            if (deFaultId!="" && deFaultId != address.getAddressId()){
                 dbRef.child(deFaultId).child("default").setValue(false);
                 deFaultId = address.getAddressId();
             }
-
         }
     }
 }
