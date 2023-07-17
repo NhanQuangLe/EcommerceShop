@@ -14,17 +14,15 @@ import android.widget.TextView;
 
 import com.example.ecommerceshop.R;
 
-public class dialog_success_activity extends Dialog {
+public class DialogError extends Dialog {
 
     public Activity a;
     public String  contentDialog;
     public TextView content, button;
 
-
-
-    public dialog_success_activity(Activity a, String contentDialog) {
+    public DialogError(Activity a, String contentDialog) {
         super(a);
-        this.contentDialog = contentDialog;
+        this.contentDialog = contentDialog;;
     }
 
     @SuppressLint("MissingInflatedId")
@@ -32,14 +30,15 @@ public class dialog_success_activity extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_dialog_success);
+        setContentView(R.layout.activity_dialog_error);
+
 
         content = findViewById(R.id.content_dialog);
-        button = findViewById(R.id.xacnhan_dialog);
-
+        button = findViewById(R.id.button_dong_dialog);
 
         content.setText(contentDialog);
         button.setOnClickListener(view -> dismiss());
+
 
         Window window = this.getWindow();
         if (window == null)

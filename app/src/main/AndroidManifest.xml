@@ -19,13 +19,13 @@
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
         <activity
-            android:name=".tinh.Activity.dialog_notification_activity"
+            android:name=".tinh.Activity.DialogNotification"
             android:exported="false" />
         <activity
-            android:name=".tinh.Activity.dialog_error_activity"
+            android:name=".tinh.Activity.DialogError"
             android:exported="false" />
         <activity
-            android:name=".tinh.Activity.dialog_success_activity"
+            android:name=".tinh.Activity.DialogSuccess"
             android:exported="false" />
 
         <meta-data

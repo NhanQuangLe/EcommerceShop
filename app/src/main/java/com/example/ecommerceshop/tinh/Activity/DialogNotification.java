@@ -14,14 +14,14 @@ import android.widget.TextView;
 
 import com.example.ecommerceshop.R;
 
-public class dialog_notification_activity extends Dialog {
+public class DialogNotification extends Dialog {
 
     public Activity a;
     public String contentDialog;
     public TextView content, button_ok, button_cancel;
     public Boolean resultDialog;
 
-    public dialog_notification_activity(Activity a, String content) {
+    public DialogNotification(Activity a, String content) {
         super(a);
         this.contentDialog = content;
     }
