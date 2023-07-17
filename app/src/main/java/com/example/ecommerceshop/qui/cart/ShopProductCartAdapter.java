@@ -12,11 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.databinding.AdapterShopListItemOnCartBinding;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -52,6 +57,20 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
         final boolean[] flat = {false};
         ShopProductCart shopProductCart = mList.get(position);
         if(shopProductCart!=null){
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+shopProductCart.getShopId()
+            +"/Shop/ShopInfos/shopAvt");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String avt = snapshot.getValue(String.class);
+                    Glide.with(mContext).load(avt).into(holder.mBinding.imageShop);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             holder.mBinding.shopName.setText(shopProductCart.getShopName());
             FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
             if (shopProductCart.getShopId()!=null){
@@ -90,11 +109,7 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
 
                 }
 
-                @Override
-                public void checkAllCheckbox() {
-                    flat[0] =true;
-                   holder.mBinding.checkBox.setChecked(false);
-                }
+
 
                 @Override
                 public void sendInfoProduct(ProductCart productCart) {
@@ -110,32 +125,8 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext,RecyclerView.VERTICAL,false);
             holder.mBinding.rcvProductCart.setLayoutManager(linearLayoutManager);
             holder.mBinding.rcvProductCart.setAdapter(productCartAdapter);
-            if (shopProductCart.isChecked()){
-                holder.mBinding.checkBox.setChecked(true);
-            }
-            else {
-                holder.mBinding.checkBox.setChecked(false);
-            }
-            holder.mBinding.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b){
-                        flat[0] =false;
-                        for (ProductCart cart :shopProductCart.getProductCarts()){
-                            cart.setChecked(true);
-                        }
-                        productCartAdapter.setData(shopProductCart.getProductCarts());
-                    }
-                    else {
-                        if (flat[0]==true) return;
-                        for (ProductCart cart :shopProductCart.getProductCarts()){
-                            cart.setChecked(false);
-                        }
-                        productCartAdapter.setData(shopProductCart.getProductCarts());
 
-                    }
-                }
-            });
+
         }
     }
 
@@ -162,8 +153,6 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
             return adapter;
         }
     }
-    public void setAllCheckboxChecked(boolean b){
-        adapterShopListItemOnCartBinding.checkBox.setChecked(b);
-    }
+
 
 }

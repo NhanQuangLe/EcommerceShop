@@ -15,7 +15,7 @@
         android:layout_width="65dp"
         android:layout_height="43dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/checkBox"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img_product" />
 
     <TextView

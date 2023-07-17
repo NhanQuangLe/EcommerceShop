@@ -10,8 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.databinding.AdapterShopListProductPaymentBinding;
 import com.example.ecommerceshop.nhan.Model.Address;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -52,6 +58,20 @@ public class ItemPaymentAdapter extends RecyclerView.Adapter<ItemPaymentAdapter.
     public void onBindViewHolder(@NonNull ItemPaymentViewHolder holder, int position) {
         ItemPayment itemPayment = mListItemPayment.get(position);
         if (itemPayment != null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+itemPayment.getShopId()
+                    +"/Shop/ShopInfos/shopAvt");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String avt = snapshot.getValue(String.class);
+                    Glide.with(mContext).load(avt).into(holder.adapterShopListProductPaymentBinding.imageShop);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             holder.adapterShopListProductPaymentBinding.shopName.setText(itemPayment.getShopName());
             holder.adapterShopListProductPaymentBinding.tvKhuyenmai.setText(getPrice(itemPayment.getTienKhuyenMai()));
             holder.adapterShopListProductPaymentBinding.tvTienVanChuyen.setText(getPrice(itemPayment.getTienVanChuyen()));

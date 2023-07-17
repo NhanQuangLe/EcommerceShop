@@ -53,7 +53,7 @@
                 android:layout_marginTop="5dp"
                 android:textColor="#444444" />
            <LinearLayout
-               android:layout_width="wrap_content"
+               android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:orientation="horizontal">
                <TextView
@@ -70,6 +70,29 @@
                    android:id="@+id/discount_price"
                    android:textSize="14sp"
                    android:layout_marginStart="10dp"
+                   android:layout_weight="1"
+                   android:layout_marginTop="5dp"
+                   android:textColor="#444444" />
+               <TextView
+                   android:visibility="gone"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/tv_gia_toi_thieu"
+                   android:textSize="14sp"
+                   android:text="Giá tối thiểu: 200.000 đ"
+                   android:layout_marginStart="10dp"
+                   android:textStyle="italic"
+                   android:layout_marginTop="5dp"
+                   android:textColor="#444444" />
+               <TextView
+                   android:visibility="gone"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/tv_shop_khac"
+                   android:textSize="14sp"
+
+                   android:layout_marginStart="10dp"
+                   android:textStyle="italic"
                    android:layout_marginTop="5dp"
                    android:textColor="#444444" />
 
@@ -109,10 +132,12 @@
             android:src="@drawable/icon_close_favorite_product"
             android:tooltipText="close"/>
         <CheckBox
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:id="@+id/checkbox"
+            app:useMaterialThemeColors="false"
             android:button="@drawable/custom_checkbox_voucher"/>
 
     </LinearLayout>

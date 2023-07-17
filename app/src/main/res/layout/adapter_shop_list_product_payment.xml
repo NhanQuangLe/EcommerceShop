@@ -3,14 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="1dp"
     android:background="#f5f5f5f5"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@drawable/bg_top_line_red"
         android:orientation="vertical">
 
         <LinearLayout
@@ -20,13 +22,19 @@
             android:background="@drawable/text_line"
             android:orientation="horizontal"
             android:paddingBottom="3dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:id="@+id/imageShop"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="5dp"/>
 
             <TextView
                 android:id="@+id/shop_Name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="20dp"
                 android:fontFamily="sans-serif-medium"
                 android:paddingBottom="10dp"
                 android:text="shopcr7qn"
@@ -41,7 +49,9 @@
             android:id="@+id/rcv_product_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            tools:listitem="@layout/adapter_item_product_payment"
+            tools:itemCount="2"/>
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
