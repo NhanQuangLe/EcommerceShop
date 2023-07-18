@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
 import com.google.android.gms.tasks.Task;
@@ -46,6 +47,7 @@ public class ReviewActivity extends AppCompatActivity {
     Review rv;
     ImageReviewAdapter ivAdapter;
     FirebaseAuth firebaseAuth;
+    ProgressBar loginProgressBar;
     StorageReference storageReference;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -146,6 +148,7 @@ public class ReviewActivity extends AppCompatActivity {
 
     private void InitUI() {
         rv_listProductInReview = findViewById(R.id.rv_listProductInReview);
+        loginProgressBar = findViewById(R.id.progressBar);
         btnBackward = findViewById(R.id.btnBackward);
         btnBackward.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,8 +217,10 @@ public class ReviewActivity extends AppCompatActivity {
         return false;
     }
     private void pushReviewToFirebase(int n){
+        loading(true);
         if(n == productViewList.size())
         {
+            loading(false);
             Toast.makeText(ReviewActivity.this, "Cảm ơn bạn đã đánh giá", Toast.LENGTH_SHORT).show();
             onBackPressed();
             return;
@@ -262,5 +267,12 @@ public class ReviewActivity extends AppCompatActivity {
                 pushReviewToFirebase(n + 1);
             }
         });
+    }
+    private void loading(Boolean isLoading) {
+        if (isLoading) {
+            loginProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            loginProgressBar.setVisibility(View.INVISIBLE);
+        }
     }
 }
