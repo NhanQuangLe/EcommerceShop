@@ -217,14 +217,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
         String date = hour+":"+minute+" "+day+"/"+month+"/"+year;
         Notification notification = new Notification(orderItems.get(0).getpAvatar(), orderid, selectOpt, customerid, date);
         DatabaseReference reference =FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(customerid).child("Customer").child("Notifications").child(timestamp).setValue(notification, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                if (selectOpt.equals("Completed")){
-                    completeOrder(selectOpt);
-                }
-            }
-        });
+        reference.child(customerid).child("Customer").child("Notifications").child(timestamp).setValue(notification);
     }
     private void completeOrder(String selectOpt){
         if (numOrderItem>size){
