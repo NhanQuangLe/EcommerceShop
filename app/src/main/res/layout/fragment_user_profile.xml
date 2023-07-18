@@ -242,30 +242,7 @@
                         android:textSize="12sp"></TextView>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_delivery_box" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="8dp"
-                        android:fontFamily="@font/lato_regular"
-                        android:text="Chờ lấy hàng"
-                        android:textColor="@color/drak_x2_gray"
-                        android:textSize="12sp"></TextView>
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_DeliveryOrder"
@@ -293,8 +270,34 @@
                         android:textColor="@color/drak_x2_gray"
                         android:textSize="12sp"></TextView>
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_CancelOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_cancel" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="3dp"
+                        android:fontFamily="@font/lato_regular"
+                        android:text="Đã hủy"
+                        android:textColor="@color/drak_x2_gray"
+                        android:textSize="12sp"></TextView>
+                </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_RatingProduct"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"

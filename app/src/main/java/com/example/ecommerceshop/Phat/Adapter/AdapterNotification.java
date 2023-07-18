@@ -27,7 +27,6 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
     Context context;
     ArrayList<Notification> notifications;
 
-
     public AdapterNotification(Context context, ArrayList<Notification> notifications) {
         this.context = context;
         this.notifications = notifications;
@@ -62,6 +61,7 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
             public void onClick(View view) {
                 Intent intent = new Intent(context, OrderDetailActivity.class);
                 intent.putExtra("orderId", notification.getOrderId());
+                intent.putExtra("isNoti", true);
                 context.startActivity(intent);
             }
         });

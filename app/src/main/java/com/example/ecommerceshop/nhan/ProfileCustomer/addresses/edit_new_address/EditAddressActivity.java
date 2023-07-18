@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import com.example.ecommerceshop.R;
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
@@ -46,6 +49,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class EditAddressActivity extends AppCompatActivity {
     public static final int ACTIVITY_NEW = 1;
@@ -60,9 +64,14 @@ public class EditAddressActivity extends AppCompatActivity {
     Double latitude, longitude;
     AppCompatButton aBtn_DeleteAddress;
     Button btn_UpdateAddress;
+    ConstraintLayout ct_OutMap;
     LinearLayout btn_ChooseAddress;
-    Address addressNew;
+    Address addressNew, currentAddress;
+    android.location.Address currentAddressMap;
     ImageView ic_back;
+    String stringAddress;
+    LinearLayout ll_MapOutLine;
+    boolean check = false;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -73,9 +82,13 @@ public class EditAddressActivity extends AppCompatActivity {
                         case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS:
                             String mainAddress = intent.getStringExtra("Address");
                             tv_MainAddress.setText(mainAddress);
+                            ct_OutMap.setVisibility(View.VISIBLE);
+                            stringAddress = mainAddress;
+                            check = true;
                             loadCurrentAddress(mainAddress);
                             break;
                         case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS_BY_CURRENT_LOCATION:
+                            ct_OutMap.setVisibility(View.VISIBLE);
                             android.location.Address ad = intent.getParcelableExtra("choosenAddress");
                             if(ad != null && ad.getAddressLine(0) != null)
                             {
@@ -96,6 +109,20 @@ public class EditAddressActivity extends AppCompatActivity {
 
                             else
                                 Toast.makeText(EditAddressActivity.this, "Fail to get your current address!", Toast.LENGTH_SHORT).show();
+                            break;
+                        case GoogleMapLocationActivity.CHOOSE_ADDRESS_MAP:
+                            android.location.Address adr = intent.getParcelableExtra("location");
+                            if(adr != null){
+                                loadCurrentAddress(adr);
+                            }
+                            break;
+                        case GoogleMapLocationActivity.CHOOSE_ADDRESS_MAP_BY_STRING_ADDRESS:
+                            if(intent.getBooleanExtra("isChoose", false)){
+                                android.location.Address address = intent.getParcelableExtra("location");
+                                if(address != null){
+                                    loadCurrentAddress(address);
+                                }
+                            }
                             break;
                     }
                 }
@@ -121,16 +148,17 @@ public class EditAddressActivity extends AppCompatActivity {
         if(status == UserAddressActivity.EDIT_ACTIVITY)
         {
             Address address = (Address)intent.getSerializableExtra("AddressSelected");
+            currentAddress = address;
             SetContent(address, status);
         }
-    }
-    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            map = googleMap;
+        else{
+            if(intent.getBooleanExtra("IsBlank", false)){
+                sw_DeFaultAddress.setChecked(true);
+            }
         }
-    };
+    }
     private void InitUI(int status){
+        ll_MapOutLine = findViewById(R.id.ll_MapOutLine);
         et_FullName = findViewById(R.id.et_FullName);
         et_PhoneNumber = findViewById(R.id.et_PhoneNumber);
         et_Detail = findViewById(R.id.et_Detail);
@@ -138,15 +166,26 @@ public class EditAddressActivity extends AppCompatActivity {
         sw_DeFaultAddress = findViewById(R.id.sw_DefaultAddress);
         aBtn_DeleteAddress = findViewById(R.id.aBtn_DeleteAddress);
         btn_UpdateAddress = findViewById(R.id.btn_UpdateAddress);
+        ct_OutMap = findViewById(R.id.ct_OutMap);
         google_map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
-       // google_map_layout = findViewById(R.id.google_map_layout);
-//        google_map_layout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
-//                mActivityLauncher.launch(intent);
-//            }
-//        });
+        ll_MapOutLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
+                intent.putExtra("status", status);
+                if(status == UserAddressActivity.EDIT_ACTIVITY){
+                    if(check){
+                        intent.putExtra("latitude", latitude);
+                        intent.putExtra("longitude", longitude);
+                        intent.putExtra("check", check);
+                        intent.putExtra("stringAddress", stringAddress);
+                    }else{
+                        intent.putExtra("location", currentAddress);
+                    }
+                }
+                mActivityLauncher.launch(intent);
+            }
+        });
         btn_ChooseAddress = findViewById(R.id.btn_ChooseAddress);
         btn_ChooseAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +200,7 @@ public class EditAddressActivity extends AppCompatActivity {
         if(status == UserAddressActivity.NEW_ACTIVITY){
             aBtn_DeleteAddress.setVisibility(View.INVISIBLE);
             btn_UpdateAddress.setText("Thêm địa chỉ");
+            ct_OutMap.setVisibility(View.GONE);
             addressNew = new Address();
             btn_UpdateAddress.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -177,6 +217,19 @@ public class EditAddressActivity extends AppCompatActivity {
         et_Detail.setText(address.getDetail());
         tv_MainAddress.setText(address.GetAddressString());
         sw_DeFaultAddress.setChecked(address.isDefault());
+        latitude = address.getLatitude();
+        longitude = address.getLongitude();
+        LatLng end = new LatLng(latitude, longitude);
+        MarkerOptions markerEnd = new MarkerOptions().position(end).title(address.getDetail()+ "/ "+ address.getWard() + "/ "+ address.getDistrict() + "/ " + address.getProvince());
+        Geocoder geocoder = new Geocoder(getApplicationContext());
+        google_map.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                googleMap.clear();
+                googleMap.addMarker(markerEnd);
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20));
+            }
+        });
         sw_DeFaultAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -288,24 +341,20 @@ public class EditAddressActivity extends AppCompatActivity {
         }
         return true;
     }
-    private void loadCurrentAddress(android.location.Address currentAddress){
-        if (currentAddress != null) {
-            longitude = currentAddress.getLongitude();
-            latitude = currentAddress.getLatitude();
-            LatLng end = new LatLng(latitude, longitude);
+    private void loadCurrentAddress(android.location.Address ca){
+        longitude = ca.getLongitude();
+        latitude = ca.getLatitude();
+        LatLng end = new LatLng(latitude, longitude);
 
-            MarkerOptions markerEnd = new MarkerOptions().position(end).title(currentAddress.getAddressLine(0));
-            google_map.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(@NonNull GoogleMap googleMap) {
-                    googleMap.addMarker(markerEnd);
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 35));
-                }
-            });
-        }
-        else{
-            longitude = latitude = Double.valueOf(0);
-        }
+        MarkerOptions markerEnd = new MarkerOptions().position(end).title(ca.getAddressLine(0));
+        google_map.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                googleMap.clear();
+                googleMap.addMarker(markerEnd);
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20));
+            }
+        });
     }
     private void loadCurrentAddress(String location){
         List<android.location.Address> addresses = null;
@@ -314,22 +363,23 @@ public class EditAddressActivity extends AppCompatActivity {
             try {
                 addresses = geocoder.getFromLocationName(location, 1);
                 if (addresses != null) {
-                    android.location.Address address = addresses.get(0);
-                    longitude = address.getLongitude();
-                    latitude = address.getLatitude();
+                    currentAddressMap = addresses.get(0);
+                    longitude = currentAddressMap.getLongitude();
+                    latitude = currentAddressMap.getLatitude();
                     LatLng end = new LatLng(latitude, longitude);
 
                     MarkerOptions markerEnd = new MarkerOptions().position(end).title(location);
                     google_map.getMapAsync(new OnMapReadyCallback() {
                         @Override
                         public void onMapReady(@NonNull GoogleMap googleMap) {
+                            googleMap.clear();
                             googleMap.addMarker(markerEnd);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 35));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20));
                         }
                     });
                 }
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Không tìm ra địa điểm: ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Không tìm ra địa điểm", Toast.LENGTH_SHORT).show();
                 longitude = latitude = Double.valueOf(0);
             }
         }

@@ -61,7 +61,7 @@ public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReview
         holder.rb_Rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                mClickProductInReviewListener.RatingBarChange(ratingBar, (double)v, b, review);
+                mClickProductInReviewListener.RatingBarChange(ratingBar, (float)v, b, review);
             }
         });
         holder.btn_AddImage.setOnClickListener(new View.OnClickListener() {

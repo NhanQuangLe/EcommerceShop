@@ -28,6 +28,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.edit_user_info.EditUserInf
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.rating_products_orders.UserReviewsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
@@ -48,8 +49,9 @@ import com.squareup.picasso.Picasso;
 
 public class UserProfileFragment extends Fragment {
     public static final int ORDER_UNPROCESSED = 0;
-    public static final int ORDER_DELIVERY = 2;
-    public static final int ORDER_HISTORY = 3;
+    public static final int ORDER_DELIVERY = 1;
+    public static final int ORDER_HISTORY = 2;
+    public static final int ORDER_CANCEL = 3;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -95,9 +97,22 @@ public class UserProfileFragment extends Fragment {
         return mView;
     }
     private void LoadData() {
-        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.child(firebaseAuth.getUid())
-                .child("Customer").addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.getUid());
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child("Shop").exists()){
+                    mFragmentUserProfileBinding.tvBeginSale.setText("Cửa hàng của tôi");
+                    mFragmentUserProfileBinding.tvRegisFree.setText("");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        databaseReference.child("Customer").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         currentCustomer.setName(snapshot.child("CustomerInfos/name").getValue(String.class));
@@ -230,7 +245,22 @@ public class UserProfileFragment extends Fragment {
                 mActivityLauncher.launch(intent);
             }
         });
-
+        mFragmentUserProfileBinding.llCancelOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), UserOrdersActivity.class);
+                intent.putExtra("OrderClickType", ORDER_CANCEL);
+                mActivityLauncher.launch(intent);
+            }
+        });
+        mFragmentUserProfileBinding.llRatingProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), UserReviewsActivity.class);
+                intent.putExtra("OrderClickType", ORDER_CANCEL);
+                mActivityLauncher.launch(intent);
+            }
+        });
     }
     private void checkUser() {
         FirebaseUser user = firebaseAuth.getCurrentUser();

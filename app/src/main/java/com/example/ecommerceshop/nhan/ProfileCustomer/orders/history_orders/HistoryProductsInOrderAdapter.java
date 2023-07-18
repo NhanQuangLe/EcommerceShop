@@ -43,7 +43,6 @@ public class HistoryProductsInOrderAdapter extends RecyclerView.Adapter<HistoryP
         holder.tv_ProductPurchaseQuantity.setText(String.valueOf(product.getPurchaseQuantity()));
         holder.tv_ProductDiscountPrice.setText(String.valueOf(product.getProductDiscountPrice()));
     }
-
     @Override
     public int getItemCount() {
         return listProductInOrder.size();

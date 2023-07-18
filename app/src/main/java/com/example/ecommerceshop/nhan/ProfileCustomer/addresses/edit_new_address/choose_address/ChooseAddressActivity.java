@@ -219,7 +219,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ChooseAddressActivity.this, "Didn't work", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChooseAddressActivity.this, "Lỗi khi lấy địa chỉ", Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(stringRequest);
@@ -255,7 +255,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ChooseAddressActivity.this, "Didn't work", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChooseAddressActivity.this, "Lỗi khi lấy địa chỉ", Toast.LENGTH_SHORT).show();
             }
         });
         queue.add(stringRequest);
@@ -294,7 +294,6 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 mainAddress = "";
                 finish();
                 break;
-
         }
     }
     void SortAndSetHeader(){
@@ -333,6 +332,9 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
+                            }
+                            else{
+                                Toast.makeText(ChooseAddressActivity.this, "Lỗi khi tìm địa chỉ của bạn, hãy thử lại sau", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

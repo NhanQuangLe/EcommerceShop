@@ -104,4 +104,30 @@ public class Address implements Serializable {
     {
         return ward + ", " + district + ", " + province;
     }
+    public String GetWardRemoveHeader(){
+        String result = "";
+        String[] a = ward.split(" ");
+        int i = 1;
+        if(a[0].equals("Thị")) i = 2;
+        while (i < a.length){
+            result += a[i];
+            if(i != a.length - 1)
+                result += " ";
+            i++;
+        }
+        return result;
+    }
+    public String GetDistrictRemoveHeader(){
+        String result = "";
+        String[] a = district.split(" ");
+        int i = 1;
+        if(a[0].equals("Thành")) i = 2;
+        while (i < a.length){
+            result += a[i];
+            if(i != a.length - 1)
+                result += " ";
+            i++;
+        }
+        return result;
+    }
 }

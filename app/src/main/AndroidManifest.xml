@@ -173,6 +173,9 @@
         <activity
             android:name=".nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity"
             android:exported="false" />
+        <activity
+            android:name=".nhan.ProfileCustomer.orders.rating_products_orders.UserReviewsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

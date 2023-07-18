@@ -51,7 +51,7 @@ public class CancelOrderAdapter extends RecyclerView.Adapter<CancelOrderAdapter.
         historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, order.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
         holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
-        holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
+        holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mClickHistoryOrderListener.GoToOrderDetail(order);
@@ -79,6 +79,7 @@ public class CancelOrderAdapter extends RecyclerView.Adapter<CancelOrderAdapter.
         TextView tv_SumMoney;
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
         TextView btn_Rate;
+        LinearLayout container;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -89,6 +90,7 @@ public class CancelOrderAdapter extends RecyclerView.Adapter<CancelOrderAdapter.
             aBtn_DetailOrder = itemView.findViewById(R.id.aBtn_DetailOrder);
             aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
             btn_Rate = itemView.findViewById(R.id.btn_Rate);
+            container = itemView.findViewById(R.id.container);
         }
     }
 }

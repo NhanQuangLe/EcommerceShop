@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="24dp">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
         <androidx.cardview.widget.CardView
             android:id="@+id/user_avatar"
             android:layout_width="32dp"
@@ -19,6 +23,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             >
             <ImageView
+                android:id="@+id/avtCus"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -33,13 +38,15 @@
             android:layout_marginRight="24dp"
             android:paddingLeft="24dp"
             android:paddingRight="20dp"
+            android:background="@color/white"
             app:layout_constraintTop_toBottomOf="@id/user_avatar"
             app:layout_constraintLeft_toLeftOf="parent"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/cusName"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/lato_bold"
                 android:text="Lê Quang Nhân"
                 android:textColor="@color/black"
@@ -48,44 +55,23 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    >
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:backgroundTint="@color/secondary_gray"
-                        android:src="@drawable/img_star"
-                        android:layout_marginRight="3dp"/>
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:backgroundTint="@color/secondary_gray"
-                        android:src="@drawable/img_star"
-                        android:layout_marginRight="3dp"/>
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:backgroundTint="@color/secondary_gray"
-                        android:src="@drawable/img_star"
-                        android:layout_marginRight="3dp"/>
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:backgroundTint="@color/secondary_gray"
-                        android:src="@drawable/img_star"
-                        android:layout_marginRight="3dp"/>
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:backgroundTint="@color/secondary_gray"
-                        android:src="@drawable/img_star"
-                        android:layout_marginRight="3dp"/>
-                </LinearLayout>
+                <RatingBar
+                    android:id="@+id/RatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="-78dp"
+                    android:layout_marginTop="-15dp"
+                    android:focusableInTouchMode="false"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:progressTint="@color/second_yellow"
+                    android:scaleX="0.35"
+                    android:scaleY="0.35"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
                 <TextView
+                    android:id="@+id/rvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="5/5/2023"
@@ -98,9 +84,10 @@
                 </TextView>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="-6dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
             >
@@ -114,6 +101,7 @@
                     android:textSize="9dp"
                     />
                 <TextView
+                    android:id="@+id/tv_productCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
                     android:fontFamily="@font/lato_regular"
@@ -124,6 +112,7 @@
 
             </LinearLayout>
             <TextView
+                android:id="@+id/rvContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -133,28 +122,14 @@
                 android:gravity="center_vertical"
                 android:textSize="14dp"
                 android:layout_marginBottom="10dp"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/iphone" />
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/iphone"
-                    android:layout_marginLeft="13dp"
-                    android:layout_marginRight="13dp"
-                />
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/iphone" />
-            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listImgRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="5dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/adapter_img_in_review_shop"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -162,11 +137,13 @@
                 android:layout_marginBottom="10dp"
             >
                 <ImageView
+                    android:id="@+id/iv_productAvt"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/iphone" />
                 <TextView
+                    android:id="@+id/tv_productName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Điện thoại - Iphone 14 Promax 256G"
@@ -181,6 +158,7 @@
                 </TextView>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/responseBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -200,6 +178,7 @@
                 >
                 </TextView>
                 <TextView
+                    android:id="@+id/rvResponse"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Hà Nội Books xin cám ơn đánh giá của bạn. Chúng tôi rất vui vì bạn đã tin tưởng sử dụng sản phẩm của shop. Chúng tôi luôn hi vọng mang lại sự hài lòng cho Quý khách hàng, chúc bạn luôn vui vẻ và mong bạn tiếp tục ủng hộ Shop trong lần trải nghiệm mua hàng tiếp theo nhé"

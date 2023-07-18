@@ -26,13 +26,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new UnProcessdOrderFragment();
             case 1:
-                ;;
-                break;
-            case 2:
                 return new DeliveryOrderFragment();
-            case 3:
+            case 2:
                 return new HistoryOrdersFragment();
-            case 4:
+            case 3:
                 return new CancelOrderFragment();
         }
         return new HistoryOrdersFragment();
@@ -40,7 +37,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return 4;
     }
 
     @Nullable
@@ -53,15 +50,12 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 title = "Chờ xác nhận";
                 break;
             case 1:
-                title = "Chờ lấy hàng";
-                break;
-            case 2:
                 title = "Đang giao";
                 break;
-            case 3:
+            case 2:
                 title = "Đã giao";
                 break;
-            case 4:
+            case 3:
                 title = "Đã hủy";
                 break;
         }

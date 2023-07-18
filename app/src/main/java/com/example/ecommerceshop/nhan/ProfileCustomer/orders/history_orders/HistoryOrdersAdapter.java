@@ -45,7 +45,7 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
         historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, order.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
         holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
-        holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
+        holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mClickHistoryOrderListener.GoToOrderDetail(order);
@@ -76,7 +76,7 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
         RecyclerView rv_ProductList;
         TextView tv_SumMoney;
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
-        LinearLayout btn_RatingProduct;
+        LinearLayout btn_RatingProduct, container;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +87,7 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
             aBtn_DetailOrder = itemView.findViewById(R.id.aBtn_DetailOrder);
             aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
             btn_RatingProduct = itemView.findViewById(R.id.btn_RatingProduct);
+            container = itemView.findViewById(R.id.container);
         }
     }
 }
