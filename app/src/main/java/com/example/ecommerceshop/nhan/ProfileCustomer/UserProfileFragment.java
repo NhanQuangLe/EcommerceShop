@@ -21,6 +21,8 @@ import com.example.ecommerceshop.MainShopActivity;
 import com.example.ecommerceshop.Phat.Activity.RegistrationToShopInAdminActivity;
 import com.example.ecommerceshop.Phat.Activity.RequestToShopActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.chat.ChatScreenActivity;
+import com.example.ecommerceshop.chat.MainChatActivity;
 import com.example.ecommerceshop.databinding.FragmentUserProfileBinding;
 import com.example.ecommerceshop.nhan.Model.Customer;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.UserAddressActivity;
@@ -29,6 +31,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.Favouri
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
+import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.example.ecommerceshop.utilities.Constants;
@@ -120,117 +123,98 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void setEventInteract(){
-        mFragmentUserProfileBinding.clHistoryOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        mFragmentUserProfileBinding.settingProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+            intent.putExtra("currentUser", currentCustomer);
+            mActivityLauncher.launch(intent);
         });
-        mFragmentUserProfileBinding.clHistoryOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), UserOrdersActivity.class);
-                intent.putExtra("OrderClickType", ORDER_HISTORY);
-                mActivityLauncher.launch(intent);
-            }
+        mFragmentUserProfileBinding.gotoCart.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), CartActivity.class);
+            mActivityLauncher.launch(intent);
         });
-        mFragmentUserProfileBinding.llUserAddresses.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), UserAddressActivity.class);
-                mActivityLauncher.launch(intent);
-            }
+        mFragmentUserProfileBinding.gotoChat.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), MainChatActivity.class);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.clHistoryOrder.setOnClickListener(v -> {
+        });
+        mFragmentUserProfileBinding.clHistoryOrder.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), UserOrdersActivity.class);
+            intent.putExtra("OrderClickType", ORDER_HISTORY);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.llUserAddresses.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), UserAddressActivity.class);
+            mActivityLauncher.launch(intent);
         });
 
-        mFragmentUserProfileBinding.llShopFollowers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), FavouriteShopsActivity.class);
-                mActivityLauncher.launch(intent);
-            }
+        mFragmentUserProfileBinding.llShopFollowers.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), FavouriteShopsActivity.class);
+            mActivityLauncher.launch(intent);
         });
-        mFragmentUserProfileBinding.llFavouriteProducts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), FavouriteProductsActivity.class);
-                mActivityLauncher.launch(intent);
-            }
+        mFragmentUserProfileBinding.llFavouriteProducts.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), FavouriteProductsActivity.class);
+            mActivityLauncher.launch(intent);
         });
-        mFragmentUserProfileBinding.btnEditInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
-                intent.putExtra("currentUser", currentCustomer);
-                mActivityLauncher.launch(intent);
-            }
+        mFragmentUserProfileBinding.btnEditInfo.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+            intent.putExtra("currentUser", currentCustomer);
+            mActivityLauncher.launch(intent);
         });
-        mFragmentUserProfileBinding.llConvertToShop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-                ref.child(firebaseAuth.getUid()).child("Shop").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists())
-                        {
-                            PreferenceManagement preferenceManagement = new PreferenceManagement(getContext());
-                            preferenceManagement.putBoolean("roleShop", true);
-                            Intent intent = new Intent(getContext(), MainShopActivity.class);
-                            mActivityLauncher.launch(intent);
-                            getActivity().finish();
-                        }
-                        else{
-                            Intent intent = new Intent(getContext(), RequestToShopActivity.class);
-                            intent.putExtra("id", firebaseAuth.getUid());
-                            mActivityLauncher.launch(intent);
-                        }
+        mFragmentUserProfileBinding.llConvertToShop.setOnClickListener(view -> {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+            ref.child(firebaseAuth.getUid()).child("Shop").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists())
+                    {
+                        PreferenceManagement preferenceManagement = new PreferenceManagement(getContext());
+                        preferenceManagement.putBoolean("roleShop", true);
+                        Intent intent = new Intent(getContext(), MainShopActivity.class);
+                        mActivityLauncher.launch(intent);
+                        getActivity().finish();
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
+                    else{
+                        Intent intent = new Intent(getContext(), RequestToShopActivity.class);
+                        intent.putExtra("id", firebaseAuth.getUid());
+                        mActivityLauncher.launch(intent);
                     }
-                });
-            }
-        });
-        mFragmentUserProfileBinding.llVouchers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), VoucherCustomerActivity.class);
-                mActivityLauncher.launch(intent);
-            }
-        });
-        mFragmentUserProfileBinding.llUserPolicy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), HelpActivity.class);
-                mActivityLauncher.launch(intent);
-            }
-        });
-        mFragmentUserProfileBinding.llLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                firebaseAuth.signOut();
-                gsc.signOut();
-                checkUser();
-            }
-        });
-        mFragmentUserProfileBinding.llUnProcessed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), UserOrdersActivity.class);
-                intent.putExtra("OrderClickType", ORDER_UNPROCESSED);
-                mActivityLauncher.launch(intent);
-            }
-        });
-        mFragmentUserProfileBinding.llDeliveryOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), UserOrdersActivity.class);
-                intent.putExtra("OrderClickType", ORDER_DELIVERY);
-                mActivityLauncher.launch(intent);
-            }
-        });
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        mFragmentUserProfileBinding.llVouchers.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), VoucherCustomerActivity.class);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.llSetupAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+            intent.putExtra("currentUser", currentCustomer);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.llUserPolicy.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), HelpActivity.class);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.llLogOut.setOnClickListener(view -> {
+            firebaseAuth.signOut();
+            gsc.signOut();
+            checkUser();
+        });
+        mFragmentUserProfileBinding.llUnProcessed.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), UserOrdersActivity.class);
+            intent.putExtra("OrderClickType", ORDER_UNPROCESSED);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.llDeliveryOrder.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), UserOrdersActivity.class);
+            intent.putExtra("OrderClickType", ORDER_DELIVERY);
+            mActivityLauncher.launch(intent);
+        });
     }
     private void checkUser() {
         FirebaseUser user = firebaseAuth.getCurrentUser();

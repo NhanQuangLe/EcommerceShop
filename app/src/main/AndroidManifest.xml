@@ -19,6 +19,9 @@
         android:theme="@style/Theme.EcommerceShop"
         tools:targetApi="31">
         <activity
+            android:name=".tinh.Activity.PaymentManualActivity"
+            android:exported="false" />
+        <activity
             android:name=".tinh.Activity.DialogNotification"
             android:exported="false" />
         <activity
