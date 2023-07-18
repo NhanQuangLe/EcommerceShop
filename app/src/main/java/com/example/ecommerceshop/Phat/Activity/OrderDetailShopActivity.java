@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -145,7 +146,43 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                         hashMap1.put("productQuantity", pQuantity-orderItem.getpQuantity());
                                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
                                         reference1.child(firebaseAuth.getUid()).child("Shop").child("Products")
-                                                .child(orderItem.getPid()).updateChildren(hashMap1);
+                                                .child(orderItem.getPid()).updateChildren(hashMap1, new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                                        if(voucherId[0]!=null){
+                                                            Toast.makeText(OrderDetailShopActivity.this, ""+voucherId[0], Toast.LENGTH_SHORT).show();
+
+                                                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                                                            reference.child(customerid).child("Customer").child("Vouchers").child(voucherId[0]).removeValue();
+
+                                                            reference.child(firebaseAuth.getUid()).child("Shop")
+                                                                    .child("Vouchers").child(voucherId[0]).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            int pQuantity = 0;
+                                                                            pQuantity =snapshot.child("quantity").getValue(Integer.class);
+                                                                            HashMap<String, Object> hashMap1 = new HashMap<>();
+                                                                            hashMap1.clear();
+
+                                                                            hashMap1.put("quantity", pQuantity-1);
+                                                                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
+                                                                            reference1.child(firebaseAuth.getUid()).child("Shop").child("Vouchers")
+                                                                                    .child(voucherId[0]).updateChildren(hashMap1, new DatabaseReference.CompletionListener() {
+                                                                                        @Override
+                                                                                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                                                                            saveNotification(selectOpt);
+                                                                                        }
+                                                                                    });
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                                            Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    });
+                                                        }
+                                                    }
+                                                });
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
@@ -154,7 +191,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                 });
                     }
                 }
-                if(selectOpt.equals("Completed")||selectOpt.equals("Processing")){
+                if(selectOpt.equals("Processing")){
                     if(voucherId[0]!=null){
                         Toast.makeText(OrderDetailShopActivity.this, ""+voucherId[0], Toast.LENGTH_SHORT).show();
 
@@ -173,7 +210,12 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                         hashMap1.put("quantity", pQuantity-1);
                                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
                                         reference1.child(firebaseAuth.getUid()).child("Shop").child("Vouchers")
-                                                .child(voucherId[0]).updateChildren(hashMap1);
+                                                .child(voucherId[0]).updateChildren(hashMap1, new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                                        saveNotification(selectOpt);
+                                                    }
+                                                });
                                     }
 
                                     @Override
@@ -190,10 +232,15 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                     hashMap1.put("used", false);
                     DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
                     reference1.child(customerid).child("Customer").child("Vouchers").child(voucherId[0])
-                            .updateChildren(hashMap1);
+                            .updateChildren(hashMap1, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    saveNotification(selectOpt);
+                                }
+                            });
                 }
                 Toast.makeText(OrderDetailShopActivity.this, "Order is now "+selectOpt, Toast.LENGTH_SHORT).show();
-                saveNotification(selectOpt);
+
             }
         })
         .addOnFailureListener(new OnFailureListener() {
