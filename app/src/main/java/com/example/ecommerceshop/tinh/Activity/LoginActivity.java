@@ -193,8 +193,7 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken());
 
             } catch (ApiException e) {
-                Log.e("e", Objects.requireNonNull(e.getMessage()).trim());
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Something went wrong",CustomToast.SHORT,CustomToast.ERROR).show();
             }
         }
     }
@@ -210,7 +209,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
-                            Toast.makeText(getApplicationContext(), "SignIn Successful!", Toast.LENGTH_SHORT).show();
+                            CustomToast.makeText(getApplicationContext(),"SignIn Successful!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                             Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(i2);
                         } else {
@@ -225,7 +224,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
             } else {
-                Toast.makeText(getApplicationContext(), "Failed...........", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Login failed!",CustomToast.SHORT,CustomToast.ERROR).show();
             }
         });
     }
@@ -269,7 +268,7 @@ public class LoginActivity extends AppCompatActivity {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             loading(false);
-                                            showToast(e.getMessage());
+                                            CustomToast.makeText(getApplicationContext(),e.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
                                         }
                                     });
                         }
@@ -297,7 +296,8 @@ public class LoginActivity extends AppCompatActivity {
                     i.putExtra("email", currentUser.getEmail());
                     startActivity(i);
                 } else {
-                    Toast.makeText(getApplicationContext(), "SignUp Successful!", Toast.LENGTH_SHORT).show();
+
+                    CustomToast.makeText(getApplicationContext(),"SignIn Successful!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i);
 
@@ -313,9 +313,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
+
 
     private void Login() {
         String email = loginEmail.getText().toString().trim();
@@ -324,12 +322,12 @@ public class LoginActivity extends AppCompatActivity {
         if (email.equals("admin@gmail.com") && pass.equals("16032003")) {
             auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(authResult -> {
                 loading(false);
-                Toast.makeText(LoginActivity.this, "Login Successful !", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(), "Login Successful!", CustomToast.SHORT,CustomToast.SUCCESS).show();
                 startActivity(new Intent(LoginActivity.this, AdminActivity.class));
                 finish();
             }).addOnFailureListener(e -> {
                 loading(false);
-                Toast.makeText(LoginActivity.this, "Login Failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(), "Login Failed!"+ e.getMessage(), CustomToast.SHORT,CustomToast.ERROR).show();
             });
         } else {
             auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(authResult -> {
@@ -340,7 +338,7 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }).addOnFailureListener(e -> {
                 loading(false);
-                Toast.makeText(LoginActivity.this, "Login Failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(), "Login Failed!"+ e.getMessage(), CustomToast.SHORT,CustomToast.ERROR).show();
             });
         }
     }

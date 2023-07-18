@@ -21,6 +21,7 @@ import com.example.ecommerceshop.Phat.Model.OrderItem;
 import com.example.ecommerceshop.Phat.Model.OrderShop;
 import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -106,7 +107,8 @@ public class OrderDetailShopActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(OrderDetailShopActivity.this,""+error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
         reference.child(customerid).child("Customer").child("Orders")
@@ -137,14 +139,16 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                 }
                             });
                 }
-                Toast.makeText(OrderDetailShopActivity.this, "Order is now "+selectOpt, Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(OrderDetailShopActivity.this,"Order is now "+selectOpt,CustomToast.SHORT,CustomToast.SUCCESS).show();
+
 
             }
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(OrderDetailShopActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(OrderDetailShopActivity.this,e.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }
@@ -196,13 +200,16 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(OrderDetailShopActivity.this,""+error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
+
                     }
                 });
     }
     private void deleteVoucher(String selectOpt){
         if(voucherIdOrder!=null){
-            Toast.makeText(OrderDetailShopActivity.this, ""+voucherIdOrder, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(OrderDetailShopActivity.this, ""+voucherIdOrder, Toast.LENGTH_SHORT).show();
+
 
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
             reference.child(customerid).child("Customer").child("Vouchers").child(voucherIdOrder).removeValue(new DatabaseReference.CompletionListener() {
@@ -230,7 +237,10 @@ public class OrderDetailShopActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                    CustomToast.makeText(OrderDetailShopActivity.this,""+error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
+
                                 }
                             });
                 }
@@ -280,7 +290,9 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(getApplicationContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            CustomToast.makeText(OrderDetailShopActivity.this,""+error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                         }
                     });
     }
@@ -304,7 +316,8 @@ public class OrderDetailShopActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getApplicationContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(OrderDetailShopActivity.this,""+error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
     }

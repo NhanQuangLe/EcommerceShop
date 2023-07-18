@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.ecommerceshop.Phat.Model.Voucher;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,27 +64,29 @@ public class AddVoucherActivity extends AppCompatActivity {
         voucherdes=voucherDes.getText().toString().trim();
         exprieddate=expiredDate.getText().toString().trim();
         if(TextUtils.isEmpty(vouchercode)){
-            Toast.makeText(AddVoucherActivity.this, "Voucher Code is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Voucher Code is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(voucherdes)){
-            Toast.makeText(AddVoucherActivity.this, "Voucher Description is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Voucher Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(exprieddate.equals("Ngày hết hạn")){
-            Toast.makeText(AddVoucherActivity.this, "Voucher Expired date is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(AddVoucherActivity.this,"Voucher Expired date is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(voucherQuantity.getText().toString().trim())){
-            Toast.makeText(AddVoucherActivity.this, "Voucher quantity is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(AddVoucherActivity.this,"Voucher quantity is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         } else quantity = Integer.parseInt(voucherQuantity.getText().toString().trim());
         if(TextUtils.isEmpty(voucherDiscountPrice.getText().toString().trim())){
-            Toast.makeText(AddVoucherActivity.this, "Voucher discount price is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(AddVoucherActivity.this,"Voucher discount price is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         } else disprice = Integer.parseInt(voucherDiscountPrice.getText().toString().trim());
         if(TextUtils.isEmpty(minimumPrice.getText().toString().trim())){
-            Toast.makeText(AddVoucherActivity.this, "Voucher quantity is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(AddVoucherActivity.this,"Voucher minimum price is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         } else miniprice = Integer.parseInt(minimumPrice.getText().toString().trim());
 
@@ -102,7 +105,8 @@ public class AddVoucherActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
                         ResetData();
-                        Toast.makeText(AddVoucherActivity.this, "Add voucher successfully", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(AddVoucherActivity.this,"Add voucher successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                     }
                 });
     }
