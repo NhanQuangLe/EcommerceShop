@@ -10,9 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ecommerceshop.Phat.Adapter.AdapterOrderShop;
 import com.example.ecommerceshop.Phat.Adapter.AdapterRatedProducts;
-import com.example.ecommerceshop.Phat.Model.OrderShop;
 import com.example.ecommerceshop.Phat.Model.Product;
 import com.example.ecommerceshop.Phat.Model.RatedProduct;
 import com.example.ecommerceshop.R;
@@ -31,8 +29,8 @@ public class ReviewShopActivity extends AppCompatActivity {
     ImageView backbtn;
     RecyclerView listReview;
     FirebaseAuth firebaseAuth;
-    ArrayList<String> ListProductId;
-    ArrayList<RatedProduct> ratedProducts;
+
+
     AdapterRatedProducts adapterRatedProducts;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +50,7 @@ public class ReviewShopActivity extends AppCompatActivity {
     }
 
     private void loadListRatedProductsId() {
-        ListProductId = new ArrayList<>();
+        ArrayList<String> ListProductId = new ArrayList<>();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -69,9 +67,8 @@ public class ReviewShopActivity extends AppCompatActivity {
                                         for (DataSnapshot ds: snapshot.getChildren()) {
                                             String productId = "" + ds.child("productId").getValue();
                                             ListProductId.add(productId);
-
                                         }
-                                        loadRatedProducts();
+                                        loadRatedProducts(ListProductId);
                                     }
                                 }
                                 @Override
@@ -96,11 +93,12 @@ public class ReviewShopActivity extends AppCompatActivity {
         }
         return uniqueStrings;
     }
-    private void loadRatedProducts() {
-        ratedProducts=new ArrayList<>();
-        Map<String, Integer> uniqueStrings =  filterAndCountDuplicates(ListProductId);
+    private void loadRatedProducts(ArrayList<String> listProductId) {
+        ArrayList<RatedProduct>  ratedProducts=new ArrayList<>();
+        Map<String, Integer> uniqueStrings =  filterAndCountDuplicates(listProductId);
         for (Map.Entry<String, Integer> entry : uniqueStrings.entrySet()) {
             String str = entry.getKey();
+            ratedProducts.clear();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
             databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products").child(str)
                     .addValueEventListener(new ValueEventListener() {
