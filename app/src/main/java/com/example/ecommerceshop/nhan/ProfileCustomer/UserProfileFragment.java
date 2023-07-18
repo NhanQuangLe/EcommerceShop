@@ -105,7 +105,7 @@ public class UserProfileFragment extends Fragment {
                     mFragmentUserProfileBinding.tvBeginSale.setText("Cửa hàng của tôi");
                     mFragmentUserProfileBinding.tvRegisFree.setText("");
                 }
-            }
+              }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
