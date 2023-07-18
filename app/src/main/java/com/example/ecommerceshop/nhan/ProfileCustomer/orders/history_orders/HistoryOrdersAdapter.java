@@ -1,6 +1,8 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +10,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.nhan.Model.Product;
+import com.example.ecommerceshop.nhan.Model.Review;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,7 +59,7 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
         historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, order.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
         holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
-        holder.container.setOnClickListener(new View.OnClickListener() {
+        holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mClickHistoryOrderListener.GoToOrderDetail(order);
@@ -63,6 +77,42 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
                     mClickHistoryOrderListener.GoToReview(order);
             }
         });
+        holder.item_order_shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShopActivityCustomer.class);
+                intent.putExtra("shopId", order.getShopId());
+                context.startActivity(intent);
+            }
+        });
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getUid()).child("Customer").child("Reviews");
+
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Product> productList = order.getItems();
+                int count = 0;
+                for (int i = 0; i < productList.size(); i++) {
+
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (ds.child("productId").getValue(String.class).equals(productList.get(i).getProductID())) {
+                            count = count + 1;
+                        }
+                    }
+                }
+                if(count == productList.size()){
+                    holder.btn_Rate.setText("Đã đánh giá");
+                    holder.btn_Rate.setTextColor(Color.parseColor("#00c5a5"));
+                    holder.btn_RatingProduct.setEnabled(false);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -74,9 +124,10 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
         ImageView iv_ShopAvatar;
         TextView tv_ShopName;
         RecyclerView rv_ProductList;
-        TextView tv_SumMoney;
+        TextView tv_SumMoney, btn_Rate;
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
         LinearLayout btn_RatingProduct, container;
+        ConstraintLayout item_order_shop;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -88,6 +139,8 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
             aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
             btn_RatingProduct = itemView.findViewById(R.id.btn_RatingProduct);
             container = itemView.findViewById(R.id.container);
+            item_order_shop = itemView.findViewById(R.id.item_order_shop);
+            btn_Rate = itemView.findViewById(R.id.btn_Rate);
         }
     }
 }

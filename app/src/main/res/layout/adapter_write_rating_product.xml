@@ -74,17 +74,17 @@
             android:layout_marginTop="10dp"
         />
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/lato_bold"
-        android:textSize="20dp"
-        android:textColor="@color/drak_gray"
-        android:text="Vui lòng đánh giá"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        >
-    </TextView>
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fontFamily="@font/lato_bold"-->
+<!--        android:textSize="20dp"-->
+<!--        android:textColor="@color/drak_gray"-->
+<!--        android:text="Vui lòng đánh giá"-->
+<!--        android:gravity="center_horizontal"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        >-->
+<!--    </TextView>-->
     <RatingBar
         android:id="@+id/rb_Rating"
         android:layout_width="wrap_content"

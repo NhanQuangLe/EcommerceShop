@@ -86,16 +86,37 @@ public class ReviewActivity extends AppCompatActivity {
         Order ho = (Order) intent.getSerializableExtra("HistoryOrder");
         ArrayList<Product> productList = ho.getItems();
         productViewList = new ArrayList<>();
-        for (int i = 0; i < productList.size(); i++) {
-            Review review = new Review();
-            review.setProductId(productList.get(i).getProductID());
-            review.setShopId(productList.get(i).getShopID());
-            review.setProductName(productList.get(i).getProductName());
-            review.setProductAvatar(productList.get(i).getProductAvatar());
-            review.setRating((float) 0);
-            review.setUriList(new ArrayList<>());
-            productViewList.add(review);
-        }
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
+                .child(firebaseAuth.getUid()).child("Customer").child("Reviews");
+
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (int i = 0; i < productList.size(); i++) {
+                        boolean contain = false;
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            if (ds.child("productId").getValue(String.class).equals(productList.get(i).getProductID())) {
+                                contain = true;
+                            }
+                        }
+                        if(!contain){
+                            Review review = new Review();
+                            review.setProductId(productList.get(i).getProductID());
+                            review.setShopId(productList.get(i).getShopID());
+                            review.setProductName(productList.get(i).getProductName());
+                            review.setProductAvatar(productList.get(i).getProductAvatar());
+                            review.setRating((float) 0);
+                            review.setUriList(new ArrayList<>());
+                            productViewList.add(review);
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(ReviewActivity.this, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         productInReviewAdapter = new ProductInReviewAdapter(this, productViewList, new IClickProductInReviewListener() {
             @Override

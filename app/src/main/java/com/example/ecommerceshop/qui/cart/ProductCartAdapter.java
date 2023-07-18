@@ -54,7 +54,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
     @NonNull
     @Override
     public ProductCartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-         AdapterItemOnCartBinding adapterItemOnCartBinding = AdapterItemOnCartBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
+        AdapterItemOnCartBinding adapterItemOnCartBinding = AdapterItemOnCartBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
         return new ProductCartViewHolder(adapterItemOnCartBinding);
     }
 

@@ -1,6 +1,9 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.unprocessed_orders;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -12,24 +15,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ecommerceshop.Phat.Model.Notification;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.OrderDetailActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.delivery_orders.DeliveryOrderAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrderAdapter.OrderViewholder> {
-
     private Context context;
     private ArrayList<Order> orders;
     private HistoryProductsInOrderAdapter historyProductsInOrderAdapter;
@@ -54,7 +64,6 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
         historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, order.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
         holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
-        holder.aBtn_DetailOrder.setVisibility(View.GONE);
         holder.aBtn_ReBuy.setText("Hủy đơn hàng");
         holder.btn_Rate.setText("Chở xác nhận");
         holder.btn_Rate.setTextColor(Color.parseColor("#4c4b4b"));
@@ -67,16 +76,40 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
         holder.aBtn_ReBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                ref.child("Users").child(FirebaseAuth.getInstance().getUid())
-                        .child("Customer").child("Orders")
-                        .child(order.getOrderId()).child("orderStatus")
-                        .setValue("Cancelled").addOnSuccessListener(new OnSuccessListener<Void>() {
+                new AlertDialog.Builder(context)
+                        .setTitle("Ecommerce shop")
+                        .setMessage("Bạn có chắc chắn muốn hủy đơn hàng này không?")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(context, "Hủy đơn thành công", Toast.LENGTH_SHORT).show();
+                            public void onClick(DialogInterface dialog, int which) {
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                                ref.child("Users").child(FirebaseAuth.getInstance().getUid())
+                                        .child("Customer").child("Orders")
+                                        .child(order.getOrderId()).child("orderStatus")
+                                        .setValue("Cancelled").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                orders.remove(order);
+                                                notifyDataSetChanged();
+                                                saveNotification("Cancelled", order);
+                                                Toast.makeText(context, "Hủy đơn thành công", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
-                        });
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+
+
+            }
+
+        });
+        holder.item_order_shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShopActivityCustomer.class);
+                intent.putExtra("shopId", order.getShopId());
+                context.startActivity(intent);
             }
         });
     }
@@ -94,6 +127,7 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
         TextView btn_Rate;
         LinearLayout bottomButtons, container;
+        ConstraintLayout item_order_shop;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -106,6 +140,23 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
             btn_Rate = itemView.findViewById(R.id.btn_Rate);
             bottomButtons = itemView.findViewById(R.id.bottomButtons);
             container = itemView.findViewById(R.id.container);
+            item_order_shop = itemView.findViewById(R.id.item_order_shop);
         }
+    }
+    private void saveNotification(String selectOpt, Order od) {
+        String timestamp = ""+System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+
+        // Lấy giờ, phút, ngày, tháng, năm hiện tại
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1; // Vì Calendar.MONTH bắt đầu từ 0
+        int year = calendar.get(Calendar.YEAR);
+        String date = hour+":"+minute+" "+day+"/"+month+"/"+year;
+        Notification notification = new Notification(od.getShopAvt(), od.getOrderId(), "Cancelled", od.getCustomerId(), date);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(FirebaseAuth.getInstance().getUid()).child("Customer")
+                .child("Notifications").child(timestamp).setValue(notification);
     }
 }

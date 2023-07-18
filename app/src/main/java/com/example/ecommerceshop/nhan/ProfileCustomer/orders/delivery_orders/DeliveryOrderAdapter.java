@@ -1,6 +1,7 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.delivery_orders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
@@ -18,6 +20,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -48,13 +51,25 @@ public class DeliveryOrderAdapter extends RecyclerView.Adapter<DeliveryOrderAdap
         historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, order.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
         holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
-        holder.aBtn_DetailOrder.setVisibility(View.GONE);
-        holder.aBtn_ReBuy.setVisibility(View.GONE);
-        holder.btn_RatingProduct.setVisibility(View.GONE);
-        holder.container.setOnClickListener(new View.OnClickListener() {
+        holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mClickHistoryOrderListener.GoToOrderDetail(order);
+            }
+        });
+        holder.aBtn_ReBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mClickHistoryOrderListener.GotoRebuy(order);
+            }
+        });
+        holder.btn_RatingProduct.setVisibility(View.GONE);
+        holder.item_order_shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShopActivityCustomer.class);
+                intent.putExtra("shopId", order.getShopId());
+                context.startActivity(intent);
             }
         });
     }
@@ -71,6 +86,7 @@ public class DeliveryOrderAdapter extends RecyclerView.Adapter<DeliveryOrderAdap
         TextView tv_SumMoney;
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
         LinearLayout btn_RatingProduct, container;
+        ConstraintLayout item_order_shop;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -82,6 +98,7 @@ public class DeliveryOrderAdapter extends RecyclerView.Adapter<DeliveryOrderAdap
             aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
             btn_RatingProduct = itemView.findViewById(R.id.btn_RatingProduct);
             container = itemView.findViewById(R.id.container);
+            item_order_shop = itemView.findViewById(R.id.item_order_shop);
         }
     }
 }
