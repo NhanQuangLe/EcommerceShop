@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
@@ -19,6 +20,10 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.delivery_orders.DeliveryOrderAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -50,14 +55,28 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
         holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
         holder.aBtn_DetailOrder.setVisibility(View.GONE);
-        holder.aBtn_ReBuy.setVisibility(View.GONE);
+        holder.aBtn_ReBuy.setText("Hủy đơn hàng");
         holder.btn_Rate.setText("Chở xác nhận");
         holder.btn_Rate.setTextColor(Color.parseColor("#4c4b4b"));
-        holder.bottomButtons.setVisibility(View.GONE);
-        holder.container.setOnClickListener(new View.OnClickListener() {
+        holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mClickHistoryOrderListener.GoToOrderDetail(order);
+            }
+        });
+        holder.aBtn_ReBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                ref.child("Users").child(FirebaseAuth.getInstance().getUid())
+                        .child("Customer").child("Orders")
+                        .child(order.getOrderId()).child("orderStatus")
+                        .setValue("Cancelled").addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(context, "Hủy đơn thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
     }

@@ -1,20 +1,17 @@
 package com.example.ecommerceshop.nhan.Model;
 
-import android.net.Uri;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Review {
     String avatarCus, content, customerId, customerName, productId, reviewId, reviewDate, shopId, rvResponse;
-    Double rating;
+    Float rating;
     ArrayList<String> uriList;
     String productAvatar, productName;
 
     public Review() {
     }
 
-    public Review(String avatarCus, String content, String customerId, String customerName, String productId, String reviewId, String reviewDate, String shopId, String rvResponse, Double rating, ArrayList<String> uriList, String productAvatar, String productName) {
+    public Review(String avatarCus, String content, String customerId, String customerName, String productId, String reviewId, String reviewDate, String shopId, String rvResponse, Float rating, ArrayList<String> uriList, String productAvatar, String productName) {
         this.avatarCus = avatarCus;
         this.content = content;
         this.customerId = customerId;
@@ -102,11 +99,11 @@ public class Review {
         this.rvResponse = rvResponse;
     }
 
-    public Double getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 

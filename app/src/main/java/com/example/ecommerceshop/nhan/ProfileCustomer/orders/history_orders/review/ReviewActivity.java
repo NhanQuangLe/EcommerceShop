@@ -92,7 +92,7 @@ public class ReviewActivity extends AppCompatActivity {
             review.setShopId(productList.get(i).getShopID());
             review.setProductName(productList.get(i).getProductName());
             review.setProductAvatar(productList.get(i).getProductAvatar());
-            review.setRating((double) 0);
+            review.setRating((float) 0);
             review.setUriList(new ArrayList<>());
             productViewList.add(review);
         }
@@ -107,7 +107,7 @@ public class ReviewActivity extends AppCompatActivity {
             }
 
             @Override
-            public void RatingBarChange(RatingBar ratingBar, double v, boolean b, Review review) {
+            public void RatingBarChange(RatingBar ratingBar, float v, boolean b, Review review) {
                 review.setRating(v);
             }
 

@@ -28,6 +28,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.edit_user_info.EditUserInf
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.rating_products_orders.UserReviewsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
@@ -255,7 +256,7 @@ public class UserProfileFragment extends Fragment {
         mFragmentUserProfileBinding.llRatingProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), UserOrdersActivity.class);
+                Intent intent = new Intent(getContext(), UserReviewsActivity.class);
                 intent.putExtra("OrderClickType", ORDER_CANCEL);
                 mActivityLauncher.launch(intent);
             }
