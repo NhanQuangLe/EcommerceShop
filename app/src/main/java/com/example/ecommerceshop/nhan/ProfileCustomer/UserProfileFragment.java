@@ -21,6 +21,8 @@ import com.example.ecommerceshop.MainShopActivity;
 import com.example.ecommerceshop.Phat.Activity.RegistrationToShopInAdminActivity;
 import com.example.ecommerceshop.Phat.Activity.RequestToShopActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.chat.ChatScreenActivity;
+import com.example.ecommerceshop.chat.MainChatActivity;
 import com.example.ecommerceshop.databinding.FragmentUserProfileBinding;
 import com.example.ecommerceshop.nhan.Model.Customer;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.UserAddressActivity;
@@ -28,8 +30,8 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.edit_user_info.EditUserInf
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
-import com.example.ecommerceshop.nhan.ProfileCustomer.orders.rating_products_orders.UserReviewsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
+import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.example.ecommerceshop.utilities.Constants;
@@ -135,18 +137,25 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void setEventInteract(){
-        mFragmentUserProfileBinding.clHistoryOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        mFragmentUserProfileBinding.settingProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+            intent.putExtra("currentUser", currentCustomer);
+            mActivityLauncher.launch(intent);
         });
-        mFragmentUserProfileBinding.clHistoryOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), UserOrdersActivity.class);
-                intent.putExtra("OrderClickType", ORDER_HISTORY);
-                mActivityLauncher.launch(intent);
-            }
+        mFragmentUserProfileBinding.gotoCart.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), CartActivity.class);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.gotoChat.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), MainChatActivity.class);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.clHistoryOrder.setOnClickListener(v -> {
+        });
+        mFragmentUserProfileBinding.clHistoryOrder.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), UserOrdersActivity.class);
+            intent.putExtra("OrderClickType", ORDER_HISTORY);
+            mActivityLauncher.launch(intent);
         });
         mFragmentUserProfileBinding.llUserAddresses.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,12 +223,14 @@ public class UserProfileFragment extends Fragment {
                 mActivityLauncher.launch(intent);
             }
         });
-        mFragmentUserProfileBinding.llUserPolicy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), HelpActivity.class);
-                mActivityLauncher.launch(intent);
-            }
+        mFragmentUserProfileBinding.llSetupAccount.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+            intent.putExtra("currentUser", currentCustomer);
+            mActivityLauncher.launch(intent);
+        });
+        mFragmentUserProfileBinding.llUserPolicy.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), HelpActivity.class);
+            mActivityLauncher.launch(intent);
         });
         mFragmentUserProfileBinding.llLogOut.setOnClickListener(new View.OnClickListener() {
             @Override

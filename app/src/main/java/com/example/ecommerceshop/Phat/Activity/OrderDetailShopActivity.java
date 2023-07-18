@@ -116,7 +116,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String vId = snapshot.child("voucherUserId").getValue(String.class);
-                if (!vId.isEmpty()) voucherId[0] = vId;
+                if (vId!=null) voucherId[0] = vId;
             }
 
             @Override
@@ -155,7 +155,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                     }
                 }
                 if(selectOpt.equals("Completed")||selectOpt.equals("Processing")){
-                    if(!voucherId[0].isEmpty()){
+                    if(voucherId[0]!=null){
                         Toast.makeText(OrderDetailShopActivity.this, ""+voucherId[0], Toast.LENGTH_SHORT).show();
 
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");

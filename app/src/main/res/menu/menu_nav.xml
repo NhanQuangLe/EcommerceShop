@@ -13,9 +13,8 @@
     </item>
     <item android:title="Thông tin">
         <menu>
-            <item android:id="@+id/phoneContact" android:title="0123456789" android:icon="@drawable/ic_phone_info" />
+            <item android:id="@+id/phoneContact" android:title="037 936 1210" android:icon="@drawable/ic_phone_info" />
             <item android:id="@+id/policy" android:title="Chính sách" android:icon="@drawable/ic_policy"/>
-            <item android:id="@+id/promotion" android:title="Tổng hợp khuyến mãi" android:icon="@drawable/ic_promotion"/>
             <item android:id="@+id/paymentInstruction" android:title="Hướng dẫn thanh toán" android:icon="@drawable/ic_payment_instruction"/>
             <item android:id="@+id/cart" android:title="Giỏ hàng của bạn" android:icon="@drawable/ic_shopping_cart"/>
             <item android:id="@+id/logout" android:title="Đăng xuất" android:icon="@drawable/ic_logout_gray"/>

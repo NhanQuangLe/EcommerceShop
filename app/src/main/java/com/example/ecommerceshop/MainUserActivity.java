@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.ecommerceshop.Phat.Fragment.NotificationFragment;
@@ -82,24 +83,21 @@ public class MainUserActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         if (homeFragmentUser.getmFragmentHomeUserBinding()!=null){
             if (homeFragmentUser.getmFragmentHomeUserBinding().drawer.isDrawerOpen(GravityCompat.START)){
                 homeFragmentUser.getmFragmentHomeUserBinding().drawer.closeDrawer(GravityCompat.START);
             }
-        }
-
-        else {
-            if (mCurrentFragment!=FRAGMENT_HOME){
-                mCurrentFragment = FRAGMENT_HOME;
-                replaceFragment(new HomeFragmentUser());
-            }
             else {
-                super.onBackPressed();
+                if (mCurrentFragment!=FRAGMENT_HOME){
+                    mCurrentFragment = FRAGMENT_HOME;
+                    replaceFragment(new HomeFragmentUser());
+                }
+                else {
+                    super.onBackPressed();
+                }
+
             }
-
         }
-
     }
 
     public void replaceFragment(Fragment fragment){

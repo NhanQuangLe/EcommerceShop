@@ -28,6 +28,16 @@ import java.util.List;
 public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCartAdapter.ShopProductCartViewHolder>{
 
     private Context mContext;
+
+    public ProductCartAdapter getmProductCartAdapter() {
+        return mProductCartAdapter;
+    }
+
+    public void setmProductCartAdapter(ProductCartAdapter mProductCartAdapter) {
+        this.mProductCartAdapter = mProductCartAdapter;
+    }
+
+    private ProductCartAdapter mProductCartAdapter;
     private IClickProductCartItemListener iClickProductCartItemListener;
     private AdapterShopListItemOnCartBinding adapterShopListItemOnCartBinding;
 
@@ -57,6 +67,7 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
         final boolean[] flat = {false};
         ShopProductCart shopProductCart = mList.get(position);
         if(shopProductCart!=null){
+
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+shopProductCart.getShopId()
             +"/Shop/ShopInfos/shopAvt");
             ref.addValueEventListener(new ValueEventListener() {
@@ -91,7 +102,7 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
                 }
             });
 
-             ProductCartAdapter productCartAdapter = new ProductCartAdapter(mContext, new IClickProductCartItemListener() {
+            mProductCartAdapter = new ProductCartAdapter(mContext, new IClickProductCartItemListener() {
                 @Override
                 public void sendParentAdapter(boolean b, ProductCart productCart) {
                     if (b) iClickProductCartItemListener.addListSelectedItem(productCart);
@@ -120,10 +131,10 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
 
                 }
             });
-            productCartAdapter.setData(shopProductCart.getProductCarts());
+            mProductCartAdapter.setData(shopProductCart.getProductCarts());
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext,RecyclerView.VERTICAL,false);
             holder.mBinding.rcvProductCart.setLayoutManager(linearLayoutManager);
-            holder.mBinding.rcvProductCart.setAdapter(productCartAdapter);
+            holder.mBinding.rcvProductCart.setAdapter(mProductCartAdapter);
 
 
         }

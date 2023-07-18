@@ -1,9 +1,14 @@
 package com.example.ecommerceshop.qui.homeuser;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -13,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -25,7 +31,10 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.chat.ChatScreenActivity;
 import com.example.ecommerceshop.databinding.FragmentHomeUserBinding;
+import com.example.ecommerceshop.nhan.Model.Customer;
+import com.example.ecommerceshop.nhan.ProfileCustomer.edit_user_info.EditUserInfoActivity;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.qui.homeuser.searchProducts.AllProductsFragment;
 import com.example.ecommerceshop.qui.homeuser.searchShops.AllShopsFragment;
@@ -33,6 +42,7 @@ import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
 import com.example.ecommerceshop.qui.spinner.SpinnerItem;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.example.ecommerceshop.tinh.Activity.PaymentManualActivity;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -46,6 +56,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,12 +84,17 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
+    private static final int REQUEST_PHONE_CALL = 1;
+    private Customer currentCustomer;
+    private FirebaseAuth firebaseAuth;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mFragmentHomeUserBinding = FragmentHomeUserBinding.inflate(inflater, container, false);
         viewFragment = mFragmentHomeUserBinding.getRoot();
         mMainUserActivity = (MainUserActivity) getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         preferenceManagement = new PreferenceManagement(getContext());
         mMainUserActivity.setSupportActionBar(mFragmentHomeUserBinding.toolbarHomeUser);
@@ -89,6 +105,8 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
                 .requestEmail()
                 .build();
         gsc = GoogleSignIn.getClient(getContext(), gso);
+        currentCustomer = new Customer();
+        LoadData();
 
         init();
 
@@ -96,6 +114,15 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
         TextView tvCustomerName = headerView.findViewById(R.id.customer_name);
         TextView tvCustomerEmail = headerView.findViewById(R.id.customer_email);
         CircleImageView imageViewCustomer = headerView.findViewById(R.id.profile_image);
+
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EditUserInfoActivity.class);
+                intent.putExtra("currentUser", currentCustomer);
+                getContext().startActivity(intent);
+            }
+        });
 
 
         // set name drawer
@@ -108,7 +135,10 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
                 String email = snapshot.child("email").getValue(String.class);
                 tvCustomerName.setText(name);
                 tvCustomerEmail.setText(email);
-                Glide.with(getContext()).load(avt).into(imageViewCustomer);
+                if (getContext()!=null){
+                    Glide.with(getContext()).load(avt).into(imageViewCustomer);
+                }
+
             }
 
             @Override
@@ -207,6 +237,26 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
             }
         });
         return viewFragment;
+    }
+
+    private void LoadData() {
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.child(firebaseAuth.getUid())
+                .child("Customer").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        currentCustomer.setName(snapshot.child("CustomerInfos/name").getValue(String.class));
+                        currentCustomer.setAvatar(snapshot.child("CustomerInfos/avatar").getValue(String.class));
+                        currentCustomer.setEmail(snapshot.child("CustomerInfos/email").getValue(String.class));
+                        currentCustomer.setPhoneNumber(snapshot.child("CustomerInfos/phoneNumber").getValue(String.class));
+                        currentCustomer.setDateOfBirth(snapshot.child("CustomerInfos/dateOfBirth").getValue(String.class));
+                        currentCustomer.setGender(snapshot.child("CustomerInfos/gender").getValue(String.class));
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void init() {
@@ -423,20 +473,18 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
 
         }
         else if (id == R.id.phoneContact){
-
+            callPhone();
         }
         else if (id == R.id.policy){
             Intent intent = new Intent(getContext(), HelpActivity.class);
             startActivity(intent);
         }
-        else if (id == R.id.promotion){
-
-        }
         else if (id == R.id.paymentInstruction){
-
+            Intent intent = new Intent(getContext(), PaymentManualActivity.class);
+            startActivity(intent);
         }
         else if (id == R.id.cart){
-
+            onClickGoToCart();
         }
         else if (id == R.id.logout){
             FirebaseAuth.getInstance().signOut();
@@ -452,6 +500,16 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
             startActivity(new Intent(getContext(), LoginActivity.class));
             preferenceManagement.putBoolean(Constants.KEY_USER_ADMIN,false);
             getActivity().finish();
+        }
+    }
+    private void callPhone() {
+        Intent call_phone = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "0379361210"));
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE},REQUEST_PHONE_CALL);
+        }
+        else
+        {
+            startActivity(call_phone);
         }
     }
 }

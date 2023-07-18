@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".tinh.Activity.PaymentManualActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        android:elevation="10dp">
+
+    <ImageView
+        android:id="@+id/buttonBackSidebar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/lato_bold"
+        android:text="Hướng dẫn thanh toán"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionbar">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="quy định và Hướng dẫn về thanh toán"
+                    android:paddingVertical="10dp"
+                    android:gravity="center"
+                    android:textAllCaps="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sau đây là quy định về thanh toán cũng như những hướng dẫ cơ bản về thanh toán."
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="5dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textStyle="italic"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sau khi khách hàng mua hàng thì để thanh toán khách hàng sẽ phải chọn các phương thức thanh toán mà ứng dụng của chúng tôi hỗ trợ để thanh toán, đối với ứng dụng của chúng thôi thì việc thanh toán sẽ cung cấp hai phương thức thanh toán đó là thanh toán khi nhận hàng và chuyển khoản, cụ thể và chi tiết về hai phương thức thanh toán như sau:"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="5dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textStyle="italic"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" 1,  Đối với hình thức thanh toán khi nhận hàng:"
+                    android:padding="10dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sau khi đặt hàng và lựa chọn thanh toán khi nhận hàng thì tình trạng đơn hàng sẽ cập nhật và thông tin đơn hàng của bạn sẽ trong tình trạng chờ xác nhận bởi admin và chủ shop, sau đó bên chủ hop sẽ tiến hàng đóng gói và giao kiện hàng đến tay bạn, bạn sẽ nhận đường hàng và kiểm tra sau đó sẽ thanh toán bằng tiền mặt nêu bạn ưng ý và hài lòng với kiện hàng đó và chúng tôi sẽ yêu cầu gửi đánh giá của bạn về sản phẩm và cửa đã mua tại ứng dụng của chúng tôi."
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="5dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textStyle="italic"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" 2,  Đối với hình thức thanh toán chuyển khoản:"
+                    android:padding="10dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sau khi đặt hàng thì bạn sẽ phải chọn một trong các hình thức thanh toán chuyển khoản để tiến hành thanh toán, trong đó phổ biến là thanh toán qua các ví điện tử và chuyển khoản ngân hàng
+khách hàng sẽ chọn và thanh toán, sau đó chụp lại màn hình chuyển khoản để xác thực thông tin thanh toán và upload và thông tin đơn hàng để chờ xác nhận. Sau đó bên shop sẽ kiểm duyệt và tiến hành đóng gói và giao hàng đến tay bạn, sau khi nhận được hàng chúng tôi sẽ yêu cầu gửi đánh giá của bạn về sản phẩm và cửa đã mua tại ứng dụng của chúng tôi."
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="5dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:textStyle="italic"/>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
