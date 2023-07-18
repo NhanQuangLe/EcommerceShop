@@ -222,7 +222,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
     private void completeOrder(String selectOpt){
         numOrderItem++;
         if (numOrderItem>size){
-            saveNotification(selectOpt);
+            deleteVoucher(selectOpt);
             return;
         }
 
@@ -245,44 +245,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                 .child(orderItem.getPid()).updateChildren(hashMap1, new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                        if(voucherIdOrder!=null){
-                                            Toast.makeText(OrderDetailShopActivity.this, ""+voucherIdOrder, Toast.LENGTH_SHORT).show();
-
-                                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-                                            reference.child(customerid).child("Customer").child("Vouchers").child(voucherIdOrder).removeValue();
-
-                                            reference.child(firebaseAuth.getUid()).child("Shop")
-                                                    .child("Vouchers").child(voucherIdOrder).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            int pQuantity = 0;
-                                                            pQuantity =snapshot.child("quantity").getValue(Integer.class);
-                                                            HashMap<String, Object> hashMap1 = new HashMap<>();
-                                                            hashMap1.clear();
-
-                                                            hashMap1.put("quantity", pQuantity-1);
-                                                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
-                                                            reference1.child(firebaseAuth.getUid()).child("Shop").child("Vouchers")
-                                                                    .child(voucherIdOrder).updateChildren(hashMap1, new DatabaseReference.CompletionListener() {
-                                                                        @Override
-                                                                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                                                            completeOrder(selectOpt);
-
-                                                                        }
-                                                                    });
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-                                                            Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                        }
-                                        else   {
-                                            completeOrder(selectOpt);
-
-
-                                        }
+                                       completeOrder(selectOpt);
                                     }
                                 });
                     }
@@ -291,6 +254,43 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                         Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    private void deleteVoucher(String selectOpt){
+        if(voucherIdOrder!=null){
+            Toast.makeText(OrderDetailShopActivity.this, ""+voucherIdOrder, Toast.LENGTH_SHORT).show();
+
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(customerid).child("Customer").child("Vouchers").child(voucherIdOrder).removeValue();
+
+            reference.child(firebaseAuth.getUid()).child("Shop")
+                    .child("Vouchers").child(voucherIdOrder).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            int pQuantity = 0;
+                            pQuantity =snapshot.child("quantity").getValue(Integer.class);
+                            HashMap<String, Object> hashMap1 = new HashMap<>();
+                            hashMap1.clear();
+
+                            hashMap1.put("quantity", pQuantity-1);
+                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
+                            reference1.child(firebaseAuth.getUid()).child("Shop").child("Vouchers")
+                                    .child(voucherIdOrder).updateChildren(hashMap1, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                            saveNotification(selectOpt);
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(OrderDetailShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else   {
+            saveNotification(selectOpt);
+        }
     }
 
     private void LoadOrderDetail() {
