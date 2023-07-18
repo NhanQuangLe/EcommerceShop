@@ -23,6 +23,17 @@ public class ProductCart implements Parcelable {
     private String brand;
     private String productCategory;
 
+    public int getProductAvailable() {
+        return productAvailable;
+    }
+
+    public void setProductAvailable(int productAvailable) {
+        this.productAvailable = productAvailable;
+    }
+
+    private int productAvailable;
+
+
     public boolean isCheckAll() {
         return isCheckAll;
     }
@@ -55,7 +66,7 @@ public class ProductCart implements Parcelable {
     public ProductCart() {
     }
 
-    public ProductCart( String productCardId,String productId, String productName, int productQuantity, int productPrice, int productDiscountPrice, String uri, String shopId, String shopName, String brand, String productCategory) {
+    public ProductCart( String productCardId,String productId, int productAvailable,  String productName, int productQuantity, int productPrice, int productDiscountPrice, String uri, String shopId, String shopName, String brand, String productCategory) {
         this.productId = productId;
         this.productCardId = productCardId;
         this.productName = productName;
@@ -68,6 +79,7 @@ public class ProductCart implements Parcelable {
         this.brand = brand;
         this.productCategory  = productCategory;
         this.isCheckAll = false;
+        this.productAvailable = productAvailable;
     }
 
     protected ProductCart(Parcel in) {
@@ -83,6 +95,7 @@ public class ProductCart implements Parcelable {
         brand = in.readString();
         productCategory = in.readString();
         isChecked = in.readByte() != 0;
+        productAvailable = in.readInt();
     }
 
 
@@ -207,5 +220,6 @@ public class ProductCart implements Parcelable {
         parcel.writeString(brand);
         parcel.writeString(productCategory);
         parcel.writeByte((byte) (isChecked ? 1 : 0));
+        parcel.writeInt(productAvailable);
     }
 }
