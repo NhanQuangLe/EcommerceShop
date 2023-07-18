@@ -1,6 +1,7 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.cancel_orders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
@@ -19,6 +21,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,7 +54,7 @@ public class CancelOrderAdapter extends RecyclerView.Adapter<CancelOrderAdapter.
         historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, order.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
         holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
-        holder.container.setOnClickListener(new View.OnClickListener() {
+        holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mClickHistoryOrderListener.GoToOrderDetail(order);
@@ -65,6 +68,14 @@ public class CancelOrderAdapter extends RecyclerView.Adapter<CancelOrderAdapter.
         });
         holder.btn_Rate.setText("Đã hủy");
         holder.btn_Rate.setTextColor(Color.parseColor("#4c4b4b"));
+        holder.item_order_shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShopActivityCustomer.class);
+                intent.putExtra("shopId", order.getShopId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -80,6 +91,7 @@ public class CancelOrderAdapter extends RecyclerView.Adapter<CancelOrderAdapter.
         AppCompatButton aBtn_DetailOrder, aBtn_ReBuy;
         TextView btn_Rate;
         LinearLayout container;
+        ConstraintLayout item_order_shop;
 
         public OrderViewholder(@NonNull View itemView) {
             super(itemView);
@@ -91,6 +103,7 @@ public class CancelOrderAdapter extends RecyclerView.Adapter<CancelOrderAdapter.
             aBtn_ReBuy = itemView.findViewById(R.id.aBtn_ReBuy);
             btn_Rate = itemView.findViewById(R.id.btn_Rate);
             container = itemView.findViewById(R.id.container);
+            item_order_shop = itemView.findViewById(R.id.item_order_shop);
         }
     }
 }

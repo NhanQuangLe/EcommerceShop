@@ -22,6 +22,7 @@ public class Product implements Serializable {
     private String productSite;
     private String uid;
 
+
     public String getShopName() {
         return shopName;
     }

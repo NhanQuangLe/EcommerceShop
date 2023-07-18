@@ -232,7 +232,6 @@ public class CartFragment extends Fragment {
                                                     }
                                             }
                                         }
-
                                     }
 
                                     @Override
@@ -402,8 +401,6 @@ public class CartFragment extends Fragment {
                 tvOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-
                         dialog.dismiss();
                         numSelectedCart = 0;
                         deleteCart();

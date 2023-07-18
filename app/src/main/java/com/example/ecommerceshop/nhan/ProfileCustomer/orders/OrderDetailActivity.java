@@ -15,12 +15,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
 import com.example.ecommerceshop.qui.cart.CartActivity;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,6 +40,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     TextView tv_ShopName, tv_statusOrder, tv_DateSuccess, btn_Rate;
     TextView tv_SumMoney, tv_DiscountPrice, tv_DeliveryPrice, tv_TotalPrice;
     LinearLayout btn_buy;
+    ConstraintLayout item_order_shop;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -92,7 +95,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         tv_DeliveryPrice = findViewById(R.id.tv_DeliveryPrice);
         tv_TotalPrice = findViewById(R.id.tv_TotalPrice);
         tv_DateSuccess = findViewById(R.id.tv_DateSuccess);
-
+        item_order_shop = findViewById(R.id.item_order_shop);
         btn_buy = findViewById(R.id.btn_buy);
         btn_Rate = findViewById(R.id.btn_Rate);
         btn_Rate.setVisibility(View.GONE);
@@ -104,6 +107,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
     }
     private void LoadData(Order ho)
     {
@@ -122,8 +126,34 @@ public class OrderDetailActivity extends AppCompatActivity {
                 break;
         }
 
-        tv_DateSuccess.setText(ho.getOrderedDate());
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("Users").child(FirebaseAuth.getInstance().getUid())
+                .child("Customer")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.child("Notifications" + ho.getOrderId()).exists()){
+                                    tv_DateSuccess.setText(ho.getOrderedDate());
+                                }
+                                else{
+                                    tv_DateSuccess.setText("");
+                                }
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+        item_order_shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(OrderDetailActivity.this, ShopActivityCustomer.class);
+                intent.putExtra("shopId", ho.getShopId());
+                mActivityLauncher.launch(intent);
+            }
+        });
         address_name.setText(ho.getReceiveAddress().getFullName());
         address_phone.setText(ho.getReceiveAddress().getPhoneNumber());
         address_detail.setText(ho.getReceiveAddress().getDetail());

@@ -94,7 +94,6 @@ public class ShopProductCartAdapter extends RecyclerView.Adapter<ShopProductCart
              ProductCartAdapter productCartAdapter = new ProductCartAdapter(mContext, new IClickProductCartItemListener() {
                 @Override
                 public void sendParentAdapter(boolean b, ProductCart productCart) {
-
                     if (b) iClickProductCartItemListener.addListSelectedItem(productCart);
                     else iClickProductCartItemListener.removeListSelectedItem(productCart);
                 }
