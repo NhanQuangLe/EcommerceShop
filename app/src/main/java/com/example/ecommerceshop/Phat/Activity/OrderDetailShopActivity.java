@@ -228,6 +228,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
     }
     private void completeOrder(String selectOpt){
         if (numOrderItem>size){
+            saveNotification(selectOpt);
             return;
         }
         numOrderItem++;
@@ -271,7 +272,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                                                     .child(voucherIdOrder).updateChildren(hashMap1, new DatabaseReference.CompletionListener() {
                                                                         @Override
                                                                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                                                            saveNotification(selectOpt);
+                                                                            completeOrder(selectOpt);
 
                                                                         }
                                                                     });
@@ -284,8 +285,9 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                                     });
                                         }
                                         else   {
-                                            saveNotification(selectOpt);
-                                   
+                                            completeOrder(selectOpt);
+
+
                                         }
                                     }
                                 });
