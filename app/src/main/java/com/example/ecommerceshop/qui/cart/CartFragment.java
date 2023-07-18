@@ -123,7 +123,6 @@ public class CartFragment extends Fragment {
             }
 
 
-
             @Override
             public void sendInfoProduct(ProductCart productCart) {
 
@@ -139,9 +138,12 @@ public class CartFragment extends Fragment {
         mFragmentCartBinding.rcvCart.setAdapter(shopProductCartAdapter);
         mShopListProductCarts = new ArrayList<>();
         shopProductCartAdapter.setData(mShopListProductCarts);
-        if (order != null)
+        if (order != null) {
             loadHistoryOrderToCart(order);
+        }
+
         setListShopProductCarts();
+
     }
 
     private void showActivityProductDetail(ProductCart productCart) {
@@ -220,18 +222,22 @@ public class CartFragment extends Fragment {
                                             String uri = product.getUriList().get(0);
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(),
                                                     productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
+
                                             mapProductCart.get(cart.getShopId()).add(productCart);
                                             mShopListProductCarts.add(new ShopProductCart(cart.getShopId(), shopName, shopProvince, mapProductCart.get(cart.getShopId())));
                                             shopProductCartAdapter.notifyDataSetChanged();
+
                                             if (order != null) {
                                                 ArrayList<com.example.ecommerceshop.nhan.Model.Product> listProduct = order.getItems();
-                                                for (int i = 0; i < listProduct.size(); i++)
+                                                for (int i = 0; i < listProduct.size(); i++){
                                                     if (listProduct.get(i).getProductID().equals(productCart.getProductId())) {
                                                         productCart.setChecked(true);
                                                         addSelectedItemCart(productCart);
                                                         shopProductCartAdapter.notifyDataSetChanged();
                                                         break;
                                                     }
+                                                }
+
                                             }
                                         }
 
@@ -267,10 +273,12 @@ public class CartFragment extends Fragment {
                                             String productName = product.getProductName();
                                             String brand = product.getProductBrand();
                                             String productCategory = product.getProductCategory();
+                                            Boolean isSold = product.isSold();
                                             int productPrice = product.getProductPrice();
                                             int productDiscountPrice = product.getProductDiscountPrice();
                                             String uri = product.getUriList().get(0);
                                             ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(), productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
+
                                             for (ShopProductCart shopProductCart : mShopListProductCarts) {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
                                                     shopProductCart.getProductCarts().add(productCart);
@@ -375,6 +383,25 @@ public class CartFragment extends Fragment {
 
     }
 
+    private void setListMuaLai() {
+        for (ShopProductCart shopProductCart : mShopListProductCarts) {
+            for (ProductCart productCart : shopProductCart.getProductCarts()) {
+                if (order != null) {
+                    for (com.example.ecommerceshop.nhan.Model.Product product : order.getItems()) {
+                        if (product.getProductID().equals(productCart.getProductCardId())) {
+                            productCart.setChecked(true);
+                            shopProductCartAdapter.notifyDataSetChanged();
+                            addSelectedItemCart(productCart);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+
     private void iListener() {
 
 
@@ -468,7 +495,7 @@ public class CartFragment extends Fragment {
                 int index = -1;
                 for (ProductCart productCart : listSelectedProductCart) {
                     index++;
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + productCart.getShopId() + "/Shop/Products/"+productCart.getProductId());
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + productCart.getShopId() + "/Shop/Products/" + productCart.getProductId());
                     int finalIndex = index;
                     ref.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -478,13 +505,13 @@ public class CartFragment extends Fragment {
                             if (!isSold) {
                                 isHasNoSold[0] = true;
                             }
-                            if (finalIndex == listSelectedProductCart.size()-1){
+                            if (finalIndex == listSelectedProductCart.size() - 1) {
                                 if (isHasNoSold[0]) {
                                     noti("Xin lỗi, vì đơn hàng có sản phẩm đã ngừng kinh doanh");
                                 } else {
-                                    Map<String,String> IdProvinceShop = new HashMap<>();
-                                    for (ShopProductCart shopProductCart: mShopListProductCarts){
-                                        IdProvinceShop.put(shopProductCart.getShopId(),shopProductCart.getShopProvince());
+                                    Map<String, String> IdProvinceShop = new HashMap<>();
+                                    for (ShopProductCart shopProductCart : mShopListProductCarts) {
+                                        IdProvinceShop.put(shopProductCart.getShopId(), shopProductCart.getShopProvince());
                                     }
                                     Intent intent = new Intent(getContext(), PaymentActivity.class);
                                     Bundle bundle = new Bundle();
@@ -505,8 +532,6 @@ public class CartFragment extends Fragment {
                     });
 
                 }
-
-
 
 
             }

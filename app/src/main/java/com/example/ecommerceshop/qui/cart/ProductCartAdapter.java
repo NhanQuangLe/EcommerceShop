@@ -62,9 +62,10 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
     public void onBindViewHolder(@NonNull ProductCartViewHolder holder, int position) {
         ProductCart productCart = mList.get(position);
         if (productCart!=null){
+
             Glide.with(holder.mBinding.getRoot()).load(productCart.getUri()).into(holder.mBinding.productImage);
             holder.mBinding.productName.setText(productCart.getProductName());
-
+            holder.mBinding.checkBox.setChecked(false);
             if (productCart.getProductDiscountPrice()==0){
                 holder.mBinding.productPrice.setVisibility(View.GONE);
                 holder.mBinding.productDiscountPrice.setText(productCart.getProductPriceStr());
@@ -75,22 +76,35 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                 holder.mBinding.productDiscountPrice.setText(productCart.getProductAfterDiscountStr());
             }
             holder.mBinding.productQuantity.setText(String.valueOf(productCart.getProductQuantity()));
+            if (productCart.isChecked()) {
+                holder.mBinding.checkBox.setChecked(true);
+
+            }
+            else {
+                holder.mBinding.checkBox.setChecked(false);
+            }
+
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/"+productCart.getShopId()+"/Shop/Products/"+productCart.getProductId());
 
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Boolean isSold = snapshot.child("sold").getValue(Boolean.class);
-                    holder.mBinding.checkBox.setChecked(false);
+
                     if (!isSold){
                         holder.mBinding.mainLayout.setClickable(false);
                         holder.mBinding.layoutChangeQuantity.setVisibility(View.GONE);
                         holder.mBinding.layoutNgungkinhdoanh.setVisibility(View.VISIBLE);
+                        holder.mBinding.checkBox.setChecked(false);
+                        holder.mBinding.productDiscountPrice.setVisibility(View.GONE);
+                        holder.mBinding.productPrice.setVisibility(View.GONE);
                     }
                     else {
                         holder.mBinding.mainLayout.setClickable(true);
                         holder.mBinding.layoutChangeQuantity.setVisibility(View.VISIBLE);
                         holder.mBinding.layoutNgungkinhdoanh.setVisibility(View.GONE);
+                        holder.mBinding.productDiscountPrice.setVisibility(View.VISIBLE);
+                        holder.mBinding.productPrice.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -100,13 +114,13 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                 }
             });
 
-            if (productCart.isChecked()) holder.mBinding.checkBox.setChecked(true);
-            else holder.mBinding.checkBox.setChecked(false);
+
+
             holder.mBinding.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    iClickProductCartItemListener.sendParentAdapter(b,productCart);
 
+                    iClickProductCartItemListener.sendParentAdapter(b,productCart);
                 }
             });
             holder.mBinding.mainLayout.setOnClickListener(new View.OnClickListener() {

@@ -108,7 +108,10 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
                 String email = snapshot.child("email").getValue(String.class);
                 tvCustomerName.setText(name);
                 tvCustomerEmail.setText(email);
-                Glide.with(getContext()).load(avt).into(imageViewCustomer);
+                if (getContext()!=null){
+                    Glide.with(getContext()).load(avt).into(imageViewCustomer);
+                }
+
             }
 
             @Override
