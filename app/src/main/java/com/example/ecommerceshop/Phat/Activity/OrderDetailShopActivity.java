@@ -181,6 +181,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                                                         }
                                                                     });
                                                         }
+                                                        else   saveNotification(selectOpt);
                                                     }
                                                 });
                                     }
@@ -224,6 +225,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                     }
                                 });
                     }
+                    else   saveNotification(selectOpt);
 
                 }
                 if(selectOpt.equals("Cancelled")){
