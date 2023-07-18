@@ -220,11 +220,12 @@ public class OrderDetailShopActivity extends AppCompatActivity {
         reference.child(customerid).child("Customer").child("Notifications").child(timestamp).setValue(notification);
     }
     private void completeOrder(String selectOpt){
+        numOrderItem++;
         if (numOrderItem>size){
             saveNotification(selectOpt);
             return;
         }
-        numOrderItem++;
+
         OrderItem orderItem = orderItems.get(numOrderItem-1);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.child(firebaseAuth.getUid()).child("Shop").child("Products")
