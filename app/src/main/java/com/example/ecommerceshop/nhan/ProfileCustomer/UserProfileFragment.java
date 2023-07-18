@@ -30,6 +30,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.edit_user_info.EditUserInf
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.UserOrdersActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.rating_products_orders.UserReviewsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerActivity;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
