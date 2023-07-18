@@ -2,15 +2,22 @@ package com.example.ecommerceshop.chat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.chat.adapters.ChatAdapter;
 import com.example.ecommerceshop.chat.models.ChatMessage;
 import com.example.ecommerceshop.chat.models.UserChat;
@@ -63,6 +70,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private Boolean isRoleShop;
     private String currentUserId;
+    private static final int REQUEST_PHONE_CALL = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +100,8 @@ public class ChatScreenActivity extends AppCompatActivity {
         if (!receiverUser.idCus.equals("")) receiverUser.id = receiverUser.idCus;
         if (!receiverUser.nameShop.equals("")) receiverUser.name = receiverUser.nameShop;
         if (!receiverUser.nameCus.equals("")) receiverUser.name = receiverUser.nameCus;
+        if (!receiverUser.phoneShop.equals("")) receiverUser.phoneNumber = receiverUser.phoneShop;
+        if (!receiverUser.phoneCus.equals("")) receiverUser.phoneNumber = receiverUser.phoneCus;
         binding.textName.setText(receiverUser.name);
         preferenceManagement = new PreferenceManagement(getApplicationContext());
         chatMessageList = new ArrayList<>();
@@ -305,6 +315,19 @@ public class ChatScreenActivity extends AppCompatActivity {
     {
         binding.buttonBack.setOnClickListener(view -> onBackPressed());
         binding.layoutSend.setOnClickListener(view -> sendMessage());
+        binding.buttonCallPhone.setOnClickListener(view -> callPhone());
+    }
+
+    private void callPhone() {
+        String sdt = receiverUser.phoneNumber;
+        Intent call_phone = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + sdt));
+        if (ContextCompat.checkSelfPermission(ChatScreenActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ChatScreenActivity.this, new String[]{Manifest.permission.CALL_PHONE},REQUEST_PHONE_CALL);
+        }
+        else
+        {
+            startActivity(call_phone);
+        }
     }
 
     private String getReadableDateTime(Date date)

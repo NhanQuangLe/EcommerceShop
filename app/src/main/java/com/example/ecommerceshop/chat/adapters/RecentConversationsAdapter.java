@@ -77,18 +77,23 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
                    user.idCus = chatMessage.conversionId;
                    user.imageCus = chatMessage.conversionImage;
                    user.nameCus = chatMessage.conversionName;
+                   user.phoneCus = chatMessage.phoneNumber;
                    user.idShop = "";
                    user.imageShop = "";
                    user.nameShop = "";
+                   user.phoneShop="";
+
                }
                else {
 
                    user.idShop = chatMessage.conversionId;
                    user.imageShop = chatMessage.conversionImage;
                    user.nameShop = chatMessage.conversionName;
+                   user.phoneShop = chatMessage.phoneNumber;
                    user.idCus = "";
                    user.imageCus = "";
                    user.nameCus = "";
+                   user.phoneCus = "";
                }
                 conversionListener.onConversionClicked(user);
             });
