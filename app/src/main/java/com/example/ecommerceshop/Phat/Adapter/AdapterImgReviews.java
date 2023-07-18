@@ -35,7 +35,10 @@ public class AdapterImgReviews extends RecyclerView.Adapter<AdapterImgReviews.im
     @Override
     public void onBindViewHolder(@NonNull imgViewHolder holder, int position) {
         String str = arrayList.get(position);
-        Glide.with(context).load(Uri.parse(str)).into(holder.imagephoto);
+        if(str!= null){
+            Glide.with(context).load(Uri.parse(str)).into(holder.imagephoto);
+        }
+
     }
 
     @Override

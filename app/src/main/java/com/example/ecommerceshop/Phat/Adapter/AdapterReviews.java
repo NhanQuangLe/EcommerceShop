@@ -79,8 +79,11 @@ public class AdapterReviews extends RecyclerView.Adapter<AdapterReviews.ReviewVi
                 }
             });
         }
-        AdapterImgReviews adapterImgReviews = new AdapterImgReviews(context,review.getUriList());
-        holder.listImgRv.setAdapter(adapterImgReviews);
+        if(review.getUriList()!=null){
+            AdapterImgReviews adapterImgReviews = new AdapterImgReviews(context,review.getUriList());
+            holder.listImgRv.setAdapter(adapterImgReviews);
+        }
+
 
     }
 
