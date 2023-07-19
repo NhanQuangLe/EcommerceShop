@@ -208,17 +208,19 @@ public class StatiscalShopActivity extends AppCompatActivity {
         LoadOrderQuantity(completed, cancelled);
         loadPieChart(laptopRe, smartphoneRe, pkRe, discount);
     }
-
+    public static float roundToDecimalPlaces(float number, int decimalPlaces) {
+        float powerOfTen = (float) Math.pow(10, decimalPlaces);
+        return Math.round(number * powerOfTen) / powerOfTen;
+    }
     private void loadPieChart(long lap, long smartphone, long pk, long discount) {
         float lapPer=0, smartphonePer=0,pkPer=0;
-        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+
         long total = lap+smartphone+pk-discount;
         if(lap!=0 ||smartphone!=0 || pk!=0){
             overlay.setVisibility(View.GONE);
-              lapPer= (float) 100*((float)lap/(float)(lap+smartphone+pk));
-              smartphonePer =(float) 100*((float)smartphone/(float)(lap+smartphone+pk));
-             pkPer =(float) 100*(((float)pk/(float)(lap+smartphone+pk)));
-
+            lapPer= (float) 100*((float)lap/(float)(lap+smartphone+pk));
+            smartphonePer =(float) 100*((float)smartphone/(float)(lap+smartphone+pk));
+            pkPer =(float) 100*(((float)pk/(float)(lap+smartphone+pk)));
         }
         else {
             overlay.setVisibility(View.VISIBLE);
@@ -226,9 +228,9 @@ public class StatiscalShopActivity extends AppCompatActivity {
 
         monthRevenue.setText(Constants.convertToVND(total));
         List<PieEntry> entries = new ArrayList<>();
-        if(lap!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(lapPer)), "Laptop"));
-        if(smartphone!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(smartphonePer)), "Smartphone"));
-        if(pk!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(pkPer)), "Phụ kiện"));
+        if(lap!=0)  entries.add(new PieEntry(roundToDecimalPlaces(lapPer,1), "Laptop"));
+        if(smartphone!=0)  entries.add(new PieEntry(roundToDecimalPlaces(smartphonePer,1), "Smartphone"));
+        if(pk!=0)  entries.add(new PieEntry(roundToDecimalPlaces(pkPer,1), "Phụ kiện"));
         PieDataSet dataSet = new PieDataSet(entries, "Tỷ lệ doanh thu");
         dataSet.setColors(getColor(R.color.primary_yellow), getColor(R.color.green1), Color.RED);
         dataSet.setValueTextSize(10f);
