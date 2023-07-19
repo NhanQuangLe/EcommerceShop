@@ -71,7 +71,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
         btnAllow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreateAccountChat(requestShop.getShopEmail());
+                CreateAccountChat(requestShop.getShopEmail(),requestShop.getUid());
             }
         });
         btnRefuse.setOnClickListener(new View.OnClickListener() {
@@ -121,8 +121,8 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
             }
         });
     }
-    private void CreateAccountChat(String email) {
-        String userIdChat = FirebaseAuth.getInstance().getCurrentUser().getUid()+"Shop";
+    private void CreateAccountChat(String email, String uid) {
+        String userIdChat = uid+"Shop";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         HashMap<String, Object> userChat = new HashMap<>();
         userChat.put(Constants.KEY_EMAIL, email);

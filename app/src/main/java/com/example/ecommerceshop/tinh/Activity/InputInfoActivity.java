@@ -410,7 +410,6 @@ public class InputInfoActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        loading(false);
                         preferenceManagement.putString(Constants.KEY_USER_ID, mCurrentUser.getUid());
                         SaveImgInFirebaseStorage(email);
 
@@ -454,6 +453,7 @@ public class InputInfoActivity extends AppCompatActivity {
                     startActivity(i2);
                 }
                 else {
+                    loading(false);
                     CustomToast.makeText(getApplicationContext(),"Successful!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                     Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                     i2.putExtra("signUp",true);
