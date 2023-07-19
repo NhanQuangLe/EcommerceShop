@@ -40,7 +40,7 @@ public class HistoryOrdersFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     FragmentHistoryOrdersBinding fragmentHistoryOrdersBinding;
     HistoryOrdersAdapter mHistoryAdapter;
-    RecyclerView mHistoryAdapterView;
+    public static RecyclerView mHistoryAdapterView;
     ArrayList<Order> listOrders;
     View mViewFragment;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -176,6 +176,7 @@ public class HistoryOrdersFragment extends Fragment {
         try{
             Intent intent = new Intent(getContext(), ReviewActivity.class);
             intent.putExtra("HistoryOrder", order);
+            intent.putExtra("i", listOrders.indexOf(order));
             mActivityLauncher.launch(intent);
         }
         catch (Exception e)

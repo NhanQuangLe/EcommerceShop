@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -19,12 +20,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceshop.databinding.FragmentHistoryOrdersBinding;
 import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.nhan.Model.Product;
+import com.example.ecommerceshop.nhan.Model.Review;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.OrderDetailActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.IClickProductInReviewListener;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ImageReviewAdapter;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ProductInReviewAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity;
+import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,12 +41,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class NotRatedProductFragment extends Fragment {
+    public static final int HISTORY_ORDER = 1601;
     public NotRatedProductFragment() {
     }
     FirebaseAuth firebaseAuth;
     FragmentHistoryOrdersBinding fragmentHistoryOrdersBinding;
-    HistoryOrdersAdapter mHistoryAdapter;
-    RecyclerView mHistoryAdapterView;
+    NotRateAdapter mHistoryAdapter;
+    public static RecyclerView mHistoryAdapterView;
     ArrayList<Order> listOrders;
     View mViewFragment;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -51,8 +58,8 @@ public class NotRatedProductFragment extends Fragment {
                 }
             });
 
-    public static HistoryOrdersFragment newInstance() {
-        HistoryOrdersFragment fragment = new HistoryOrdersFragment();
+    public static NotRatedProductFragment newInstance() {
+        NotRatedProductFragment fragment = new NotRatedProductFragment();
 
         return fragment;
     }
@@ -65,14 +72,14 @@ public class NotRatedProductFragment extends Fragment {
         listOrders = new ArrayList<>();
         mHistoryAdapterView = fragmentHistoryOrdersBinding.rvHistoryOrder;
         firebaseAuth = FirebaseAuth.getInstance();
-        mHistoryAdapter = new HistoryOrdersAdapter(getContext(), listOrders, new IClickHistoryOrderListener() {
+        mHistoryAdapter = new NotRateAdapter(getContext(), listOrders, new IClickHistoryOrderListener() {
             @Override
             public void GoToOrderDetail(Order order) {
                 ToOrderDetail(order);
             }
             @Override
             public void GotoRebuy(Order order){
-                ToRebuy(order);
+
             }
 
             @Override
@@ -98,6 +105,7 @@ public class NotRatedProductFragment extends Fragment {
                         {
                             if(ds.child("orderStatus").getValue(String.class).equals("Completed"))
                             {
+
                                 Order ho = new Order();
                                 ho.setOrderId(ds.child("orderId").getValue(String.class));
                                 ho.setCustomerId(ds.child("customerId").getValue(String.class));
@@ -131,8 +139,31 @@ public class NotRatedProductFragment extends Fragment {
                                                     products.add(pd);
                                                 }
                                                 ho.setItems(products);
-                                                listOrders.add(ho);
-                                                mHistoryAdapter.notifyDataSetChanged();
+                                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
+                                                        .child(firebaseAuth.getUid()).child("Customer").child("Reviews");
+                                                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        int count = 0;
+                                                        for (int i = 0; i < products.size(); i++) {
+
+                                                            for (DataSnapshot ds : snapshot.getChildren()) {
+                                                                if (ds.child("productId").getValue(String.class).equals(products.get(i).getProductID())) {
+                                                                    count = count + 1;
+                                                                }
+                                                            }
+                                                        }
+                                                        if(count != products.size()){
+                                                            listOrders.add(ho);
+                                                            mHistoryAdapter.notifyDataSetChanged();
+                                                        }
+                                                    }
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                        Toast.makeText(getContext(), "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
                                             }
 
                                             @Override
@@ -161,13 +192,25 @@ public class NotRatedProductFragment extends Fragment {
         }
     }
     public void ToRebuy(Order order){
-
+        try{
+            Intent intent = new Intent(getContext(), CartActivity.class);
+            intent.putExtra("HistoryOrder", order);
+            intent.putExtra("Key", HISTORY_ORDER);
+            mActivityLauncher.launch(intent);
+        }
+        catch (Exception e)
+        {
+            Log.d("Nhanle", e + "");
+        }
     }
     public void ToReview(Order order){
         try{
             Intent intent = new Intent(getContext(), ReviewActivity.class);
             intent.putExtra("HistoryOrder", order);
+            intent.putExtra("isNotRated", true);
+            intent.putExtra("i", listOrders.indexOf(order));
             mActivityLauncher.launch(intent);
+            getActivity().finish();
         }
         catch (Exception e)
         {

@@ -2,14 +2,22 @@ package com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.rev
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersAdapter;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.rating_products_orders.NotRateAdapter;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.rating_products_orders.NotRatedProductFragment;
+import com.example.ecommerceshop.nhan.ProfileCustomer.orders.rating_products_orders.UserReviewsActivity;
 import com.google.android.gms.tasks.Task;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -76,74 +84,84 @@ public class ReviewActivity extends AppCompatActivity {
     ArrayList<Review> productViewList;
     LinearLayout btn_Send;
     Button btnBackward;
+    Order ho;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_rating_product);
 
-        Intent intent = getIntent();
+        intent = getIntent();
         firebaseAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        Order ho = (Order) intent.getSerializableExtra("HistoryOrder");
+        ho = (Order) intent.getSerializableExtra("HistoryOrder");
+        Log.d("order", ho.getOrderId() + "");
         ArrayList<Product> productList = ho.getItems();
         productViewList = new ArrayList<>();
+        InitUI();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
                 .child(firebaseAuth.getUid()).child("Customer").child("Reviews");
-
-
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (int i = 0; i < productList.size(); i++) {
-                        boolean contain = false;
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            if (ds.child("productId").getValue(String.class).equals(productList.get(i).getProductID())) {
-                                contain = true;
-                            }
-                        }
-                        if(!contain){
-                            Review review = new Review();
-                            review.setProductId(productList.get(i).getProductID());
-                            review.setShopId(productList.get(i).getShopID());
-                            review.setProductName(productList.get(i).getProductName());
-                            review.setProductAvatar(productList.get(i).getProductAvatar());
-                            review.setRating((float) 0);
-                            review.setUriList(new ArrayList<>());
-                            productViewList.add(review);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (int i = 0; i < productList.size(); i++) {
+                    boolean contain = false;
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        if (ds.child("productId").getValue(String.class).equals(productList.get(i).getProductID())) {
+                            contain = true;
                         }
                     }
+                    Log.d("check", contain + "");
+                    if(!contain){
+                        Review review = new Review();
+                        review.setProductId(productList.get(i).getProductID());
+                        review.setShopId(productList.get(i).getShopID());
+                        review.setProductName(productList.get(i).getProductName());
+                        review.setProductAvatar(productList.get(i).getProductAvatar());
+                        review.setRating((float) 0);
+                        review.setUriList(new ArrayList<>());
+                        productViewList.add(review);
+                    }
                 }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(ReviewActivity.this, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
-                }
-            });
+                productInReviewAdapter = new ProductInReviewAdapter(ReviewActivity.this, productViewList, new IClickProductInReviewListener() {
+                    @Override
+                    public void RemoveReview(Review review) {
+                        if (productViewList.size() == 1)
+                            finish();
+                        productViewList.remove(review);
+                        productInReviewAdapter.notifyDataSetChanged();
+                    }
 
-        productInReviewAdapter = new ProductInReviewAdapter(this, productViewList, new IClickProductInReviewListener() {
-            @Override
-            public void RemoveReview(Review review) {
-                if (productViewList.size() == 1)
-                    finish();
-                productViewList.remove(review);
-                productInReviewAdapter.notifyDataSetChanged();
+                    @Override
+                    public void RatingBarChange(RatingBar ratingBar, float v, boolean b, Review review) {
+                        review.setRating(v);
+                    }
+
+                    @Override
+                    public void AddImage(ImageReviewAdapter imageReviewAdapter, Review review) {
+                        ivAdapter = imageReviewAdapter;
+                        rv = review;
+                        ReviewActivity.this.AddImage();
+                    }
+                });
+                LoadData();
             }
-
             @Override
-            public void RatingBarChange(RatingBar ratingBar, float v, boolean b, Review review) {
-                review.setRating(v);
-            }
-
-            @Override
-            public void AddImage(ImageReviewAdapter imageReviewAdapter, Review review) {
-                ivAdapter = imageReviewAdapter;
-                rv = review;
-                ReviewActivity.this.AddImage();
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ReviewActivity.this, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
             }
         });
 
-        InitUI();
-        LoadData();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent it = new Intent(ReviewActivity.this, UserReviewsActivity.class);
+        it.putExtra("isNotRate", true);
+        startActivity(it);
+        finish();
     }
 
     private void InitUI() {
@@ -222,6 +240,16 @@ public class ReviewActivity extends AppCompatActivity {
         {
             loading(false);
             Toast.makeText(ReviewActivity.this, "Cảm ơn bạn đã đánh giá", Toast.LENGTH_SHORT).show();
+            if(intent.getBooleanExtra("isNotRated", false)){
+
+            }
+            else{
+                HistoryOrdersAdapter.OrderViewholder holder = (HistoryOrdersAdapter.OrderViewholder) HistoryOrdersFragment.mHistoryAdapterView
+                        .findViewHolderForAdapterPosition(intent.getIntExtra("i", 0));
+                holder.btn_Rate.setText("Đã đánh giá");
+                holder.btn_Rate.setTextColor(Color.parseColor("#00c5a5"));
+                holder.btn_RatingProduct.setEnabled(false);
+            }
             onBackPressed();
             return;
         }
