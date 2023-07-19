@@ -96,6 +96,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
     AddressAdapter addressAdapter;
     EditText et_SearchBox;
     ImageView ic_back;
+    String stringNameAddress;
     private FusedLocationProviderClient fusedLocationClient;
 
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -122,6 +123,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
 
         addressList = new ArrayList<>();
         mainAddress = "";
+        stringNameAddress = "";
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         getDataProvince();
@@ -182,6 +184,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
             public void onClick(View v) {
                 getDataProvince();
                 mainAddress = "";
+                stringNameAddress = "";
                 Status = 0;
                 tv_TypeChoose.setText("Tỉnh/ Thành phố");
                 ll_CurrentLocation.setVisibility(View.GONE);
@@ -207,6 +210,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 AddressItem addressItem = new AddressItem();
                                 addressItem.setCode(singleObject.getString("code"));
                                 addressItem.setFullName(singleObject.getString("name"));
+                                addressItem.setName(singleObject.getString("name"));
                                 addressList.add(addressItem);
                             }
                             SortAndSetHeader();
@@ -243,6 +247,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 AddressItem addressItem = new AddressItem();
                                 addressItem.setCode(singleObject.getString("code"));
                                 addressItem.setFullName(singleObject.getString("name_with_type"));
+                                addressItem.setName(singleObject.getString("name"));
                                 addressList.add(addressItem);
                             }
                             SortAndSetHeader();
@@ -270,6 +275,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 String apiDisTemp = apiDistrict + addressItem.getCode();
                 getDataBy(apiDisTemp);
                 mainAddress += addressItem.getFullName();
+                stringNameAddress += addressItem.getName();
                 tv_CurrentProvince.setText(addressItem.getFullName());
                 tv_TypeChoose.setText("Quận/ Huyện");
                 et_SearchBox.setText("");
@@ -279,6 +285,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 String apiWardTemp = apiWard + addressItem.getCode();
                 getDataBy(apiWardTemp);
                 mainAddress = addressItem.getFullName() + ", " + mainAddress;
+                stringNameAddress += addressItem.getName() + "," + stringNameAddress;
                 tv_CurrentDistrict.setText(addressItem.getFullName());
                 tv_TypeChoose.setText("Phường/ Xã");
                 ll_ChooseDistrictRoundbox.setVisibility(View.GONE);
@@ -288,10 +295,13 @@ public class ChooseAddressActivity extends AppCompatActivity {
             case 2:
                 Status = 0;
                 mainAddress = addressItem.getFullName() + ", " + mainAddress;
+                stringNameAddress += addressItem.getName() + "," + stringNameAddress;
                 Intent intent = new Intent(ChooseAddressActivity.this, EditAddressActivity.class);
                 intent.putExtra("Address", mainAddress);
+                intent.putExtra("stringNameAddress", stringNameAddress);
                 setResult(SUCCESS_CREATE_ADDRESS, intent);
                 mainAddress = "";
+                stringNameAddress = "";
                 finish();
                 break;
         }
