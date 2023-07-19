@@ -362,6 +362,10 @@ public class UpdateProductShopActivity extends AppCompatActivity {
 
                 return;
             } else ProductDiscountPrice= Integer.parseInt(productDiscountPrice.getText().toString().trim());
+            if(ProductDiscountPrice>= Integer.parseInt(productOriginalPrice.getText().toString().trim())) {
+                CustomToast.makeText(getApplicationContext(),"Product Discount Price is invalid...",CustomToast.SHORT,CustomToast.ERROR).show();
+                return;
+            }
             int x = (int) (( Float.parseFloat(productDiscountPrice.getText().toString().trim())/
                     Float.parseFloat(productOriginalPrice.getText().toString().trim()))*100);
             ProductDiscountNote = "- " + x + "%";
