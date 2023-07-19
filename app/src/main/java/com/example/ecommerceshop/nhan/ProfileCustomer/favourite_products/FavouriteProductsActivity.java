@@ -1,5 +1,7 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import com.example.ecommerceshop.nhan.Model.Cart;
 import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.nhan.Model.Review;
 import com.example.ecommerceshop.nhan.Model.Shop;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -199,52 +202,74 @@ public class FavouriteProductsActivity extends AppCompatActivity {
         });
     }
     public void AddProductToCart(Product favouriteProduct) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference().child("Users").child(firebaseAuth.getUid()).child("Customer").child("Cart");
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.app_name))
+                .setMessage("Bạn có chắc chắn muốn thêm sản phẩm này vào giỏ hàng không?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference dbRef = database.getReference().child("Users").child(firebaseAuth.getUid()).child("Customer").child("Cart");
 
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean isContain = false;
-                for(DataSnapshot pd : snapshot.getChildren()){
-                    if(pd.child("productId").getValue(String.class).equals(favouriteProduct.getProductID()))
-                    {
-                        isContain = true;
-                        Toast.makeText(FavouriteProductsActivity.this, "Sản phẩm đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                boolean isContain = false;
+                                for(DataSnapshot pd : snapshot.getChildren()){
+                                    if(pd.child("productId").getValue(String.class).equals(favouriteProduct.getProductID()))
+                                    {
+                                        isContain = true;
+                                        Toast.makeText(FavouriteProductsActivity.this, "Sản phẩm đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                                if(!isContain){
+                                    String cartId = Long.toString(new Date().getTime());
+                                    Cart cart = new Cart(cartId, favouriteProduct.getProductID(), favouriteProduct.getShopID(), 1);
+                                    dbRef.child(cartId).setValue(cart, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                            Toast.makeText(FavouriteProductsActivity.this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(FavouriteProductsActivity.this, "Can not get value", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                }
-                if(!isContain){
-                    String cartId = Long.toString(new Date().getTime());
-                    Cart cart = new Cart(cartId, favouriteProduct.getProductID(), favouriteProduct.getShopID(), 1);
-                    dbRef.child(cartId).setValue(cart, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            Toast.makeText(FavouriteProductsActivity.this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+        ///
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(FavouriteProductsActivity.this, "Can not get value", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
     public void DeleteFavouriteProduct(Product favouriteProduct) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference();
-        dbRef.child("Users")
-                .child(firebaseAuth.getUid())
-                .child("Customer")
-                .child("FavouriteProducts")
-                .child(favouriteProduct.getProductID())
-                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.app_name))
+                .setMessage("Bạn có chắc chắn muốn xóa sản phẩm này không?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(FavouriteProductsActivity.this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference dbRef = database.getReference();
+                        dbRef.child("Users")
+                                .child(firebaseAuth.getUid())
+                                .child("Customer")
+                                .child("FavouriteProducts")
+                                .child(favouriteProduct.getProductID())
+                                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(FavouriteProductsActivity.this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
-                });
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
     }
     private float GetAverageRatingProduct(ArrayList<Review> rvList){
         int length = rvList.size();
