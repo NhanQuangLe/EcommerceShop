@@ -468,7 +468,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             long pPrice = 0;
             if (productCart.getProductDiscountPrice() != 0) {
-                pPrice = productCart.getProductDiscountPrice();
+                pPrice = productCart.getProductPrice()-productCart.getProductDiscountPrice();
             } else pPrice = productCart.getProductPrice();
             long pQuantity = productCart.getProductQuantity();
             ItemOrder itemOrder = new ItemOrder(pid, pAvatar, pBrand, pName, pPrice, pQuantity, pCategory);

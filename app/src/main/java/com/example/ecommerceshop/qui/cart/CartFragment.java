@@ -499,7 +499,7 @@ public class CartFragment extends Fragment {
                 }
                 if (!listSanPham.equals("")){
                     String message = "Các sản phẩm: ";
-                    message+=listSanPham.substring(0,listSanPham.length()-2);
+                    message+=listSanPham.substring(0,listSanPham.length()-2) + " không đủ số lượng có sẵn để đáp ứng!";
                     DialogError dialogError = new DialogError(getActivity(),message);
                     dialogError.show();
                     return;

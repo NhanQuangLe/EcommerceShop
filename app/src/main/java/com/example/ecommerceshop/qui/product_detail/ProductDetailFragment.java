@@ -412,7 +412,7 @@ public class ProductDetailFragment extends Fragment {
     }
 
     private void showNavBuyDetail() {
-        if (product.getProductQuantity()==0){
+        if (product.getProductQuantity()<=0){
             DialogError dialogError = new DialogError(getActivity(),"Số lượng sản phẩm không đủ để đáp ứng!");
             dialogError.show();
             return;
