@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersAdapter;
@@ -50,7 +51,8 @@ public class DeliveryOrderAdapter extends RecyclerView.Adapter<DeliveryOrderAdap
         holder.tv_ShopName.setText(order.getShopName());
         historyProductsInOrderAdapter = new HistoryProductsInOrderAdapter(context, order.getItems());
         holder.rv_ProductList.setAdapter(historyProductsInOrderAdapter);
-        holder.tv_SumMoney.setText(String.valueOf(order.getTotalPrice()));
+        String  price = Constants.convertToVND(order.getTotalPrice());
+        holder.tv_SumMoney.setText(price);
         holder.aBtn_DetailOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

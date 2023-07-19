@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Cart;
 import com.example.ecommerceshop.nhan.Model.Product;
@@ -71,7 +72,8 @@ public class FavouriteProductsAdapter extends RecyclerView.Adapter<FavouriteProd
         holder.tv_ProductName.setText(favouriteProduct.getProductName());
         holder.tv_ProductSite.setText(favouriteProduct.getProductSite());
         holder.tv_ProductBrand.setText(favouriteProduct.getProductBrand());
-        holder.tv_ProductSalePrice.setText(Integer.toString(favouriteProduct.getProductDiscountPrice()));
+        String  price = Constants.convertToVND(favouriteProduct.getProductDiscountPrice());
+        holder.tv_ProductSalePrice.setText(price);
         holder.rb_ProductRating.setRating(favouriteProduct.getProductRating());
         holder.rb_ProductRating.setVisibility(View.GONE);
 

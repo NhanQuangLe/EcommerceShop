@@ -111,7 +111,7 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                                         product.setProductBrand(s.child("productBrand").getValue(String.class));
                                         product.setProductSite(s.child("productSite").getValue(String.class));
                                         product.setProductCategory(s.child("productCategory").getValue(String.class));
-                                        product.setProductDiscountPrice(s.child("productDiscountPrice").getValue(int.class));
+                                        product.setProductDiscountPrice(s.child("productPrice").getValue(int.class) - s.child("productDiscountPrice").getValue(int.class));
                                         product.setShopID(s.child("uid").getValue(String.class));
                                         if(s.child("productReviews").getValue() == null)
                                             product.setProductRating(0);
