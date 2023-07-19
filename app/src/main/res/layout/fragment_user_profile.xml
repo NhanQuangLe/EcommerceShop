@@ -390,6 +390,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="11sp"></TextView>
                                 <ImageView
+                                    android:id="@+id/arrowRight"
                                     android:layout_width="20dp"
                                     android:layout_height="9dp"
                                     android:layout_gravity="center_vertical"

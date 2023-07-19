@@ -112,6 +112,9 @@ public class UserProfileFragment extends Fragment {
                 else if(snapshot.child("Requests/" + firebaseAuth.getUid()).exists()){
                     mFragmentUserProfileBinding.tvBeginSale.setText("Đang xét duyệt yêu cầu");
                     mFragmentUserProfileBinding.tvRegisFree.setText("");
+                    mFragmentUserProfileBinding.arrowRight.setVisibility(View.GONE);
+                    mFragmentUserProfileBinding.llConvertToShop.setClickable(false);
+
                 }
               }
 
