@@ -52,6 +52,8 @@ public class UserAddressActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     AppCompatButton aBtn_AddAddress;
     HashMap<String, String> mapWard;
+    Intent tmp;
+    boolean flat;
     String deFaultId;
     ImageView ic_back;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -95,6 +97,8 @@ public class UserAddressActivity extends AppCompatActivity {
         listAddressView = findViewById(R.id.rv_ListAddress);
         aBtn_AddAddress = findViewById(R.id.aBtn_AddAddress);
         deFaultId = "";
+        tmp = getIntent();
+        flat = tmp.getBooleanExtra("isPayment",false);
         ic_back = findViewById(R.id.ic_back);
         ic_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,12 +120,10 @@ public class UserAddressActivity extends AppCompatActivity {
 
             @Override
             public void ReturnAddressForPayment(Address address) {
-
-                if(tmp.getBooleanExtra("isPayment", false)){
+                if(flat){
                     Intent i = new Intent();
                     i.putExtra("address",address);
                     setResult(TRA_VE_TU_USER_ADDRESS_ACTIVITY,i);
-                    Log.e("t đã vô","2");
                     finish();
                 }
             }
@@ -202,6 +204,7 @@ public class UserAddressActivity extends AppCompatActivity {
         intent.putExtra("Status", NEW_ACTIVITY);
         if(listAddress.size() == 0)
             intent.putExtra("IsBlank", true);
+
         mActivityLauncher.launch(intent);
     }
     private void UpdateAddressFirebase(Address address){

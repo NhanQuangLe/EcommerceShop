@@ -306,7 +306,7 @@ public class EditAddressActivity extends AppCompatActivity {
             address.setLatitude(latitude);
             address.setLongitude(longitude);
 
-            Intent intent = new Intent(EditAddressActivity.this, UserAddressActivity.class);
+            Intent intent = new Intent();
             if(status == UserAddressActivity.EDIT_ACTIVITY)
             {
                 intent.putExtra("AddressReturn", address);
@@ -316,7 +316,9 @@ public class EditAddressActivity extends AppCompatActivity {
             {
                 intent.putExtra("AddressReturn", address);
                 setResult(ACTIVITY_NEW, intent);
+
             }
+
             finish();
         }
     }

@@ -109,6 +109,7 @@
                             android:layout_height="match_parent"
                             android:hint="Số điện thoại"
                             android:background="#00000000"
+                            android:inputType="phone"
                             android:textSize="14dp"
                             android:textColorHint="@color/secondary_gray"
                             android:layout_marginLeft="16dp"

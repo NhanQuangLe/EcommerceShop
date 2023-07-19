@@ -73,6 +73,7 @@ public class FavouriteProductsAdapter extends RecyclerView.Adapter<FavouriteProd
         holder.tv_ProductBrand.setText(favouriteProduct.getProductBrand());
         holder.tv_ProductSalePrice.setText(Integer.toString(favouriteProduct.getProductDiscountPrice()));
         holder.rb_ProductRating.setRating(favouriteProduct.getProductRating());
+        holder.rb_ProductRating.setVisibility(View.GONE);
 
         holder.ib_AddToCart.setOnClickListener(new View.OnClickListener() {
             @Override

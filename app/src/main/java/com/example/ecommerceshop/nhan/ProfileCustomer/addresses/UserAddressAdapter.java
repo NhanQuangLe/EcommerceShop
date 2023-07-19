@@ -63,7 +63,6 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
         holder.layout_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("t đã vô","1");
                 addressListener.ReturnAddressForPayment(address);
             }
         });

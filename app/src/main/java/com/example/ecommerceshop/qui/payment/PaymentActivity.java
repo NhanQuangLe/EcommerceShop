@@ -174,6 +174,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent();
+                i.putExtra("isPayment", true);
                 i.setClass(getApplicationContext(), UserAddressActivity.class);
                 mActivityResultLauncher.launch(i);
             }
