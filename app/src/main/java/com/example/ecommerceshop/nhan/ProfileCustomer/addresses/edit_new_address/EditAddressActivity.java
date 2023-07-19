@@ -70,9 +70,9 @@ public class EditAddressActivity extends AppCompatActivity {
     Address addressNew, currentAddress;
     android.location.Address currentAddressMap;
     ImageView ic_back;
-    String stringAddress;
+    String stringAddress, stringNameAddress;
     LinearLayout ll_MapOutLine;
-    boolean check = false;
+    boolean checkCreateAddressByAPI = false;
     boolean isBlank = false;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -86,7 +86,8 @@ public class EditAddressActivity extends AppCompatActivity {
                             tv_MainAddress.setText(mainAddress);
                             ct_OutMap.setVisibility(View.VISIBLE);
                             stringAddress = mainAddress;
-                            check = true;
+                            stringNameAddress = intent.getStringExtra("stringNameAddress");
+                            checkCreateAddressByAPI = true;
                             loadCurrentAddress(mainAddress);
                             break;
                         case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS_BY_CURRENT_LOCATION:
@@ -117,14 +118,6 @@ public class EditAddressActivity extends AppCompatActivity {
                             android.location.Address adr = intent.getParcelableExtra("location");
                             if(adr != null){
                                 loadCurrentAddress(adr);
-                            }
-                            break;
-                        case GoogleMapLocationActivity.CHOOSE_ADDRESS_MAP_BY_STRING_ADDRESS:
-                            if(intent.getBooleanExtra("isChoose", false)){
-                                android.location.Address address = intent.getParcelableExtra("location");
-                                if(address != null){
-                                    loadCurrentAddress(address);
-                                }
                             }
                             break;
                     }
@@ -185,19 +178,18 @@ public class EditAddressActivity extends AppCompatActivity {
         ll_MapOutLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
-                intent.putExtra("status", status);
-                if(status == UserAddressActivity.EDIT_ACTIVITY){
-                    if(check){
-                        intent.putExtra("latitude", latitude);
-                        intent.putExtra("longitude", longitude);
-                        intent.putExtra("check", check);
-                        intent.putExtra("stringAddress", stringAddress);
-                    }else{
-                        intent.putExtra("location", currentAddress);
-                    }
-                }
-                mActivityLauncher.launch(intent);
+//                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
+//                intent.putExtra("status", status);
+//                if(checkCreateAddressByAPI){
+//                    intent.putExtra("latitude", latitude);
+//                    intent.putExtra("longitude", longitude);
+//                    intent.putExtra("checkCreateAddressByAPI", checkCreateAddressByAPI);
+//                    intent.putExtra("stringAddress", stringAddress);
+//                    intent.putExtra("stringNameAddress", stringNameAddress);
+//                }else{
+//                    intent.putExtra("location", currentAddress);
+//                }
+//                mActivityLauncher.launch(intent);
             }
         });
         btn_ChooseAddress = findViewById(R.id.btn_ChooseAddress);

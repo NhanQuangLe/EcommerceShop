@@ -1,7 +1,7 @@
 package com.example.ecommerceshop.nhan.Model;
 
 public class AddressItem {
-    public String Code, FullName, HeadName;
+    public String Code, FullName, HeadName, Name;
 
     public AddressItem() {
         HeadName = "";
@@ -11,6 +11,14 @@ public class AddressItem {
         Code = code;
         FullName = fullName;
         HeadName = headName;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
     }
 
     public String getCode() {

@@ -20,9 +20,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.UserAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
-import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -50,13 +50,12 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
     SupportMapFragment google_map;
     final static int REQUEST_CODE = 100;
     public final static int CHOOSE_ADDRESS_MAP = 1000;
-    public final static int CHOOSE_ADDRESS_MAP_BY_STRING_ADDRESS = 1001;
     FusedLocationProviderClient fusedLocationProviderClient;
     Button btnBackward, btn_ConfirmLocation;
     public static Address choosenAddress;
-    String stringAddress;
+    String stringAddress, stringNameAddress;
     Double latitude, longitude;
-    Boolean check = false, isChoose = false;
+    Boolean checkCreateAddressByAPI = false, isPickAddressInMap = false;
     com.example.ecommerceshop.nhan.Model.Address currentAddress;
 
     @Override
@@ -66,9 +65,10 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
         InitUI();
         Intent intent = getIntent();
         google_map = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
-        if(intent.getBooleanExtra("check", false) == true){
-            check = true;
+        if(intent.getBooleanExtra("checkCreateAddressByAPI", false)){
+            checkCreateAddressByAPI = true;
             stringAddress = intent.getStringExtra("stringAddress");
+            stringNameAddress = intent.getStringExtra("stringNameAddress");
             latitude = intent.getDoubleExtra("latitude", 0);
             longitude = intent.getDoubleExtra("longitude", 0);
             getLastLocation(latitude, longitude);
@@ -94,34 +94,21 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(GoogleMapLocationActivity.this, EditAddressActivity.class);
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    if(check){
-                        intent.putExtra("isChoose", isChoose);
-                        if(isChoose){
-                            if(checkTrueLocation()) {
-                                intent.putExtra("location", choosenAddress);
-                            }
-                            else{
-                                CustomToast.makeText(getApplicationContext(),"Vui lòng chọn địa chỉ nằm trong vùng "
-                                        + currentAddress.GetAddressString(),CustomToast.SHORT,CustomToast.ERROR).show();
-
-                                return;
-                            }
+                    if(isPickAddressInMap){
+                        if(checkTrueLocation()){
+                            intent.putExtra("location", choosenAddress);
+                            setResult(CHOOSE_ADDRESS_MAP);
+                            finish();
                         }
                         else{
-                            setResult(CHOOSE_ADDRESS_MAP_BY_STRING_ADDRESS, intent);
-                            finish();
+                            if(checkCreateAddressByAPI)
+                                Toast.makeText(GoogleMapLocationActivity.this, "Vui lòng chọn địa chỉ nằm trong vùng "
+                                        + stringAddress, Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(GoogleMapLocationActivity.this, "Vui lòng chọn địa chỉ nằm trong vùng "
+                                        + currentAddress.GetAddressString(), Toast.LENGTH_SHORT).show();
                         }
                     }
-                    else
-                        if(checkTrueLocation()) {
-                            intent.putExtra("location", choosenAddress);
-                            setResult(CHOOSE_ADDRESS_MAP, intent);
-                            finish();
-                        }
-                        else{
-                            CustomToast.makeText(getApplicationContext(),"Vui lòng chọn địa chỉ nằm trong vùng "
-                                    + currentAddress.GetAddressString(),CustomToast.SHORT,CustomToast.ERROR).show();
-                        }
                 }
             }
         });
@@ -138,9 +125,6 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(end, 20)) ;
                     googleMap.setMaxZoomPreference(20);
                     googleMap.setMinZoomPreference(16);
-                    googleMap.isMyLocationEnabled();
-                    googleMap.getUiSettings().setTiltGesturesEnabled(true);
-                    googleMap.getUiSettings().setCompassEnabled(true);
                     googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                         @Override
                         public void onMapClick(@NonNull LatLng latLng) {
@@ -150,12 +134,12 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                                 ArrayList<Address> addresses = (ArrayList<Address>) geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Đây là địa chỉ của bạn");
                                 choosenAddress = addresses.get(0);
-                                isChoose = true;
+                                isPickAddressInMap = true;
                                 googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                                 googleMap.addMarker(markerOptions);
                             } catch (Exception e){
 
-                                CustomToast.makeText(getApplicationContext(),"Không xác định được vị trí",CustomToast.SHORT,CustomToast.ERROR).show();
+                                Toast.makeText(getApplicationContext(), "Không xác định được vị trí", Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
@@ -190,11 +174,11 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                             ArrayList<Address> addresses = (ArrayList<Address>) geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                             MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Đây là địa chỉ của bạn");
                             choosenAddress = addresses.get(0);
-                            isChoose = true;
+                            isPickAddressInMap = true;
                             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                             googleMap.addMarker(markerOptions);
                         } catch (Exception e){
-                            CustomToast.makeText(getApplicationContext(),"Không xác định được vị trí",CustomToast.SHORT,CustomToast.ERROR).show();
+                            Toast.makeText(getApplicationContext(), "Không xác định được vị trí", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -213,20 +197,19 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                 getLastLocation();
             }
             else {
-                CustomToast.makeText(getApplicationContext(),"Please turn on your Location App permissions",CustomToast.SHORT,CustomToast.ERROR).show();
-
+                Toast.makeText(GoogleMapLocationActivity.this, "Please turn on your Location App permissions", Toast.LENGTH_SHORT).show();
             }
         }
     }
     public boolean checkTrueLocation(){
-        if(check){
-            Log.d("ad", choosenAddress.getAddressLine(0) + "");
-            Log.d("ad", stringAddress.split(", ")[0] + "");
-            Log.d("ad", stringAddress.split(", ")[1] +  "");
-            Log.d("ad", stringAddress.split(", ")[2] + "");
-            if(!choosenAddress.getAddressLine(0).contains(GetDistrictRemoveHeader(stringAddress.split(", ")[1])))
+        Log.d("a", choosenAddress.getAddressLine(0) + "");
+        Log.d("b", stringNameAddress + "");
+        Log.d("c", stringNameAddress.split(",")[0] + "");
+        Log.d("d", stringNameAddress.split(",")[1] + "");
+        if(checkCreateAddressByAPI){
+            if(!choosenAddress.getAddressLine(0).contains(stringNameAddress.split(",")[0]))
                 return false;
-            if(!choosenAddress.getAddressLine(0).contains(GetWardRemoveHeader(stringAddress.split(", ")[0])))
+            if(!choosenAddress.getAddressLine(0).contains(stringNameAddress.split(",")[1]))
                 return false;
         }
         else{
@@ -236,31 +219,5 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                 return false;
         }
         return true;
-    }
-    public String GetWardRemoveHeader(String k){
-        String result = "";
-        String[] a = k.split(" ");
-        int i = 1;
-        if(a[0].equals("Thị")) i = 2;
-        while (i < a.length){
-            result += a[i];
-            if(i != a.length - 1)
-                result += " ";
-            i++;
-        }
-        return result;
-    }
-    public String GetDistrictRemoveHeader(String k){
-        String result = "";
-        String[] a = k.split(" ");
-        int i = 1;
-        if(a[0].equals("Thành")) i = 2;
-        while (i < a.length){
-            result += a[i];
-            if(i != a.length - 1)
-                result += " ";
-            i++;
-        }
-        return result;
     }
 }
