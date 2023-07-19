@@ -126,11 +126,12 @@ public class HomePageShopFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 products.clear();
+
                 for (DataSnapshot ds: snapshot.getChildren()){
                     String category = ""+ds.child("productCategory").getValue();
                     if(category.equals(selected)){
                         Product product = ds.getValue(Product.class);
-                        products.add(product);
+                        products.add(0,product);
                     }
                 }
                 adapterProductShop = new AdapterProductShop(getContext(), products);
@@ -160,8 +161,9 @@ public class HomePageShopFragment extends Fragment {
                 products.clear();
                 for (DataSnapshot ds: snapshot.getChildren()){
                     Product product = ds.getValue(Product.class);
-                    products.add(product);
+                    products.add(0,product);
                 }
+
                 adapterProductShop = new AdapterProductShop(getContext(), products);
                 listproduct.setAdapter(adapterProductShop);
             }
