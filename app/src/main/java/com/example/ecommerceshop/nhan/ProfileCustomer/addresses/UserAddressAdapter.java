@@ -1,6 +1,7 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.addresses;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
         holder.layout_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("t đã vô","1");
                 addressListener.ReturnAddressForPayment(address);
             }
         });
