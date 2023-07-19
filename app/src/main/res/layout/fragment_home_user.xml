@@ -291,7 +291,6 @@
         android:layout_gravity="start"
         app:menu="@menu/menu_nav"
         app:itemHorizontalPadding="40dp"
-        android:visibility="gone"
       />
 
 </androidx.drawerlayout.widget.DrawerLayout>

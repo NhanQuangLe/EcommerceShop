@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
@@ -167,11 +168,15 @@ public class OrderDetailActivity extends AppCompatActivity {
         HistoryProductsInOrderAdapter historyOrdersAdapter = new HistoryProductsInOrderAdapter(this, ho.getItems());
         rv_ProductList.setAdapter(historyOrdersAdapter);
         tv_ShopName.setText(ho.getShopName());
-
-        tv_SumMoney.setText(String.valueOf(ho.getTotalPrice() - ho.getDiscountPrice() - ho.getShipPrice()));
-        tv_DiscountPrice.setText(String.valueOf(ho.getDiscountPrice()));
-        tv_DeliveryPrice.setText(String.valueOf(ho.getShipPrice()));
-        tv_TotalPrice.setText(String.valueOf(ho.getTotalPrice()));
+        String price;
+         price = Constants.convertToVND(ho.getTotalPrice() - ho.getDiscountPrice() - ho.getShipPrice());
+        tv_SumMoney.setText(price);
+        price = Constants.convertToVND(ho.getDiscountPrice());
+        tv_DiscountPrice.setText(price);
+        price = Constants.convertToVND(ho.getShipPrice());
+        tv_DeliveryPrice.setText(price);
+        price = Constants.convertToVND(ho.getTotalPrice());
+        tv_TotalPrice.setText(price);
 
         btn_buy.setOnClickListener(new View.OnClickListener() {
             @Override

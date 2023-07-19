@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
@@ -53,7 +54,8 @@ public class HistoryProductsInOrderAdapter extends RecyclerView.Adapter<HistoryP
         holder.tv_ProductBrand.setText(product.getProductBrand());
         holder.tv_ProductCategory.setText(product.getProductCategory());
         holder.tv_ProductPurchaseQuantity.setText(String.valueOf(product.getPurchaseQuantity()));
-        holder.tv_ProductDiscountPrice.setText(String.valueOf(product.getProductDiscountPrice()));
+        String  price = Constants.convertToVND(product.getProductDiscountPrice());
+        holder.tv_ProductDiscountPrice.setText(price);
         holder.item_order_product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

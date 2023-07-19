@@ -52,6 +52,8 @@ public class UserAddressActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     AppCompatButton aBtn_AddAddress;
     HashMap<String, String> mapWard;
+    Intent tmp;
+    boolean flat;
     String deFaultId;
     ImageView ic_back;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -64,13 +66,13 @@ public class UserAddressActivity extends AppCompatActivity {
                         case EditAddressActivity.ACTIVITY_EDIT:
                             Address addressEdit = (Address) intent.getSerializableExtra("AddressReturn");
                             for(int i = 0 ; i < listAddress.size(); i++)
-                            if(listAddress.get(i).getAddressId().equals(addressEdit.getAddressId()))
-                            {
-                                listAddress.set(i, addressEdit);
-                                userAddressAdapter.notifyDataSetChanged();
-                                UpdateAddressFirebase(addressEdit);
-                                return;
-                            }
+                                if(listAddress.get(i).getAddressId().equals(addressEdit.getAddressId()))
+                                {
+                                    listAddress.set(i, addressEdit);
+                                    userAddressAdapter.notifyDataSetChanged();
+                                    UpdateAddressFirebase(addressEdit);
+                                    return;
+                                }
                             break;
                         case EditAddressActivity.ACTIVITY_NEW:
                             Address addressNew = (Address) intent.getSerializableExtra("AddressReturn");
@@ -95,6 +97,8 @@ public class UserAddressActivity extends AppCompatActivity {
         listAddressView = findViewById(R.id.rv_ListAddress);
         aBtn_AddAddress = findViewById(R.id.aBtn_AddAddress);
         deFaultId = "";
+        tmp = getIntent();
+        flat = tmp.getBooleanExtra("isPayment",false);
         ic_back = findViewById(R.id.ic_back);
         ic_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,8 +120,7 @@ public class UserAddressActivity extends AppCompatActivity {
 
             @Override
             public void ReturnAddressForPayment(Address address) {
-                Intent tmp = getIntent();
-                if(tmp.getBooleanExtra("isPayment", false)){
+                if(flat){
                     Intent i = new Intent();
                     i.putExtra("address",address);
                     setResult(TRA_VE_TU_USER_ADDRESS_ACTIVITY,i);
@@ -201,6 +204,7 @@ public class UserAddressActivity extends AppCompatActivity {
         intent.putExtra("Status", NEW_ACTIVITY);
         if(listAddress.size() == 0)
             intent.putExtra("IsBlank", true);
+
         mActivityLauncher.launch(intent);
     }
     private void UpdateAddressFirebase(Address address){
@@ -246,15 +250,16 @@ public class UserAddressActivity extends AppCompatActivity {
         dbRef.child(address.getAddressId()).setValue(address, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if(address.isDefault()){
+                    if (deFaultId!="" && !deFaultId.equals(address.getAddressId())){
+                        dbRef.child(deFaultId).child("default").setValue(false);
+                        deFaultId = address.getAddressId();
+                    }
+                }
                 CustomToast.makeText(getApplicationContext(),"Thêm địa chỉ thành công",CustomToast.SHORT,CustomToast.SUCCESS).show();
 
             }
         });
-        if(address.isDefault()){
-            if (deFaultId!="" && !deFaultId.equals(address.getAddressId())){
-                dbRef.child(deFaultId).child("default").setValue(false);
-                deFaultId = address.getAddressId();
-            }
-        }
+
     }
 }

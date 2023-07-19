@@ -16,6 +16,7 @@ import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -31,6 +32,7 @@ import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -45,6 +47,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -134,27 +137,41 @@ public class RequestToShopActivity extends AppCompatActivity {
         shopphone=shopPhone.getText().toString().trim();
         shopaddress=shopAddress.getText().toString().trim();
         if(TextUtils.isEmpty(shopname)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Name is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Name is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(shopdes)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Description is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(shopemail)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Email is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Email is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
+            return;
+        }
+        if((!Patterns.EMAIL_ADDRESS.matcher(shopEmail.getText().toString()).matches())){
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Email is wrong...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(shopphone)){
-            Toast.makeText(RequestToShopActivity.this, "Shop PhoneNumber is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop PhoneNumber is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
+            return;
+        }
+        if (!checkPhone(shopphone)){
+            CustomToast.makeText(RequestToShopActivity.this,"Shop PhoneNumber is not valid...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(shopaddress)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Address is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Address is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(uriImage.toString())){
-            Toast.makeText(RequestToShopActivity.this, "Shop Avatar is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Avatar is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         uploadImage();
@@ -199,7 +216,21 @@ public class RequestToShopActivity extends AppCompatActivity {
         });
 
     }
+    boolean checkPhone(String phone){
+        Pattern p = Pattern.compile("^[0-9]{10}$");
+        Pattern p1 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4}$");
+        Pattern p2 = Pattern.compile("^[0-9]{3}.[0-9]{3}.[0-9]{4}$");
+        Pattern p3 = Pattern.compile("^[0-9]{3} [0-9]{3} [0-9]{4}$");
+        Pattern p4 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4} (x|ext)[0-9]{4}$");
+        Pattern p5 = Pattern.compile("^\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}$");
+        if (p.matcher(phone).find() || p1.matcher(phone).find() || p2.matcher(phone).find()
+                || p3.matcher(phone).find() || p4.matcher(phone).find() || p5.matcher(phone).find())
+        {
 
+            return true;
+        }
+        else return false;
+    }
     private void initUI(){
         backbtn=findViewById(R.id.backbtn);
         avatarShop=findViewById(R.id.avatarShop);

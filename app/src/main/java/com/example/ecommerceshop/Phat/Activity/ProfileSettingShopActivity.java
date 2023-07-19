@@ -37,6 +37,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.regex.Pattern;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileSettingShopActivity extends AppCompatActivity {
@@ -106,6 +108,10 @@ public class ProfileSettingShopActivity extends AppCompatActivity {
             CustomToast.makeText(ProfileSettingShopActivity.this,"Shop PhoneNumber is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
+        if (!checkPhone(phone)){
+            CustomToast.makeText(ProfileSettingShopActivity.this,"Shop PhoneNumber is not valid...",CustomToast.SHORT,CustomToast.ERROR).show();
+            return;
+        }
         if(TextUtils.isEmpty(address)){
             CustomToast.makeText(ProfileSettingShopActivity.this,"Shop Address is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
@@ -115,6 +121,21 @@ public class ProfileSettingShopActivity extends AppCompatActivity {
             return;
         }
         uploadImage();
+    }
+    boolean checkPhone(String phone){
+        Pattern p = Pattern.compile("^[0-9]{10}$");
+        Pattern p1 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4}$");
+        Pattern p2 = Pattern.compile("^[0-9]{3}.[0-9]{3}.[0-9]{4}$");
+        Pattern p3 = Pattern.compile("^[0-9]{3} [0-9]{3} [0-9]{4}$");
+        Pattern p4 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4} (x|ext)[0-9]{4}$");
+        Pattern p5 = Pattern.compile("^\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}$");
+        if (p.matcher(phone).find() || p1.matcher(phone).find() || p2.matcher(phone).find()
+                || p3.matcher(phone).find() || p4.matcher(phone).find() || p5.matcher(phone).find())
+        {
+
+            return true;
+        }
+        else return false;
     }
 
     private void uploadImage() {

@@ -47,9 +47,13 @@ public class MainUserActivity extends AppCompatActivity {
         preferenceManagement.putBoolean(Constants.KEY_USER_ADMIN,false);
         mActivityHomeUserBinding = ActivityHomeUserBinding.inflate(getLayoutInflater());
         setContentView(mActivityHomeUserBinding.getRoot());
-        homeFragmentUser = new HomeFragmentUser();
-        //replaceFragment(homeFragmentUser);
-        replaceFragment(homeFragmentUser);
+
+
+            homeFragmentUser = new HomeFragmentUser();
+            //replaceFragment(homeFragmentUser);
+            replaceFragment(homeFragmentUser);
+
+
         bottomNavigationView =findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override

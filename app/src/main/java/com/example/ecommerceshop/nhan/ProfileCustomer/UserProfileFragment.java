@@ -122,7 +122,7 @@ public class UserProfileFragment extends Fragment {
 
             }
         });
-        databaseReference.child("Customer").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Users").child(firebaseAuth.getUid()).child("Customer").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         currentCustomer.setName(snapshot.child("CustomerInfos/name").getValue(String.class));

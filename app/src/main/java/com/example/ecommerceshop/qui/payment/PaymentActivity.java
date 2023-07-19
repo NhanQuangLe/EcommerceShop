@@ -174,6 +174,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent();
+                i.putExtra("isPayment", true);
                 i.setClass(getApplicationContext(), UserAddressActivity.class);
                 mActivityResultLauncher.launch(i);
             }
@@ -448,7 +449,7 @@ public class PaymentActivity extends AppCompatActivity {
         Date date = new Date();
         SimpleDateFormat sp = new SimpleDateFormat("dd/MM/yyyy");
         String orderedDate = sp.format(date);
-        long shipPrice = 0;
+        long shipPrice = itemPayment.getTienVanChuyen();
         String shopId = itemPayment.getShopId();
 
 
