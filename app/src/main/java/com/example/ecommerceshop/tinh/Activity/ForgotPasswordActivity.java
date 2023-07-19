@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
@@ -86,7 +87,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 textErrorEmail.setText("Email hợp lệ. Vui lòng kiểm tra email của bạn để đặt lại mật khẩu!");
                 textErrorEmail.setTextColor(Color.parseColor("#08FF00"));
                 textErrorEmail.setVisibility(View.VISIBLE);
-                Toast.makeText(ForgotPasswordActivity.this, "Email sent!", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(ForgotPasswordActivity.this, "Email sent!", CustomToast.LENGTH_SHORT, CustomToast.SUCCESS).show();
             }
             else
             {

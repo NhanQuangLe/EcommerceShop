@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.tinh.models.User;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -388,7 +389,7 @@ public class InputInfoActivity extends AppCompatActivity {
 
             } else {
                 loading(false);
-                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!", CustomToast.LENGTH_SHORT, CustomToast.ERROR).show();
             }
         });
         loading(false);
@@ -446,7 +447,7 @@ public class InputInfoActivity extends AppCompatActivity {
                 user.put("phoneNumber",editTextPhone.getText().toString().trim());
                 ref.setValue(user);
                 if (isWithGoogle){
-                    Toast.makeText(getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(getApplicationContext(), "Login Successful!", CustomToast.LENGTH_SHORT, CustomToast.SUCCESS).show();
                     Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i2);
                 }
@@ -463,7 +464,7 @@ public class InputInfoActivity extends AppCompatActivity {
     }
 
     private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        CustomToast.makeText(getApplicationContext(), message, CustomToast.LENGTH_SHORT, CustomToast.ERROR).show();
     }
 
     private void InitUI() {
