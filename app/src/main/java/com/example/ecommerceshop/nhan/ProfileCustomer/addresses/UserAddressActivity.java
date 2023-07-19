@@ -244,14 +244,15 @@ public class UserAddressActivity extends AppCompatActivity {
         dbRef.child(address.getAddressId()).setValue(address, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if(address.isDefault()){
+                    if (deFaultId!="" && !deFaultId.equals(address.getAddressId())){
+                        dbRef.child(deFaultId).child("default").setValue(false);
+                        deFaultId = address.getAddressId();
+                    }
+                }
                 Toast.makeText(UserAddressActivity.this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
             }
         });
-        if(address.isDefault()){
-            if (deFaultId!="" && !deFaultId.equals(address.getAddressId())){
-                dbRef.child(deFaultId).child("default").setValue(false);
-                deFaultId = address.getAddressId();
-            }
-        }
+
     }
 }
