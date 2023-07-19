@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,7 +16,7 @@ import android.widget.Toast;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityFavouriteShopsBinding;
 import com.example.ecommerceshop.nhan.Model.Shop;
-import com.example.ecommerceshop.toast.CustomToast;
+import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_products.FavouriteProductsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -119,16 +121,14 @@ public class FavouriteShopsActivity extends AppCompatActivity {
 
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError error) {
-                                                CustomToast.makeText(getApplicationContext(),"Fail",CustomToast.SHORT,CustomToast.ERROR).show();
-
+                                                Toast.makeText(FavouriteShopsActivity.this, "Fail", Toast.LENGTH_SHORT).show();
                                             }
                                         });
 
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        CustomToast.makeText(getApplicationContext(),error.getMessage()+  "",CustomToast.SHORT,CustomToast.ERROR).show();
-
+                                        Toast.makeText(FavouriteShopsActivity.this, error.getMessage()+  "", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }
@@ -161,21 +161,30 @@ public class FavouriteShopsActivity extends AppCompatActivity {
 
                     }
                 });
-        }
+    }
     public void ClickUnFolloweShop(Shop favouriteShop){
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference()
-                .child("Users")
-                .child(firebaseAuth.getUid())
-                .child("Customer")
-                .child("Followers");
-        dbRef.child(favouriteShop.getShopID())
-                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.app_name))
+                .setMessage("Bạn có chắc chắn muốn hủy theo dõi shop này không?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        CustomToast.makeText(getApplicationContext(),"Đã hủy theo dõi",CustomToast.SHORT,CustomToast.SUCCESS).show();
-
+                    public void onClick(DialogInterface dialog, int which) {
+                        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference()
+                                .child("Users")
+                                .child(firebaseAuth.getUid())
+                                .child("Customer")
+                                .child("Followers");
+                        dbRef.child(favouriteShop.getShopID())
+                                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
-                });
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
     }
 
- }
+}

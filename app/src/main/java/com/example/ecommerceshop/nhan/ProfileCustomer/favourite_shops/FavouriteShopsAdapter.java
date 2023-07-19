@@ -2,11 +2,13 @@ package com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Shop;
+import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,6 +54,14 @@ public class FavouriteShopsAdapter extends RecyclerView.Adapter<FavouriteShopsAd
                 mClickFavouriteShopListener.UnFollowShop(favouriteShop);
             }
         });
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShopActivityCustomer.class);
+                intent.putExtra("shopId", favouriteShop.getShopID());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -62,6 +73,7 @@ public class FavouriteShopsAdapter extends RecyclerView.Adapter<FavouriteShopsAd
           ImageView iv_ShopAvatar;
           TextView tv_ShopName, tv_ShopEmail, tv_ShopAddress, tv_ShopRating, tv_NumberFollower;
           AppCompatButton btn_UnFollow;
+          LinearLayout container;
         public FavouriteShopsViewholder(@NonNull View itemView) {
             super(itemView);
             iv_ShopAvatar = itemView.findViewById(R.id.iv_ShopAvatar);
@@ -71,6 +83,7 @@ public class FavouriteShopsAdapter extends RecyclerView.Adapter<FavouriteShopsAd
             tv_ShopRating = itemView.findViewById(R.id.tv_ShopRating);
             tv_NumberFollower = itemView.findViewById(R.id.tv_NumberFollower);
             btn_UnFollow = itemView.findViewById(R.id.btn_UnFollow);
+            container = itemView.findViewById(R.id.container);
         }
     }
 }
