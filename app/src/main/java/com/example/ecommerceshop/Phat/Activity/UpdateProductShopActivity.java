@@ -354,6 +354,7 @@ public class UpdateProductShopActivity extends AppCompatActivity {
         productCategory = CategoryProduct.getText().toString().trim();
         ProductBrand = productBrand.getText().toString().trim();
         ProductSite = productCountry.getText().toString().trim();
+        ProductQuantity = Integer.parseInt(productQuantity.getText().toString().trim());
         isDiscount=discountSwitch.isChecked();
         if(isDiscount){
 
@@ -391,9 +392,9 @@ public class UpdateProductShopActivity extends AppCompatActivity {
         }
         if(TextUtils.isEmpty(ProductBrand)){
             CustomToast.makeText(getApplicationContext(),"Product Brand is required...",CustomToast.SHORT,CustomToast.ERROR).show();
-
             return;
         }
+
         if(TextUtils.isEmpty(ProductSite)){
             CustomToast.makeText(getApplicationContext(),"Product Site is required...",CustomToast.SHORT,CustomToast.ERROR).show();
 

@@ -218,7 +218,7 @@
                     android:layout_marginBottom="10dp"
                     app:placeholderText="20"
                     app:endIconMode="clear_text"
-                    android:enabled="false"
+
                     app:helperTextTextColor="@color/primary_red">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/productQuantity"
