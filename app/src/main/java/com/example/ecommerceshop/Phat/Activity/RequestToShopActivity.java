@@ -40,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -123,11 +124,15 @@ public class RequestToShopActivity extends AppCompatActivity {
             return;
         }
         if((!Patterns.EMAIL_ADDRESS.matcher(shopEmail.getText().toString()).matches())){
-            Toast.makeText(RequestToShopActivity.this, "Shop Email is wrong...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RequestToShopActivity.this, "Shop Email is not valid...", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(shopphone)){
             CustomToast.makeText(RequestToShopActivity.this,"Shop PhoneNumber is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+            return;
+        }
+        if (!checkPhone(shopphone)){
+            CustomToast.makeText(RequestToShopActivity.this,"Shop PhoneNumber is not valid...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(shopaddress)){
@@ -140,7 +145,21 @@ public class RequestToShopActivity extends AppCompatActivity {
         }
         uploadImage();
     }
+    boolean checkPhone(String phone){
+        Pattern p = Pattern.compile("^[0-9]{10}$");
+        Pattern p1 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4}$");
+        Pattern p2 = Pattern.compile("^[0-9]{3}.[0-9]{3}.[0-9]{4}$");
+        Pattern p3 = Pattern.compile("^[0-9]{3} [0-9]{3} [0-9]{4}$");
+        Pattern p4 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4} (x|ext)[0-9]{4}$");
+        Pattern p5 = Pattern.compile("^\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}$");
+        if (p.matcher(phone).find() || p1.matcher(phone).find() || p2.matcher(phone).find()
+                || p3.matcher(phone).find() || p4.matcher(phone).find() || p5.matcher(phone).find())
+        {
 
+            return true;
+        }
+        else return false;
+    }
     private void uploadImage() {
         progressDialog.setMessage("UPLOADING....");
         progressDialog.show();

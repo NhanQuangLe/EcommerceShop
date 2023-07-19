@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -149,7 +150,10 @@ public class EditUserInfoActivity extends AppCompatActivity {
         }
         if(TextUtils.isEmpty(phoneNumber.getText().toString().trim())){
             CustomToast.makeText(getApplicationContext(),"User phone number is required...",CustomToast.SHORT,CustomToast.ERROR).show();
-
+            return;
+        }
+        if (!checkPhone(phoneNumber.getText().toString().trim())){
+            CustomToast.makeText(getApplicationContext(),"User PhoneNumber is not valid...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(userGender.getText().toString().trim())){
@@ -173,6 +177,21 @@ public class EditUserInfoActivity extends AppCompatActivity {
             currentCus.setAvatar(photo.getUri().toString());
             uploadImage();
         }
+    }
+    boolean checkPhone(String phone){
+        Pattern p = Pattern.compile("^[0-9]{10}$");
+        Pattern p1 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4}$");
+        Pattern p2 = Pattern.compile("^[0-9]{3}.[0-9]{3}.[0-9]{4}$");
+        Pattern p3 = Pattern.compile("^[0-9]{3} [0-9]{3} [0-9]{4}$");
+        Pattern p4 = Pattern.compile("^[0-9]{3}-[0-9]{3}-[0-9]{4} (x|ext)[0-9]{4}$");
+        Pattern p5 = Pattern.compile("^\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}$");
+        if (p.matcher(phone).find() || p1.matcher(phone).find() || p2.matcher(phone).find()
+                || p3.matcher(phone).find() || p4.matcher(phone).find() || p5.matcher(phone).find())
+        {
+
+            return true;
+        }
+        else return false;
     }
     private void uploadImage() {
         progressDialog.setMessage("UPLOADING....");
