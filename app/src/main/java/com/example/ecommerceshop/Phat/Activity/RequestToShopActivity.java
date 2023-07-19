@@ -1,5 +1,7 @@
 package com.example.ecommerceshop.Phat.Activity;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -10,14 +12,15 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -25,7 +28,9 @@ import com.example.ecommerceshop.Phat.Adapter.PhotoAdapter;
 import com.example.ecommerceshop.Phat.Model.Photo;
 import com.example.ecommerceshop.Phat.Model.RequestShop;
 import com.example.ecommerceshop.R;
-import com.example.ecommerceshop.toast.CustomToast;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
+import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -48,9 +53,10 @@ public class RequestToShopActivity extends AppCompatActivity {
     ImageView backbtn;
     CircleImageView avatarShop;
     FrameLayout addImgbtn;
-    TextInputEditText shopName, shopDescription, shopEmail,shopPhone,shopAddress;
+    TextInputEditText shopName, shopDescription, shopEmail,shopPhone;
     Button btnAddRequest;
     Uri uriImage;
+    TextView shopAddress;
     ProgressDialog progressDialog;
     FirebaseAuth firebaseAuth;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMultipleMedia = registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), uris -> {
@@ -59,12 +65,22 @@ public class RequestToShopActivity extends AppCompatActivity {
             Glide.with(getApplicationContext()).load(uris.get(0)).into(avatarShop);
         }
     });
+    private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent intent = result.getData();
+                    if (result.getResultCode() == 1) {
+                        shopAddress.setText(intent.getStringExtra("province"));
+                    }
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_to_shop);
         initUI();
-
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,6 +115,14 @@ public class RequestToShopActivity extends AppCompatActivity {
                 inputData();
             }
         });
+
+        shopAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(RequestToShopActivity.this, ProvinceActivity.class);
+                mActivityLauncher.launch(i);
+            }
+        });
     }
 
 
@@ -110,32 +134,27 @@ public class RequestToShopActivity extends AppCompatActivity {
         shopphone=shopPhone.getText().toString().trim();
         shopaddress=shopAddress.getText().toString().trim();
         if(TextUtils.isEmpty(shopname)){
-            CustomToast.makeText(RequestToShopActivity.this,"Shop Name is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+            Toast.makeText(RequestToShopActivity.this, "Shop Name is required...", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(shopdes)){
-            CustomToast.makeText(RequestToShopActivity.this,"Shop Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
-
+            Toast.makeText(RequestToShopActivity.this, "Shop Description is required...", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(shopemail)){
-            CustomToast.makeText(RequestToShopActivity.this,"Shop Email is required...",CustomToast.SHORT,CustomToast.ERROR).show();
-            return;
-        }
-        if((!Patterns.EMAIL_ADDRESS.matcher(shopEmail.getText().toString()).matches())){
-            Toast.makeText(RequestToShopActivity.this, "Shop Email is wrong...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RequestToShopActivity.this, "Shop Email is required...", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(shopphone)){
-            CustomToast.makeText(RequestToShopActivity.this,"Shop PhoneNumber is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+            Toast.makeText(RequestToShopActivity.this, "Shop PhoneNumber is required...", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(shopaddress)){
-            CustomToast.makeText(RequestToShopActivity.this,"Shop Address is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+            Toast.makeText(RequestToShopActivity.this, "Shop Address is required...", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(uriImage.toString())){
-            CustomToast.makeText(RequestToShopActivity.this,"Shop Avatar is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+            Toast.makeText(RequestToShopActivity.this, "Shop Avatar is required...", Toast.LENGTH_SHORT).show();
             return;
         }
         uploadImage();
@@ -173,7 +192,7 @@ public class RequestToShopActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 progressDialog.dismiss();
-                CustomToast.makeText(RequestToShopActivity.this,"Registrating to be Seller successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
+                Toast.makeText(RequestToShopActivity.this, "Registrating to be Seller successfully", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(RequestToShopActivity.this, SuccessRegisActivity.class));
                 finish();
             }
@@ -194,6 +213,7 @@ public class RequestToShopActivity extends AppCompatActivity {
         progressDialog=new ProgressDialog(RequestToShopActivity.this);
         progressDialog.setTitle("Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
-        firebaseAuth= FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+
     }
 }
