@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -119,6 +120,10 @@ public class RequestToShopActivity extends AppCompatActivity {
         }
         if(TextUtils.isEmpty(shopemail)){
             CustomToast.makeText(RequestToShopActivity.this,"Shop Email is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+            return;
+        }
+        if((!Patterns.EMAIL_ADDRESS.matcher(shopEmail.getText().toString()).matches())){
+            Toast.makeText(RequestToShopActivity.this, "Shop Email is wrong...", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(shopphone)){
