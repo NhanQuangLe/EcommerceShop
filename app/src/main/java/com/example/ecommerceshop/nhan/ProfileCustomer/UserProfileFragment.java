@@ -101,12 +101,16 @@ public class UserProfileFragment extends Fragment {
         return mView;
     }
     private void LoadData() {
-        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.getUid());
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("Shop").exists()){
+                if(snapshot.child("Users/" + firebaseAuth.getUid() +"/Shop").exists()){
                     mFragmentUserProfileBinding.tvBeginSale.setText("Cửa hàng của tôi");
+                    mFragmentUserProfileBinding.tvRegisFree.setText("");
+                }
+                else if(snapshot.child("Requests/" + firebaseAuth.getUid()).exists()){
+                    mFragmentUserProfileBinding.tvBeginSale.setText("Đang xét duyệt yêu cầu");
                     mFragmentUserProfileBinding.tvRegisFree.setText("");
                 }
               }

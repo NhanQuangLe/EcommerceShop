@@ -180,22 +180,20 @@
                        android:background="@drawable/bg_edit_text"
                        android:inputType="numberDecimal" />
                </com.google.android.material.textfield.TextInputLayout>
-               <com.google.android.material.textfield.TextInputLayout
-                   style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+               <TextView
+                   android:id="@+id/shopAddress"
                    android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_marginBottom="10dp"
-                   android:hint="Shop address"
-                   app:endIconMode="clear_text"
-                   app:helperTextTextColor="@color/primary_red">
-
-                   <com.google.android.material.textfield.TextInputEditText
-                       android:id="@+id/shopAddress"
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:background="@drawable/bg_edit_text"
-                       android:inputType="textPersonName|textCapWords" />
-               </com.google.android.material.textfield.TextInputLayout>
+                   android:layout_height="55dp"
+                   android:layout_marginTop="4dp"
+                   android:layout_marginBottom="15dp"
+                   android:background="@drawable/bg_edit_text"
+                   android:paddingTop="15dp"
+                   android:inputType="textCapSentences|textMultiLine"
+                   android:drawableEnd="@drawable/ic_arrow_right"
+                   android:paddingStart="16dp"
+                   android:paddingEnd="10dp"
+                   android:hint="Shop Address"
+                   android:textSize="16sp" />
 
                <Button
                    android:id="@+id/btnAddRequest"
