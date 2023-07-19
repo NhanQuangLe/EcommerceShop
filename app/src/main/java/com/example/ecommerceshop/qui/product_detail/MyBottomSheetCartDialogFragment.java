@@ -121,7 +121,8 @@ public class MyBottomSheetCartDialogFragment extends BottomSheetDialogFragment {
                             ref0.child(path).child("productQuantity").setValue(newQuantity, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                                    CustomToast.makeText(getContext(),"Thêm vào giỏ hàng thành công!",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                                     bottomSheetDialog.dismiss();
                                 }
                             });
@@ -132,7 +133,7 @@ public class MyBottomSheetCartDialogFragment extends BottomSheetDialogFragment {
                             ref0.child(cart.getCartId()).setValue(cart, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                                    CustomToast.makeText(getContext(),"Thêm vào giỏ hàng thành công!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                                     bottomSheetDialog.dismiss();
                                 }
                             });

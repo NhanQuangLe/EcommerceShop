@@ -359,6 +359,8 @@ public class ProductDetailFragment extends Fragment {
                         user.imageCus="";
                         user.idShop = product.getUid()+"Shop";
                         user.idCus="";
+                        user.phoneShop = snapshot.child("shopPhone").getValue(String.class);
+                        user.phoneCus="";
                         Intent intent = new Intent(getContext(), ChatScreenActivity.class);
                         intent.putExtra(Constants.KEY_USER ,user);
                         startActivity(intent);

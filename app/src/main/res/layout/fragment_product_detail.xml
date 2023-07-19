@@ -678,7 +678,7 @@ Bộ trưởng Bộ Xây dựng cũng giao nhiệm vụ biên soạn sửa đổ
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:text="Thêm vào giỏ hàng"
+                        android:text="Thêm"
 
                         android:layout_marginTop="5dp"
                         android:textColor="#9B9B9B" />

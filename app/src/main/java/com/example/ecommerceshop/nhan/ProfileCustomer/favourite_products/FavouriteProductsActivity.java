@@ -20,6 +20,7 @@ import com.example.ecommerceshop.nhan.Model.Review;
 import com.example.ecommerceshop.nhan.Model.Shop;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -138,7 +139,8 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        Toast.makeText(FavouriteProductsActivity.this, error.getMessage()+  "", Toast.LENGTH_SHORT).show();
+                                        CustomToast.makeText(getApplicationContext(),error.getMessage()+  "",CustomToast.SHORT,CustomToast.ERROR).show();
+
                                     }
                                 });
                     }
@@ -197,7 +199,8 @@ public class FavouriteProductsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(FavouriteProductsActivity.this, error.getMessage()+  "", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),error.getMessage()+  "",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }
@@ -219,7 +222,8 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                                     if(pd.child("productId").getValue(String.class).equals(favouriteProduct.getProductID()))
                                     {
                                         isContain = true;
-                                        Toast.makeText(FavouriteProductsActivity.this, "Sản phẩm đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
+                                        CustomToast.makeText(getApplicationContext(),"Sản phẩm đã có trong giỏ hàng",CustomToast.SHORT,CustomToast.ERROR).show();
+
                                     }
                                 }
                                 if(!isContain){
@@ -228,7 +232,8 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                                     dbRef.child(cartId).setValue(cart, new DatabaseReference.CompletionListener() {
                                         @Override
                                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                            Toast.makeText(FavouriteProductsActivity.this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                                            CustomToast.makeText(getApplicationContext(),"Đã thêm sản phẩm vào giỏ hàng",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                                         }
                                     });
                                 }
@@ -236,7 +241,7 @@ public class FavouriteProductsActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(FavouriteProductsActivity.this, "Can not get value", Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(getApplicationContext(),"Can not get value",CustomToast.SHORT,CustomToast.ERROR).show();
                             }
                         });
                     }
@@ -263,7 +268,8 @@ public class FavouriteProductsActivity extends AppCompatActivity {
                                 .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(FavouriteProductsActivity.this, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+                                        CustomToast.makeText(getApplicationContext(),"Đã xóa sản phẩm",CustomToast.SHORT,CustomToast.ERROR).show();
+
                                     }
                                 });
                     }
