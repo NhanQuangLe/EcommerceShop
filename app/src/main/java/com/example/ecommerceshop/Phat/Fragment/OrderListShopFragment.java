@@ -23,6 +23,7 @@ import com.example.ecommerceshop.Phat.Adapter.AdapterProductShop;
 import com.example.ecommerceshop.Phat.Model.OrderShop;
 import com.example.ecommerceshop.Phat.Model.Product;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -171,14 +172,16 @@ public class OrderListShopFragment extends Fragment {
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    CustomToast.makeText(getContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                                 }
                             });
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }
@@ -208,14 +211,16 @@ public class OrderListShopFragment extends Fragment {
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    CustomToast.makeText(getContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                                 }
                             });
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }

@@ -26,6 +26,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.Hist
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity;
 import com.example.ecommerceshop.qui.cart.CartActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -139,7 +140,8 @@ public class DeliveryOrderFragment extends Fragment {
 
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(getContext(), error.getMessage() + "", Toast.LENGTH_SHORT).show();
+                                                CustomToast.makeText(getContext(),error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                                             }
                                         });
                             }
@@ -147,7 +149,8 @@ public class DeliveryOrderFragment extends Fragment {
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), error.getMessage() + "", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getContext(),error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
     }

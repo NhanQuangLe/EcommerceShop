@@ -44,6 +44,7 @@ import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.AddressItem;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -219,7 +220,8 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ChooseAddressActivity.this, "Lỗi khi lấy địa chỉ", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Lỗi khi lấy địa chỉ",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
         queue.add(stringRequest);
@@ -255,7 +257,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(ChooseAddressActivity.this, "Lỗi khi lấy địa chỉ", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Lỗi khi lấy địa chỉ",CustomToast.SHORT,CustomToast.ERROR).show();
             }
         });
         queue.add(stringRequest);
@@ -334,7 +336,8 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 }
                             }
                             else{
-                                Toast.makeText(ChooseAddressActivity.this, "Lỗi khi tìm địa chỉ của bạn, hãy thử lại sau", Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(getApplicationContext(),"Lỗi khi tìm địa chỉ của bạn, hãy thử lại sau",CustomToast.SHORT,CustomToast.ERROR).show();
+
                             }
                         }
                     });
@@ -355,7 +358,8 @@ public class ChooseAddressActivity extends AppCompatActivity {
                 getLastLocation();
             }
             else {
-                Toast.makeText(ChooseAddressActivity.this, "Please turn on your Location App permissions", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Please turn on your Location App permissions",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         }
     }

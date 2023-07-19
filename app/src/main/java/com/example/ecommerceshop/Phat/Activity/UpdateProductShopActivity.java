@@ -27,6 +27,7 @@ import com.example.ecommerceshop.Phat.Adapter.PhotoAdapter;
 import com.example.ecommerceshop.Phat.Model.Photo;
 import com.example.ecommerceshop.Phat.Model.Product;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -231,7 +232,8 @@ public class UpdateProductShopActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(UpdateProductShopActivity.this, ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),error.getMessage()+"",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
         databaseReference.child("Trademark").addValueEventListener(new ValueEventListener() {
@@ -246,7 +248,8 @@ public class UpdateProductShopActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(UpdateProductShopActivity.this, ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),error.getMessage()+"",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }
@@ -259,13 +262,13 @@ public class UpdateProductShopActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         loadProductDetail();
-                        Toast.makeText(UpdateProductShopActivity.this, "Update product successfully", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),"Update product successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(UpdateProductShopActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),""+e.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
                     }
                 });
     }
@@ -319,7 +322,8 @@ public class UpdateProductShopActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(UpdateProductShopActivity.this, ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),""+error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
 
@@ -354,7 +358,8 @@ public class UpdateProductShopActivity extends AppCompatActivity {
         if(isDiscount){
 
             if(TextUtils.isEmpty(productDiscountPrice.getText().toString().trim())){
-                Toast.makeText(UpdateProductShopActivity.this, "Product Discount Price is required...", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Product Discount Price is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
                 return;
             } else ProductDiscountPrice= Integer.parseInt(productDiscountPrice.getText().toString().trim());
             int x = (int) (( Float.parseFloat(productDiscountPrice.getText().toString().trim())/
@@ -366,35 +371,42 @@ public class UpdateProductShopActivity extends AppCompatActivity {
             ProductDiscountPrice=0;
         }
         if(TextUtils.isEmpty(ProductName)){
-            Toast.makeText(UpdateProductShopActivity.this, "Product Name is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Product Name is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(ProductDescription)){
-            Toast.makeText(UpdateProductShopActivity.this, "Product Description is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Product Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(productCategory.equals("Loại sản phẩm")){
-            Toast.makeText(UpdateProductShopActivity.this, "Product Category is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Product Category is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(ProductBrand)){
-            Toast.makeText(UpdateProductShopActivity.this, "Product Brand is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Product Brand is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(ProductSite)){
-            Toast.makeText(UpdateProductShopActivity.this, "Product Site is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Product Site is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(productQuantity.getText().toString().trim())) {
-            Toast.makeText(UpdateProductShopActivity.this, "Product Quantity is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Product Quantity is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         } else ProductQuantity = Integer.parseInt(productQuantity.getText().toString().trim());
         if(TextUtils.isEmpty(productOriginalPrice.getText().toString().trim())){
-            Toast.makeText(UpdateProductShopActivity.this, "Product Price is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Product Price is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         } else productPrice = Integer.parseInt(productOriginalPrice.getText().toString().trim());
         if(photoList.size()==0) {
-            Toast.makeText(UpdateProductShopActivity.this, "Product Image is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Product Image is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         UploadImageFireStore();
@@ -441,7 +453,8 @@ public class UpdateProductShopActivity extends AppCompatActivity {
             public void onSuccess(Void unused) {
                 progressDialog.dismiss();
                 loadProductDetail();
-                Toast.makeText(UpdateProductShopActivity.this, "Update product successfully", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Update product successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
             }
         });
     }

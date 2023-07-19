@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.Task;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -114,7 +116,8 @@ public class ReviewActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(ReviewActivity.this, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(getApplicationContext(),"Lỗi hệ thống",CustomToast.SHORT,CustomToast.ERROR).show();
+
                 }
             });
 
@@ -168,7 +171,7 @@ public class ReviewActivity extends AppCompatActivity {
 
     private void SendReviews() {
         if (isHasEmptyReviews()) {
-            Toast.makeText(ReviewActivity.this, "Vui lòng đánh giá sản phẩm", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Vui lòng đánh giá sản phẩm",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
 
@@ -195,7 +198,8 @@ public class ReviewActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(ReviewActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Fail",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }
@@ -216,7 +220,7 @@ public class ReviewActivity extends AppCompatActivity {
     private void pushReviewToFirebase(int n){
         if(n == productViewList.size())
         {
-            Toast.makeText(ReviewActivity.this, "Cảm ơn bạn đã đánh giá", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Cảm ơn bạn đã đánh giá",CustomToast.SHORT,CustomToast.SUCCESS).show();
             onBackPressed();
             return;
         }

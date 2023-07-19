@@ -23,6 +23,7 @@ import com.example.ecommerceshop.nhan.Model.Review;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -110,7 +111,8 @@ public class HistoryOrdersAdapter extends RecyclerView.Adapter<HistoryOrdersAdap
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(context, "Lỗi hệ thống", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(context,"Lỗi hệ thống",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }

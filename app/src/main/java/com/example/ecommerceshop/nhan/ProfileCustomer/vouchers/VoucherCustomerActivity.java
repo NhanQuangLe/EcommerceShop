@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.qui.payment.Voucher;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -77,7 +78,8 @@ public class VoucherCustomerActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError error) {
-                                            Toast.makeText(VoucherCustomerActivity.this, "Fail to get vouchers", Toast.LENGTH_SHORT).show();
+                                            CustomToast.makeText(getApplicationContext(),"Fail to get vouchers",CustomToast.SHORT,CustomToast.ERROR).show();
+
                                         }
                                     });
                         }
@@ -85,7 +87,8 @@ public class VoucherCustomerActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(VoucherCustomerActivity.this, "Fail to get vouchers", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),"Fail to get vouchers",CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
 

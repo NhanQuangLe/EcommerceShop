@@ -29,6 +29,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.orders.delivery_orders.Del
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.IClickHistoryOrderListener;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
@@ -92,7 +93,8 @@ public class UnProcessedOrderAdapter extends RecyclerView.Adapter<UnProcessedOrd
                                                 orders.remove(order);
                                                 notifyDataSetChanged();
                                                 saveNotification("Cancelled", order);
-                                                Toast.makeText(context, "Hủy đơn thành công", Toast.LENGTH_SHORT).show();
+                                                CustomToast.makeText(context,"Hủy đơn thành công",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                                             }
                                         });
                             }

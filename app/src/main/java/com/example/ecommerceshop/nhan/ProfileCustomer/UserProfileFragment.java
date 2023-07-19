@@ -35,6 +35,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.vouchers.VoucherCustomerAc
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -132,7 +133,8 @@ public class UserProfileFragment extends Fragment {
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
     }
@@ -212,7 +214,8 @@ public class UserProfileFragment extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), "Fail", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getContext(),"Fail",CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
             }

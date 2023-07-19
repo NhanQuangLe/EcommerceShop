@@ -28,6 +28,7 @@ import com.example.ecommerceshop.Phat.Adapter.PhotoAdapter;
 import com.example.ecommerceshop.Phat.Model.Photo;
 import com.example.ecommerceshop.Phat.Model.Product;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -184,7 +185,8 @@ public class AddProductShopFragment extends Fragment  {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
         databaseReference.child("Trademark").addValueEventListener(new ValueEventListener() {
@@ -199,7 +201,8 @@ public class AddProductShopFragment extends Fragment  {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }
@@ -213,7 +216,8 @@ public class AddProductShopFragment extends Fragment  {
             public void onSuccess(Void unused) {
                 progressDialog.dismiss();
                 ResetData();
-                Toast.makeText(getContext(), "Add product successfully", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),"Add product successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
             }
         });
     }
@@ -242,7 +246,8 @@ public class AddProductShopFragment extends Fragment  {
         isDiscount=discountSwitch.isChecked();
         if(isDiscount){
             if(TextUtils.isEmpty(productDiscountPrice.getText().toString().trim())){
-                Toast.makeText(getContext(), "Product Discount Price is required...", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),"Product Discount Price is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
                 return;
             } else ProductDiscountPrice= Integer.parseInt(productDiscountPrice.getText().toString().trim());
             int x = (int) (( Float.parseFloat(productDiscountPrice.getText().toString().trim())/
@@ -254,35 +259,42 @@ public class AddProductShopFragment extends Fragment  {
             ProductDiscountPrice=0;
         }
         if(TextUtils.isEmpty(ProductName)){
-            Toast.makeText(getContext(), "Product Name is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getContext(),"Product Name is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(ProductDescription)){
-            Toast.makeText(getContext(), "Product Description is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getContext(),"Product Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(productCategory.equals("Loại sản phẩm")){
-            Toast.makeText(getContext(), "Product Category is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getContext(),"Product Category is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty("Thương hiệu")){
-            Toast.makeText(getContext(), "Product Brand is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getContext(),"Product Brand is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(ProductSite)){
-            Toast.makeText(getContext(), "Product Site is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getContext(),"Product Site is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(productQuantity.getText().toString().trim())) {
-            Toast.makeText(getContext(), "Product Quantity is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getContext(),"Product Quantity is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         } else ProductQuantity = Integer.parseInt(productQuantity.getText().toString().trim());
         if(TextUtils.isEmpty(productOriginalPrice.getText().toString().trim())){
-            Toast.makeText(getContext(), "Product Price is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getContext(),"Product Price is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         } else productPrice = Integer.parseInt(productOriginalPrice.getText().toString().trim());
         if(photoList.size()==0) {
-            Toast.makeText(getContext(), "Product Image is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getContext(),"Product Image is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         UploadImageFireStore();

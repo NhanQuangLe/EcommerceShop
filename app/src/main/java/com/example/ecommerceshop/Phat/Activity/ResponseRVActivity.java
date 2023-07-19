@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -34,7 +35,7 @@ public class ResponseRVActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String respone=responseRv.getText().toString().trim();
                 if(respone.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Your response is empty!", Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(getApplicationContext(),"Your response is empty!",CustomToast.SHORT,CustomToast.ERROR).show();
                     return;
                 }
                 HashMap<String, Object> hashMap = new HashMap<>();
@@ -44,13 +45,15 @@ public class ResponseRVActivity extends AppCompatActivity {
                         .updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                Toast.makeText(getApplicationContext(), "Response to your customer successfully!", Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(getApplicationContext(),"Response to your customer successfully!",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                                 onBackPressed();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(getApplicationContext(),e.getMessage()+"",CustomToast.SHORT,CustomToast.ERROR).show();
+
                             }
                         });
             }

@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.Phat.Model.Photo;
 import com.example.ecommerceshop.Phat.Model.RequestShop;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -85,27 +86,27 @@ public class ProfileSettingShopActivity extends AppCompatActivity {
         phone=shopPhone.getText().toString().trim();
         address=shopAddress.getText().toString().trim();
         if(TextUtils.isEmpty(name)){
-            Toast.makeText(ProfileSettingShopActivity.this, "Shop Name is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(ProfileSettingShopActivity.this,"Shop Name is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(des)){
-            Toast.makeText(ProfileSettingShopActivity.this, "Shop Description is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(ProfileSettingShopActivity.this,"Shop Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(email)){
-            Toast.makeText(ProfileSettingShopActivity.this, "Shop Email is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(ProfileSettingShopActivity.this,"Shop Email is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(phone)){
-            Toast.makeText(ProfileSettingShopActivity.this, "Shop PhoneNumber is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(ProfileSettingShopActivity.this,"Shop PhoneNumber is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(address)){
-            Toast.makeText(ProfileSettingShopActivity.this, "Shop Address is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(ProfileSettingShopActivity.this,"Shop Address is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(photo.getUri().toString())){
-            Toast.makeText(ProfileSettingShopActivity.this, "Shop Avatar is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(ProfileSettingShopActivity.this,"Shop Avatar is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         uploadImage();
@@ -142,7 +143,7 @@ public class ProfileSettingShopActivity extends AppCompatActivity {
             public void onSuccess(Void unused) {
                 progressDialog.dismiss();
                 LoadProfileDetail();
-                Toast.makeText(ProfileSettingShopActivity.this, "Update profile successfully", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(ProfileSettingShopActivity.this,"Update profile successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
             }
         });
     }
@@ -176,7 +177,7 @@ public class ProfileSettingShopActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(ProfileSettingShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(ProfileSettingShopActivity.this,""+error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
             }
         });
     }

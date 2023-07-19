@@ -21,6 +21,7 @@ import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.example.ecommerceshop.qui.payment.Voucher;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -299,7 +300,8 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Thất bại!", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),"Thất bại!",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
 
@@ -319,7 +321,8 @@ public class ShopCustomerFragment extends Fragment implements VoucherShopAdapter
         ref.setValue(tmp, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(getContext(), "Lưu voucher thành công", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),"Lưu voucher thành công",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
             }
         });
 

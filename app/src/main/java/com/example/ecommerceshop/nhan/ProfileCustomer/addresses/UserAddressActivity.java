@@ -21,6 +21,7 @@ import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.nhan.Model.AddressItem;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -228,7 +229,8 @@ public class UserAddressActivity extends AppCompatActivity {
                                 deFaultId = address.getAddressId();
                             }
                         }
-                        Toast.makeText(UserAddressActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),"Cập nhật thành công",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                     }
                 });
 
@@ -244,7 +246,8 @@ public class UserAddressActivity extends AppCompatActivity {
         dbRef.child(address.getAddressId()).setValue(address, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                Toast.makeText(UserAddressActivity.this, "Thêm địa chỉ thành công", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Thêm địa chỉ thành công",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
             }
         });
         if(address.isDefault()){

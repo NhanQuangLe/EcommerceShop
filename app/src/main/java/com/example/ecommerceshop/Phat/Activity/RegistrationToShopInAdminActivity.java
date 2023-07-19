@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.Phat.Model.RequestShop;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -111,7 +112,8 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
                 databaseReference1.child(id).child("Shop").updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(RegistrationToShopInAdminActivity.this, "Allow successfully!", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(RegistrationToShopInAdminActivity.this,"Allow successfully!",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                         isdelete=true;
                         deleteRequest(id);
                     }
@@ -145,7 +147,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            showToast(e.getMessage());
+                                            CustomToast.makeText(RegistrationToShopInAdminActivity.this,e.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
                                         }
                                     });
                         }
@@ -175,7 +177,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(RegistrationToShopInAdminActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(RegistrationToShopInAdminActivity.this,e.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
                     }
                 });
     }
@@ -200,7 +202,7 @@ public class RegistrationToShopInAdminActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(RegistrationToShopInAdminActivity.this, ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(RegistrationToShopInAdminActivity.this,error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
             }
         });
     }

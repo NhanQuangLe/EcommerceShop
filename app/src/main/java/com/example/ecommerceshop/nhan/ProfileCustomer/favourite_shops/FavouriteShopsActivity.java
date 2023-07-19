@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.ActivityFavouriteShopsBinding;
 import com.example.ecommerceshop.nhan.Model.Shop;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -118,14 +119,16 @@ public class FavouriteShopsActivity extends AppCompatActivity {
 
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(FavouriteShopsActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+                                                CustomToast.makeText(getApplicationContext(),"Fail",CustomToast.SHORT,CustomToast.ERROR).show();
+
                                             }
                                         });
 
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
-                                        Toast.makeText(FavouriteShopsActivity.this, error.getMessage()+  "", Toast.LENGTH_SHORT).show();
+                                        CustomToast.makeText(getApplicationContext(),error.getMessage()+  "",CustomToast.SHORT,CustomToast.ERROR).show();
+
                                     }
                                 });
                     }
@@ -169,7 +172,8 @@ public class FavouriteShopsActivity extends AppCompatActivity {
                 .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(FavouriteShopsActivity.this, "Đã hủy theo dõi", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),"Đã hủy theo dõi",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                     }
                 });
     }

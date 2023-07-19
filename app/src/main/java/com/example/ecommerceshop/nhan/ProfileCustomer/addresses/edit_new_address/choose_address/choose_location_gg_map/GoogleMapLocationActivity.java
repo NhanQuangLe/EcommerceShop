@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.EditAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -100,8 +101,9 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                                 intent.putExtra("location", choosenAddress);
                             }
                             else{
-                                Toast.makeText(GoogleMapLocationActivity.this, "Vui lòng chọn địa chỉ nằm trong vùng "
-                                        + currentAddress.GetAddressString(), Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(getApplicationContext(),"Vui lòng chọn địa chỉ nằm trong vùng "
+                                        + currentAddress.GetAddressString(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                                 return;
                             }
                         }
@@ -117,8 +119,8 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                             finish();
                         }
                         else{
-                            Toast.makeText(GoogleMapLocationActivity.this, "Vui lòng chọn địa chỉ nằm trong vùng "
-                                    + currentAddress.GetAddressString(), Toast.LENGTH_SHORT).show();
+                            CustomToast.makeText(getApplicationContext(),"Vui lòng chọn địa chỉ nằm trong vùng "
+                                    + currentAddress.GetAddressString(),CustomToast.SHORT,CustomToast.ERROR).show();
                         }
                 }
             }
@@ -153,7 +155,7 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                                 googleMap.addMarker(markerOptions);
                             } catch (Exception e){
 
-                                Toast.makeText(getApplicationContext(), "Không xác định được vị trí", Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(getApplicationContext(),"Không xác định được vị trí",CustomToast.SHORT,CustomToast.ERROR).show();
                                 e.printStackTrace();
                             }
                         }
@@ -192,7 +194,7 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                             googleMap.addMarker(markerOptions);
                         } catch (Exception e){
-                            Toast.makeText(getApplicationContext(), "Không xác định được vị trí", Toast.LENGTH_SHORT).show();
+                            CustomToast.makeText(getApplicationContext(),"Không xác định được vị trí",CustomToast.SHORT,CustomToast.ERROR).show();
                             e.printStackTrace();
                         }
                     }
@@ -211,7 +213,8 @@ public class GoogleMapLocationActivity extends AppCompatActivity {
                 getLastLocation();
             }
             else {
-                Toast.makeText(GoogleMapLocationActivity.this, "Please turn on your Location App permissions", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Please turn on your Location App permissions",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         }
     }

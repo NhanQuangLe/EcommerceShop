@@ -21,6 +21,7 @@ import com.example.ecommerceshop.Phat.Model.Notification;
 import com.example.ecommerceshop.Phat.Model.Product;
 import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -76,7 +77,8 @@ public class NotificationFragment extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
     }
