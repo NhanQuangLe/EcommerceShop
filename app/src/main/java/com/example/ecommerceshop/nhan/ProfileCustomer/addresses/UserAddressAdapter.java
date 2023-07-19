@@ -85,7 +85,6 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
             tv_DeFaultAddresss = itemView.findViewById(R.id.tv_DeFaultAddresss);
             btn_EditAddress = itemView.findViewById(R.id.btn_EditAddress);
             layout_address = itemView.findViewById(R.id.layout_address);
-
         }
     }
 }

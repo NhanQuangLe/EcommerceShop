@@ -1,5 +1,6 @@
 package com.example.ecommerceshop.qui.cart;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -24,6 +25,8 @@ import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.databinding.AdapterItemOnCartBinding;
 import com.example.ecommerceshop.qui.homeuser.Product;
+import com.example.ecommerceshop.tinh.Activity.DialogError;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -178,7 +181,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                     ref.removeValue(new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            Toast.makeText(mContext, "Đã xóa sản phẩm", Toast.LENGTH_SHORT).show();
+                            CustomToast.makeText(mContext,""+ "Đã xóa sản phẩm",CustomToast.SHORT,CustomToast.SUCCESS).show();
                             dialog.dismiss();
                         }
                     });
@@ -208,7 +211,8 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                 Log.e("name",snapshot.getRef().toString());
                 int quantity = snapshot.getValue(Integer.class);
                 if (productCart.getProductQuantity()==quantity){
-                    Toast.makeText(mContext, "Số lượng sản phẩm có sẵn không đủ để đáp ứng", Toast.LENGTH_SHORT).show();
+                    DialogError dialogError = new DialogError((Activity)mContext ,"Số lượng sản phẩm có sẵn không đủ để đáp ứng");
+                    dialogError.show();
                 }
                 else {
                     int newQuantity = productCart.getProductQuantity()+1;

@@ -358,7 +358,7 @@ public class PaymentActivity extends AppCompatActivity {
         mListItemPayment = new ArrayList<>();
         itemPaymentAdapter.setData(mListItemPayment);
         mActivityPaymentBinding.rcvItemPayment.setAdapter(itemPaymentAdapter);
-        ProductCart productCart = new ProductCart("null", mProduct.getProductId(), mProduct.getProductName(),
+        ProductCart productCart = new ProductCart("null", mProduct.getProductId(), mProduct.getProductQuantity(), mProduct.getProductName(),
                 mQuantity, mProduct.getProductPrice(), mProduct.getProductDiscountPrice(), mProduct.getUriList().get(0), mProduct.getUid(),
                 mProduct.getShopName(), mProduct.getProductBrand(), mProduct.getProductCategory());
         String shopId = mProduct.getUid();
@@ -468,7 +468,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             long pPrice = 0;
             if (productCart.getProductDiscountPrice() != 0) {
-                pPrice = productCart.getProductDiscountPrice();
+                pPrice = productCart.getProductPrice()-productCart.getProductDiscountPrice();
             } else pPrice = productCart.getProductPrice();
             long pQuantity = productCart.getProductQuantity();
             ItemOrder itemOrder = new ItemOrder(pid, pAvatar, pBrand, pName, pPrice, pQuantity, pCategory);

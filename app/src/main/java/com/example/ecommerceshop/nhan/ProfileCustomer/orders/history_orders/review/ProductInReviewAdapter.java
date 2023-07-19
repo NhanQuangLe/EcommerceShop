@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Review;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -69,7 +70,8 @@ public class ProductInReviewAdapter extends RecyclerView.Adapter<ProductInReview
             public void onClick(View view) {
                 if(review.getUriList().size() == 5)
                 {
-                    Toast.makeText(context, "Chỉ được chọn tối đa 5 ảnh", Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(context,"Chỉ được chọn tối đa 5 ảnh",CustomToast.SHORT,CustomToast.ERROR).show();
+
                     return;
                 }
                 mClickProductInReviewListener.AddImage(imageReviewAdapter, review);

@@ -24,6 +24,7 @@ import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.chat.network.ApiClient;
 import com.example.ecommerceshop.chat.network.ApiService;
 import com.example.ecommerceshop.databinding.ActivityChatScreenBinding;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -138,7 +139,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                             if (responseJson.getInt("failure") == 1)
                             {
                                 JSONObject error = (JSONObject) results.get(0);
-                                showToast(error.getString("error"));
+                                CustomToast.makeText(getApplicationContext(),"Error: " + response.code(),CustomToast.SHORT,CustomToast.ERROR).show();
                                 return;
                             }
                         }
@@ -148,17 +149,18 @@ public class ChatScreenActivity extends AppCompatActivity {
                     {
                         e.printStackTrace();
                     }
-                    showToast("Notification send successfully!");
+                    CustomToast.makeText(getApplicationContext(),"Notification send successfully!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                 }
                 else
                 {
-                    showToast("Error: " + response.code());
+                    CustomToast.makeText(getApplicationContext(),"Error: " + response.code(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<String> call,@NonNull Throwable t) {
-                showToast(t.getMessage());
+                CustomToast.makeText(getApplicationContext(),t.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
             }
         });
     }

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.ecommerceshop.Phat.Model.Voucher;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -141,7 +142,8 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-                                    Toast.makeText(UpdateVoucherShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    CustomToast.makeText(getApplicationContext(),error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                                 }
                             });
                 }
@@ -149,7 +151,8 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }
@@ -189,11 +192,13 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
                                     ref.child(uid).child("Customer").child("Vouchers").child(voucherid).removeValue();
                                 }
                                 onBackPressed();
-                                Toast.makeText(UpdateVoucherShopActivity.this, "Delete voucher successfully!", Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(getApplicationContext(),"Delete voucher successfully!",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(getApplicationContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(getApplicationContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                             }
                         });
                     }
@@ -201,7 +206,8 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(UpdateVoucherShopActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),""+ e.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
     }
@@ -225,7 +231,8 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(UpdateVoucherShopActivity.this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),""+ error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
     }
@@ -235,27 +242,30 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
         voucherdes=voucherDes.getText().toString().trim();
         exprieddate=expiredDate.getText().toString().trim();
         if(TextUtils.isEmpty(vouchercode)){
-            Toast.makeText(UpdateVoucherShopActivity.this, "Voucher Code is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Voucher Code is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(voucherdes)){
-            Toast.makeText(UpdateVoucherShopActivity.this, "Voucher Description is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Voucher Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(exprieddate.equals("Ngày hết hạn")){
-            Toast.makeText(UpdateVoucherShopActivity.this, "Voucher Expired date is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Voucher Expired date is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(voucherQuantity.getText().toString().trim())){
-            Toast.makeText(UpdateVoucherShopActivity.this, "Voucher quantity is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Voucher quantity is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         } else quantity = Integer.parseInt(voucherQuantity.getText().toString().trim());
         if(TextUtils.isEmpty(voucherDiscountPrice.getText().toString().trim())){
-            Toast.makeText(UpdateVoucherShopActivity.this, "Voucher discount price is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Voucher discount price is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         } else disprice = Integer.parseInt(voucherDiscountPrice.getText().toString().trim());
         if(TextUtils.isEmpty(minimumPrice.getText().toString().trim())){
-            Toast.makeText(UpdateVoucherShopActivity.this, "Voucher quantity is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Voucher quantity is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         } else miniprice = Integer.parseInt(minimumPrice.getText().toString().trim());
 
@@ -274,7 +284,8 @@ public class UpdateVoucherShopActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
                         LoadVoucherDetail();
-                        Toast.makeText(UpdateVoucherShopActivity.this, "Update voucher successfully", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),"Update voucher successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                     }
                 });
     }

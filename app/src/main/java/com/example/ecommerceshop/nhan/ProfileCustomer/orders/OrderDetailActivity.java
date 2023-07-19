@@ -129,22 +129,26 @@ public class OrderDetailActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         ref.child("Users").child(FirebaseAuth.getInstance().getUid())
                 .child("Customer")
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.child("Notifications" + ho.getOrderId()).exists()){
-                                    tv_DateSuccess.setText(ho.getOrderedDate());
-                                }
-                                else{
-                                    tv_DateSuccess.setText("");
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.child("Notifications").exists()){
+                            for(DataSnapshot noti : snapshot.child("Notifications").getChildren()){
+                                if(noti.child("orderId").getValue(String.class).equals(ho.getOrderId())){
+                                    tv_DateSuccess.setText(noti.child("dateNotifi").getValue(String.class));
                                 }
                             }
+                        }
+                        else{
+                            tv_DateSuccess.setText(ho.getOrderedDate());
+                        }
+                    }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+                    }
+                });
 
         item_order_shop.setOnClickListener(new View.OnClickListener() {
             @Override

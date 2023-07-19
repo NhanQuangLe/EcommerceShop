@@ -43,6 +43,7 @@ import com.example.ecommerceshop.qui.spinner.SpinnerItem;
 import com.example.ecommerceshop.tinh.Activity.HelpActivity;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.example.ecommerceshop.tinh.Activity.PaymentManualActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -254,7 +255,8 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getContext(),error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
     }
@@ -367,7 +369,8 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(getContext(), "Thất bại!", Toast.LENGTH_SHORT).show();
+                            CustomToast.makeText(getContext(),"Thất bại!",CustomToast.SHORT,CustomToast.ERROR).show();
+
                         }
                     });
                 }
@@ -375,7 +378,8 @@ public class HomeFragmentUser extends Fragment implements NavigationView.OnNavig
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Thất bại!", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getContext(),"Thất bại!",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
 

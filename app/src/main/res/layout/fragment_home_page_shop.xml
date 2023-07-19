@@ -7,7 +7,7 @@
     android:background="@color/primary_gray"
     tools:context=".Phat.Fragment.HomePageShopFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/searchViewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,21 +20,23 @@
 
         <EditText
             android:id="@+id/searchView"
-            android:layout_width="345dp"
+            android:layout_width="match_parent"
             android:layout_height="42dp"
             android:background="@drawable/bg_search_view"
             android:hint="Search"
+            android:layout_marginEnd="40dp"
             android:drawableStart="@drawable/ic_search"
             android:padding="10dp"/>
 
         <ImageView
+            android:layout_alignParentRight="true"
             android:id="@+id/imageView4"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_filter"
             android:layout_marginTop="5dp"
             />
-    </LinearLayout>
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:visibility="gone"

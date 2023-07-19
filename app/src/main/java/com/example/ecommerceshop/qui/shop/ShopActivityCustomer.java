@@ -159,6 +159,8 @@ public class ShopActivityCustomer extends AppCompatActivity {
                         user.imageCus="";
                         user.idShop = shopId+"Shop";
                         user.idCus="";
+                        user.phoneShop = snapshot.child("shopPhone").getValue(String.class);
+                        user.phoneCus="";
                         Intent intent = new Intent(getApplicationContext(), ChatScreenActivity.class);
                         intent.putExtra(Constants.KEY_USER ,user);
                         startActivity(intent);

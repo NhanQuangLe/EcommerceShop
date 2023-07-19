@@ -20,6 +20,7 @@ import com.example.ecommerceshop.chat.models.ChatMessage;
 import com.example.ecommerceshop.chat.models.UserChat;
 import com.example.ecommerceshop.databinding.ActivityMainBinding;
 import com.example.ecommerceshop.databinding.ActivityMainChatBinding;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.firebase.auth.FirebaseAuth;
@@ -135,7 +136,9 @@ public class MainChatActivity  extends BaseActivity implements ConversionListene
         DocumentReference documentReference =
                 db.collection(Constants.KEY_COLLECTION_USER).document(userId);
         documentReference.update(Constants.KEY_FCM_TOKEN, token)
-                .addOnFailureListener(e -> showToast("Unable to update token !"));
+                .addOnFailureListener(e ->  CustomToast.makeText(getApplicationContext(),"Unable to update token !",CustomToast.SHORT,CustomToast.ERROR).show());
+
+
     }
     private void showToast(String message)
     {

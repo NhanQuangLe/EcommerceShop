@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.ecommerceshop.Phat.Adapter.AdapterImgAdsShop;
 import com.example.ecommerceshop.Phat.Model.Photo;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -92,7 +93,8 @@ public class ImageAdsShopActivity extends AppCompatActivity {
 
     private void inputdate() {
         if(photoList.size()==0){
-            Toast.makeText(this, "Photo is required!", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Photo is required!",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         else{
@@ -146,7 +148,9 @@ public class ImageAdsShopActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(ImageAdsShopActivity.this, ""+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(ImageAdsShopActivity.this,error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
+
             }
         });
 
@@ -161,7 +165,7 @@ public class ImageAdsShopActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
                         loadPhotoList();
-                        Toast.makeText(ImageAdsShopActivity.this, "Upload image ads successfully", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(ImageAdsShopActivity.this,"Upload image ads successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
                     }
                 });
     }

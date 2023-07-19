@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.qui.payment.Voucher;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,7 +67,8 @@ public class VoucherCustomerAdapter extends RecyclerView.Adapter<VoucherCustomer
                             .removeValue(new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    Toast.makeText(context, "Remove voucher successfully!", Toast.LENGTH_SHORT).show();
+                                    CustomToast.makeText(context,"Remove voucher successfully!",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                                 }
                             });
                 }

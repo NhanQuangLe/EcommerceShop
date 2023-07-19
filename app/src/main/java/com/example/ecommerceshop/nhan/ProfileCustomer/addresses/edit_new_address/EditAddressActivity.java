@@ -33,6 +33,7 @@ import com.example.ecommerceshop.nhan.Model.Address;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.UserAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.ChooseAddressActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.addresses.edit_new_address.choose_address.choose_location_gg_map.GoogleMapLocationActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -69,9 +70,10 @@ public class EditAddressActivity extends AppCompatActivity {
     Address addressNew, currentAddress;
     android.location.Address currentAddressMap;
     ImageView ic_back;
-    String stringAddress;
+    String stringAddress, stringNameAddress;
     LinearLayout ll_MapOutLine;
-    boolean check = false;
+    boolean checkCreateAddressByAPI = false;
+    boolean isBlank = false;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -84,7 +86,8 @@ public class EditAddressActivity extends AppCompatActivity {
                             tv_MainAddress.setText(mainAddress);
                             ct_OutMap.setVisibility(View.VISIBLE);
                             stringAddress = mainAddress;
-                            check = true;
+                            stringNameAddress = intent.getStringExtra("stringNameAddress");
+                            checkCreateAddressByAPI = true;
                             loadCurrentAddress(mainAddress);
                             break;
                         case ChooseAddressActivity.SUCCESS_CREATE_ADDRESS_BY_CURRENT_LOCATION:
@@ -108,20 +111,13 @@ public class EditAddressActivity extends AppCompatActivity {
                             }
 
                             else
-                                Toast.makeText(EditAddressActivity.this, "Fail to get your current address!", Toast.LENGTH_SHORT).show();
+                            CustomToast.makeText(getApplicationContext(),"Fail to get your current address!",CustomToast.SHORT,CustomToast.ERROR).show();
+
                             break;
                         case GoogleMapLocationActivity.CHOOSE_ADDRESS_MAP:
                             android.location.Address adr = intent.getParcelableExtra("location");
                             if(adr != null){
                                 loadCurrentAddress(adr);
-                            }
-                            break;
-                        case GoogleMapLocationActivity.CHOOSE_ADDRESS_MAP_BY_STRING_ADDRESS:
-                            if(intent.getBooleanExtra("isChoose", false)){
-                                android.location.Address address = intent.getParcelableExtra("location");
-                                if(address != null){
-                                    loadCurrentAddress(address);
-                                }
                             }
                             break;
                     }
@@ -153,7 +149,18 @@ public class EditAddressActivity extends AppCompatActivity {
         }
         else{
             if(intent.getBooleanExtra("IsBlank", false)){
+                sw_DeFaultAddress.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(isBlank){
+                            sw_DeFaultAddress.setChecked(true);
+                            Toast.makeText(EditAddressActivity.this, "Địa chỉ đầu tiên là địa chỉ mặc định! Không được hủy chọn", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 sw_DeFaultAddress.setChecked(true);
+                //sw_DeFaultAddress.setClickable(false);
+                isBlank = true;
             }
         }
     }
@@ -171,19 +178,18 @@ public class EditAddressActivity extends AppCompatActivity {
         ll_MapOutLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
-                intent.putExtra("status", status);
-                if(status == UserAddressActivity.EDIT_ACTIVITY){
-                    if(check){
-                        intent.putExtra("latitude", latitude);
-                        intent.putExtra("longitude", longitude);
-                        intent.putExtra("check", check);
-                        intent.putExtra("stringAddress", stringAddress);
-                    }else{
-                        intent.putExtra("location", currentAddress);
-                    }
-                }
-                mActivityLauncher.launch(intent);
+//                Intent intent = new Intent(EditAddressActivity.this, GoogleMapLocationActivity.class);
+//                intent.putExtra("status", status);
+//                if(checkCreateAddressByAPI){
+//                    intent.putExtra("latitude", latitude);
+//                    intent.putExtra("longitude", longitude);
+//                    intent.putExtra("checkCreateAddressByAPI", checkCreateAddressByAPI);
+//                    intent.putExtra("stringAddress", stringAddress);
+//                    intent.putExtra("stringNameAddress", stringNameAddress);
+//                }else{
+//                    intent.putExtra("location", currentAddress);
+//                }
+//                mActivityLauncher.launch(intent);
             }
         });
         btn_ChooseAddress = findViewById(R.id.btn_ChooseAddress);
@@ -233,9 +239,10 @@ public class EditAddressActivity extends AppCompatActivity {
         sw_DeFaultAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(address.isDefault()){
+                if(address.isDefault() || isBlank){
                     sw_DeFaultAddress.setChecked(true);
-                    Toast.makeText(EditAddressActivity.this, "Địa chỉ này đang là địa chỉ mặc định! Không được hủy chọn", Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(getApplicationContext(),"Địa chỉ này đang là địa chỉ mặc định! Không được hủy chọn",CustomToast.SHORT,CustomToast.ERROR).show();
+
                 }
             }
         });
@@ -263,7 +270,8 @@ public class EditAddressActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if(address.isDefault())
                         {
-                            Toast.makeText(EditAddressActivity.this, "Không thể xóa địa chỉ mặc định", Toast.LENGTH_SHORT).show();
+                            CustomToast.makeText(getApplicationContext(),"Không thể xóa địa chỉ mặc định",CustomToast.SHORT,CustomToast.ERROR).show();
+
                             return;
                         }
                         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
@@ -275,7 +283,7 @@ public class EditAddressActivity extends AppCompatActivity {
                                 .removeValue(new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                        Toast.makeText(EditAddressActivity.this, "Xóa thành công!", Toast.LENGTH_SHORT).show();
+                                        CustomToast.makeText(getApplicationContext(),"Xóa thành công!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                                         finish();
                                     }
                                 });
@@ -315,28 +323,31 @@ public class EditAddressActivity extends AppCompatActivity {
     private boolean CheckStringAndConstraint(){
         if(et_FullName.getText().toString().trim().equals(""))
         {
-            Toast.makeText(this, "Vui lòng nhập đầy đủ họ tên", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Vui lòng nhập đầy đủ họ tên",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return false;
         }
         if(et_PhoneNumber.getText().toString().trim().equals(""))
         {
-            Toast.makeText(this, "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Vui lòng nhập số điện thoại",CustomToast.SHORT,CustomToast.ERROR).show();
             return false;
         }
         String pattern = "\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
         if(!et_PhoneNumber.getText().toString().trim().matches(pattern))
         {
-            Toast.makeText(this, "Vui lòng đúng định dạnh số điện thoại", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Vui lòng đúng định dạnh số điện thoại",CustomToast.SHORT,CustomToast.ERROR).show();
             return false;
         }
         if(tv_MainAddress.getText().toString().trim().equals(""))
         {
-            Toast.makeText(this, "Vui lòng chọn địa chỉ", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Vui lòng chọn địa chỉ",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return false;
         }
         if(et_Detail.getText().toString().trim().equals(""))
         {
-            Toast.makeText(this, "Vui lòng nhập chi tiết địa chỉ", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"Vui lòng nhập chi tiết địa chỉ",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return false;
         }
         return true;
@@ -379,7 +390,8 @@ public class EditAddressActivity extends AppCompatActivity {
                     });
                 }
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Không tìm ra địa điểm", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Không tìm ra địa điểm",CustomToast.SHORT,CustomToast.ERROR).show();
+
                 longitude = latitude = Double.valueOf(0);
             }
         }

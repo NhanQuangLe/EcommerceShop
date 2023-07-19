@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.ecommerceshop.MainUserActivity;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -252,7 +253,8 @@ public class SignUpActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Log.e("e", Objects.requireNonNull(e.getMessage()).trim());
-                Toast.makeText(getApplicationContext(), "Một vài điều gì đó đang không đúng", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Something went wrong!",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         }
     }
@@ -267,7 +269,8 @@ public class SignUpActivity extends AppCompatActivity {
             }
             else
             {
-                Toast.makeText(getApplicationContext(), "Thất bại", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(getApplicationContext(),"Thất bại",CustomToast.SHORT,CustomToast.ERROR).show();
+
             }
         });
     }

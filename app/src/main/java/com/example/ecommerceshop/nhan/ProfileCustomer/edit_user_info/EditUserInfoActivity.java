@@ -29,6 +29,7 @@ import com.example.ecommerceshop.nhan.Model.Shop;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.FavouriteShopsAdapter;
 import com.example.ecommerceshop.nhan.ProfileCustomer.favourite_shops.IClickFavouriteShopListener;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -142,19 +143,22 @@ public class EditUserInfoActivity extends AppCompatActivity {
     }
     private void inputData() {
         if(TextUtils.isEmpty(userName.getText().toString().trim())){
-            Toast.makeText(EditUserInfoActivity.this, "User Name is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"User Name is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(phoneNumber.getText().toString().trim())){
-            Toast.makeText(EditUserInfoActivity.this, "User phone number is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"User phone number is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(userGender.getText().toString().trim())){
-            Toast.makeText(EditUserInfoActivity.this, "User Gender is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"User Gender is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(userDOB.getText().toString().trim())){
-            Toast.makeText(EditUserInfoActivity.this, "User Date of birth is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(getApplicationContext(),"User Date of birth is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
 
@@ -210,7 +214,8 @@ public class EditUserInfoActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
-                        Toast.makeText(EditUserInfoActivity.this, "Update profile successfully", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getApplicationContext(),"Update profile successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                         finish();
                     }
                 });

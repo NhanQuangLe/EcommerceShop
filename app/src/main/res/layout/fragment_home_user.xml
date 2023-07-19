@@ -58,7 +58,7 @@
                         </Spinner>
                         <EditText
                             android:id="@+id/edit_text_search"
-                            android:layout_width="160dp"
+                            android:layout_width="140dp"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:paddingStart="5dp"
@@ -101,6 +101,7 @@
                             android:layout_height="20dp"
                             android:background="@drawable/bg_circle"
                             android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="10dp"
                             android:id="@+id/icon_cart_quantity">
                             <TextView
                                 android:layout_width="wrap_content"
@@ -290,6 +291,7 @@
         android:layout_gravity="start"
         app:menu="@menu/menu_nav"
         app:itemHorizontalPadding="40dp"
+        android:visibility="gone"
       />
 
 </androidx.drawerlayout.widget.DrawerLayout>

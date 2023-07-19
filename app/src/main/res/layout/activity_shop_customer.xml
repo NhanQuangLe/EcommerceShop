@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"
+                android:paddingEnd="0dp"
                 android:paddingTop="15dp"
                 android:orientation="vertical">
 
@@ -93,7 +93,7 @@
                     android:paddingTop="20dp"
                     android:paddingBottom="10dp"
 
-                    android:paddingEnd="15dp"
+
                     android:gravity="center_vertical">
 
                     <RelativeLayout
@@ -151,7 +151,7 @@
                             app:cardCornerRadius="5dp"
                             android:id="@+id/btn_follow"
                             android:layout_marginTop="35dp"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginEnd="30dp"
 
                             >
                             <LinearLayout
@@ -162,6 +162,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingEnd="15dp"
                                 android:gravity="center"
+
                                 android:orientation="horizontal">
 
                                 <TextView

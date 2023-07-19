@@ -52,7 +52,13 @@
             android:exported="false" />
         <activity
             android:name=".tinh.Activity.SplashScreenActivity"
-            android:exported="true" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".tinh.Activity.ForgotPasswordActivity"
             android:exported="false" />
@@ -72,11 +78,7 @@
             android:name=".tinh.Activity.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".tinh.Activity.HelpActivity"

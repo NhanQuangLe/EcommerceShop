@@ -46,6 +46,7 @@ import com.example.ecommerceshop.qui.homeuser.IClickProductItemListener;
 import com.example.ecommerceshop.qui.homeuser.Product;
 import com.example.ecommerceshop.qui.homeuser.ProductAdapter;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
+import com.example.ecommerceshop.tinh.Activity.DialogError;
 import com.example.ecommerceshop.utilities.Constants;
 import com.example.ecommerceshop.utilities.PreferenceManagement;
 import com.google.firebase.auth.FirebaseAuth;
@@ -358,6 +359,8 @@ public class ProductDetailFragment extends Fragment {
                         user.imageCus="";
                         user.idShop = product.getUid()+"Shop";
                         user.idCus="";
+                        user.phoneShop = snapshot.child("shopPhone").getValue(String.class);
+                        user.phoneCus="";
                         Intent intent = new Intent(getContext(), ChatScreenActivity.class);
                         intent.putExtra(Constants.KEY_USER ,user);
                         startActivity(intent);
@@ -405,11 +408,17 @@ public class ProductDetailFragment extends Fragment {
     }
 
     private void showNavCarDetail() {
+
         MyBottomSheetCartDialogFragment myBottomSheetCartDialogFragment = MyBottomSheetCartDialogFragment.newInstance(product);
         myBottomSheetCartDialogFragment.show(getParentFragmentManager(), myBottomSheetCartDialogFragment.getTag());
     }
 
     private void showNavBuyDetail() {
+        if (product.getProductQuantity()<=0){
+            DialogError dialogError = new DialogError(getActivity(),"Số lượng sản phẩm không đủ để đáp ứng!");
+            dialogError.show();
+            return;
+        }
         MyBottmSheetBuySingleProductDialogFragment myBottmSheetBuySingleProductDialogFragment = MyBottmSheetBuySingleProductDialogFragment.newInstance(product);
         myBottmSheetBuySingleProductDialogFragment.show(getParentFragmentManager(), myBottmSheetBuySingleProductDialogFragment.getTag());
     }

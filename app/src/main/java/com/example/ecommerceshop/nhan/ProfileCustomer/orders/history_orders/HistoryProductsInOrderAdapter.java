@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -75,7 +76,8 @@ public class HistoryProductsInOrderAdapter extends RecyclerView.Adapter<HistoryP
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(context, "Lỗi khi lấy dữ liệu", Toast.LENGTH_SHORT).show();
+                                CustomToast.makeText(context,"Lỗi khi lấy dữ liệu",CustomToast.SHORT,CustomToast.ERROR).show();
+
                             }
                         });
             }

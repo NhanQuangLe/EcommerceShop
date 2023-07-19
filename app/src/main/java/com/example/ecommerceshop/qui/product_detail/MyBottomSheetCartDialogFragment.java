@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.qui.homeuser.Product;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -87,7 +88,8 @@ public class MyBottomSheetCartDialogFragment extends BottomSheetDialogFragment {
                 String quantityStr = tvQuantity.getText().toString();
                 int quantity = Integer.parseInt(quantityStr);
                 if (quantity==mProduct.getProductQuantity()){
-                    Toast.makeText(getContext(), "Số lượng có sẵn không đủ đáp ứng!", Toast.LENGTH_SHORT).show();
+                    CustomToast.makeText(getContext(),"Số lượng có sẵn không đủ đáp ứng!",CustomToast.SHORT,CustomToast.ERROR).show();
+
                     return;
                 }
                 quantity++;
@@ -119,7 +121,8 @@ public class MyBottomSheetCartDialogFragment extends BottomSheetDialogFragment {
                             ref0.child(path).child("productQuantity").setValue(newQuantity, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                                    CustomToast.makeText(getContext(),"Thêm vào giỏ hàng thành công!",CustomToast.SHORT,CustomToast.SUCCESS).show();
+
                                     bottomSheetDialog.dismiss();
                                 }
                             });
@@ -130,7 +133,7 @@ public class MyBottomSheetCartDialogFragment extends BottomSheetDialogFragment {
                             ref0.child(cart.getCartId()).setValue(cart, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
+                                    CustomToast.makeText(getContext(),"Thêm vào giỏ hàng thành công!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                                     bottomSheetDialog.dismiss();
                                 }
                             });

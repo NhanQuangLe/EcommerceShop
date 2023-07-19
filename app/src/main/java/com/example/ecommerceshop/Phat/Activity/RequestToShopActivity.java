@@ -25,6 +25,7 @@ import com.example.ecommerceshop.Phat.Adapter.PhotoAdapter;
 import com.example.ecommerceshop.Phat.Model.Photo;
 import com.example.ecommerceshop.Phat.Model.RequestShop;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -109,15 +110,16 @@ public class RequestToShopActivity extends AppCompatActivity {
         shopphone=shopPhone.getText().toString().trim();
         shopaddress=shopAddress.getText().toString().trim();
         if(TextUtils.isEmpty(shopname)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Name is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Name is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(shopdes)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Description is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(shopemail)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Email is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Email is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if((!Patterns.EMAIL_ADDRESS.matcher(shopEmail.getText().toString()).matches())){
@@ -125,15 +127,15 @@ public class RequestToShopActivity extends AppCompatActivity {
             return;
         }
         if(TextUtils.isEmpty(shopphone)){
-            Toast.makeText(RequestToShopActivity.this, "Shop PhoneNumber is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop PhoneNumber is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(shopaddress)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Address is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Address is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(uriImage.toString())){
-            Toast.makeText(RequestToShopActivity.this, "Shop Avatar is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Avatar is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         uploadImage();
@@ -171,7 +173,7 @@ public class RequestToShopActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 progressDialog.dismiss();
-                Toast.makeText(RequestToShopActivity.this, "Registrating to be Seller successfully", Toast.LENGTH_SHORT).show();
+                CustomToast.makeText(RequestToShopActivity.this,"Registrating to be Seller successfully",CustomToast.SHORT,CustomToast.SUCCESS).show();
                 startActivity(new Intent(RequestToShopActivity.this, SuccessRegisActivity.class));
                 finish();
             }

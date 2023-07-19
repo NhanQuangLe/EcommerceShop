@@ -39,6 +39,7 @@ import com.example.ecommerceshop.qui.payment.ItemPayment;
 import com.example.ecommerceshop.qui.payment.PaymentActivity;
 import com.example.ecommerceshop.qui.product_detail.Cart;
 import com.example.ecommerceshop.qui.product_detail.ProductDetailActivity;
+import com.example.ecommerceshop.tinh.Activity.DialogError;
 import com.example.ecommerceshop.tinh.Activity.LoginActivity;
 import com.example.ecommerceshop.toast.CustomToast;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -219,8 +220,9 @@ public class CartFragment extends Fragment {
                                             String productCategory = product.getProductCategory();
                                             int productPrice = product.getProductPrice();
                                             int productDiscountPrice = product.getProductDiscountPrice();
+                                            int productQuantity = product.getProductQuantity();
                                             String uri = product.getUriList().get(0);
-                                            ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(),
+                                            ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productQuantity, productName, cart.getProductQuantity(),
                                                     productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
 
                                             mapProductCart.get(cart.getShopId()).add(productCart);
@@ -273,10 +275,11 @@ public class CartFragment extends Fragment {
                                             String brand = product.getProductBrand();
                                             String productCategory = product.getProductCategory();
                                             Boolean isSold = product.isSold();
+                                            int productQuantity = product.getProductQuantity();
                                             int productPrice = product.getProductPrice();
                                             int productDiscountPrice = product.getProductDiscountPrice();
                                             String uri = product.getUriList().get(0);
-                                            ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(), productName, cart.getProductQuantity(), productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
+                                            ProductCart productCart = new ProductCart(cart.getCartId(), cart.getProductId(),productQuantity, productName, cart.getProductQuantity(), productPrice, productDiscountPrice, uri, cart.getShopId(), shopName, brand, productCategory);
 
                                             for (ShopProductCart shopProductCart : mShopListProductCarts) {
                                                 if (shopProductCart.getShopId().equals(cart.getShopId())) {
@@ -486,8 +489,22 @@ public class CartFragment extends Fragment {
                         noti("Không thể mua hàng thuộc Shop của bạn");
                         return;
                     }
-
                 }
+                boolean flat = false;
+                String listSanPham = "";
+                for (ProductCart productCart:listSelectedProductCart){
+                    if (productCart.getProductQuantity()> productCart.getProductAvailable()){
+                        listSanPham+=productCart.getProductName()+", ";
+                    }
+                }
+                if (!listSanPham.equals("")){
+                    String message = "Các sản phẩm: ";
+                    message+=listSanPham.substring(0,listSanPham.length()-2) + " không đủ số lượng có sẵn để đáp ứng!";
+                    DialogError dialogError = new DialogError(getActivity(),message);
+                    dialogError.show();
+                    return;
+                }
+
                 final Boolean[] isHasNoSold = {false};
                 int index = -1;
                 for (ProductCart productCart : listSelectedProductCart) {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -62,9 +63,11 @@ public class AdapterReviewCustomer extends RecyclerView.Adapter<AdapterReviewCus
         holder.rvContent.setText(review.getContent());
         if(review.getRvResponse() != null){
             holder.rvResponse.setText(review.getRvResponse());
+            holder.layoutRV.setVisibility(View.VISIBLE);
         }
         else {
             holder.rvResponse.setVisibility(View.GONE);
+            holder.layoutRV.setVisibility(View.GONE);
         }
         AdapterImgReviews adapterImgReviews = new AdapterImgReviews(context,review.getUriList());
         holder.listImgRv.setAdapter(adapterImgReviews);
@@ -113,6 +116,7 @@ public class AdapterReviewCustomer extends RecyclerView.Adapter<AdapterReviewCus
     public static class ReviewViewHolder extends RecyclerView.ViewHolder{
         CircleImageView avtCus;
         TextView cusName, rvDate, rvContent,rvResponse;
+        LinearLayout layoutRV;
         AppCompatButton btnResponse;
         RatingBar RatingBar;
         RecyclerView listImgRv;
@@ -130,6 +134,7 @@ public class AdapterReviewCustomer extends RecyclerView.Adapter<AdapterReviewCus
             listImgRv=itemView.findViewById(R.id.listImgRv);
             likeQuantity = itemView.findViewById(R.id.likeQuantity);
             checkBoxLike = itemView.findViewById(R.id.checkBoxLike);
+            layoutRV = itemView.findViewById(R.id.responseBox);
         }
     }
 }

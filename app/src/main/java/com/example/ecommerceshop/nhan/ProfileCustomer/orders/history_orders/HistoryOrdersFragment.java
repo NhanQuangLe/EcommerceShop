@@ -24,6 +24,7 @@ import com.example.ecommerceshop.nhan.ProfileCustomer.orders.Order;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.OrderDetailActivity;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.review.ReviewActivity;
 import com.example.ecommerceshop.qui.cart.CartActivity;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,7 +41,7 @@ public class HistoryOrdersFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     FragmentHistoryOrdersBinding fragmentHistoryOrdersBinding;
     HistoryOrdersAdapter mHistoryAdapter;
-    RecyclerView mHistoryAdapterView;
+    public static RecyclerView mHistoryAdapterView;
     ArrayList<Order> listOrders;
     View mViewFragment;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -137,7 +138,8 @@ public class HistoryOrdersFragment extends Fragment {
 
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(getContext(), error.getMessage() + "", Toast.LENGTH_SHORT).show();
+                                                CustomToast.makeText(getContext(),error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                                             }
                                         });
                             }
@@ -145,7 +147,8 @@ public class HistoryOrdersFragment extends Fragment {
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), error.getMessage() + "", Toast.LENGTH_SHORT).show();
+                        CustomToast.makeText(getContext(),error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+
                     }
                 });
     }
@@ -176,6 +179,8 @@ public class HistoryOrdersFragment extends Fragment {
         try{
             Intent intent = new Intent(getContext(), ReviewActivity.class);
             intent.putExtra("HistoryOrder", order);
+            intent.putExtra("i", listOrders.indexOf(order));
+            intent.putExtra("isHistoryOrder",true);
             mActivityLauncher.launch(intent);
         }
         catch (Exception e)
