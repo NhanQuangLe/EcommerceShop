@@ -1,5 +1,7 @@
 package com.example.ecommerceshop.Phat.Activity;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -44,11 +46,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileSettingShopActivity extends AppCompatActivity {
     ImageView backbtn;
     FrameLayout addImgbtn;
-    TextInputEditText shopName, shopDescription, shopEmail, shopPhone, shopAddress;
+    TextInputEditText shopName, shopDescription, shopEmail, shopPhone;
+    TextView shopAddress;
     Button btnUpdateProfile;
     FirebaseAuth firebaseAuth;
     ProgressDialog progressDialog;
     CircleImageView avatarShop;
+    private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent intent = result.getData();
+                    if (result.getResultCode() == 1) {
+                        shopAddress.setText(intent.getStringExtra("province"));
+                    }
+                }
+            });
     private ActivityResultLauncher<PickVisualMediaRequest> pickMultipleMedia = registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), uris -> {
         if (!uris.isEmpty()) {
             photo=new Photo(uris.get(0),1);
@@ -79,6 +92,13 @@ public class ProfileSettingShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 inputData();
+            }
+        });
+        shopAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ProfileSettingShopActivity.this, ProvinceActivity.class);
+                mActivityLauncher.launch(i);
             }
         });
     }
