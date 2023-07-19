@@ -247,11 +247,14 @@ public class AddProductShopFragment extends Fragment  {
         if(isDiscount){
             if(TextUtils.isEmpty(productDiscountPrice.getText().toString().trim())){
                 CustomToast.makeText(getContext(),"Product Discount Price is required...",CustomToast.SHORT,CustomToast.ERROR).show();
-
                 return;
             } else ProductDiscountPrice= Integer.parseInt(productDiscountPrice.getText().toString().trim());
             int x = (int) (( Float.parseFloat(productDiscountPrice.getText().toString().trim())/
                                 Float.parseFloat(productOriginalPrice.getText().toString().trim()))*100);
+            if(ProductDiscountPrice>= Integer.parseInt(productOriginalPrice.getText().toString().trim())) {
+                CustomToast.makeText(getContext(),"Product Discount Price is invalid...",CustomToast.SHORT,CustomToast.ERROR).show();
+                return;
+            }
             ProductDiscountNote = "- " + x + "%";
         }
         else{
