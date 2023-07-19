@@ -210,14 +210,47 @@ public class StatiscalShopActivity extends AppCompatActivity {
     }
 
     private void loadPieChart(long lap, long smartphone, long pk, long discount) {
-        float lapPer=0, smartphonePer=0, pkPer=0;
+
         DecimalFormat decimalFormat = new DecimalFormat("#.#");
         long total = lap+smartphone+pk-discount;
-        if(total !=0){
+        if(lap!=0 ||smartphone!=0 || pk!=0){
             overlay.setVisibility(View.GONE);
-            lapPer= (float)(lap/(lap+smartphone+pk)*100);
-            smartphonePer = (float)(smartphone/(lap+smartphone+pk)*100);
-            pkPer = (float)(pk/(lap+smartphone+pk)*100);
+            float  lapPer= 100*((float)lap/(float)(lap+smartphone+pk));
+            float  smartphonePer = 100*((float)smartphone/(float)(lap+smartphone+pk));
+            float pkPer = 100*(((float)pk/(float)(lap+smartphone+pk)));
+            List<PieEntry> entries = new ArrayList<>();
+            if(lap!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(lapPer)), "Laptop"));
+            if(smartphone!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(smartphonePer)), "Smartphone"));
+            if(pk!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(pkPer)), "Phụ kiện"));
+            PieDataSet dataSet = new PieDataSet(entries, "Tỷ lệ doanh thu");
+            dataSet.setColors(getColor(R.color.primary_yellow), getColor(R.color.green1), Color.RED);
+            dataSet.setValueTextSize(10f);
+            dataSet.setValueTextColor(Color.WHITE);
+            dataSet.setDrawValues(true);
+            dataSet.setValueFormatter(new IndexAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    // Chuyển đổi giá trị float của tháng sang định dạng chuỗi
+
+                    return value+"% ~ "+ Constants.convertToVND((long)(value*total)/100) ;
+                }
+            });
+            PieData pieData = new PieData(dataSet);
+            Legend legend = pieChart.getLegend();
+            legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            pieChart.setData(pieData);
+            Description description = new Description();
+            description.setText("Biểu đồ tỷ lệ doanh thu");
+            pieChart.setDescription(description);
+            pieChart.getDescription().setTextAlign( Paint.Align.CENTER);
+
+            pieChart.setExtraRightOffset(40);
+            pieChart.setEntryLabelTextSize(10f);
+            pieChart.setEntryLabelColor(Color.WHITE);
+            pieChart.setDrawHoleEnabled(false);
+            pieChart.invalidate();
         }
         else {
             overlay.setVisibility(View.VISIBLE);
@@ -225,39 +258,7 @@ public class StatiscalShopActivity extends AppCompatActivity {
 
         monthRevenue.setText(Constants.convertToVND(total));
 
-        List<PieEntry> entries = new ArrayList<>();
-        if(lap!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(lapPer)), "Laptop"));
-        if(smartphone!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(smartphonePer)), "Smartphone"));
-        if(pk!=0)  entries.add(new PieEntry(Float.parseFloat(decimalFormat.format(pkPer)), "Phụ kiện"));
-        PieDataSet dataSet = new PieDataSet(entries, "Tỷ lệ doanh thu");
-        dataSet.setColors(getColor(R.color.primary_yellow), getColor(R.color.green1), Color.RED);
-        dataSet.setValueTextSize(10f);
-        dataSet.setValueTextColor(Color.WHITE);
-        dataSet.setDrawValues(true);
-        dataSet.setValueFormatter(new IndexAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                // Chuyển đổi giá trị float của tháng sang định dạng chuỗi
 
-                return value+"% ~ "+ Constants.convertToVND((long)(value*total)/100) ;
-            }
-        });
-        PieData pieData = new PieData(dataSet);
-        Legend legend = pieChart.getLegend();
-        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        pieChart.setData(pieData);
-        Description description = new Description();
-        description.setText("Biểu đồ tỷ lệ doanh thu");
-        pieChart.setDescription(description);
-        pieChart.getDescription().setTextAlign( Paint.Align.CENTER);
-
-        pieChart.setExtraRightOffset(40);
-        pieChart.setEntryLabelTextSize(10f);
-        pieChart.setEntryLabelColor(Color.WHITE);
-        pieChart.setDrawHoleEnabled(false);
-        pieChart.invalidate();
     }
     private void loadDTNam(RevenueYear revenueYear, long total) {
         YearRevenue.setText(Constants.convertToVND(total));
@@ -430,6 +431,7 @@ public class StatiscalShopActivity extends AppCompatActivity {
         spinnerOrdMonth.setSelection(0);
         Calendar calendar = Calendar.getInstance();
         selectedYear = calendar.get(Calendar.YEAR);
+        selectedMonth=0;
 
     }
 }
