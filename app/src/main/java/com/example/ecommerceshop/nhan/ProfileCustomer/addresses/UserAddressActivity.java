@@ -223,7 +223,7 @@ public class UserAddressActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                         if(address.isDefault()){
-                            if (deFaultId!="" && deFaultId != address.getAddressId()){
+                            if (deFaultId!="" && !deFaultId.equals(address.getAddressId())){
                                 dbRef.child(deFaultId).child("default").setValue(false);
                                 deFaultId = address.getAddressId();
                             }
@@ -248,7 +248,7 @@ public class UserAddressActivity extends AppCompatActivity {
             }
         });
         if(address.isDefault()){
-            if (deFaultId!="" && deFaultId != address.getAddressId()){
+            if (deFaultId!="" && !deFaultId.equals(address.getAddressId())){
                 dbRef.child(deFaultId).child("default").setValue(false);
                 deFaultId = address.getAddressId();
             }

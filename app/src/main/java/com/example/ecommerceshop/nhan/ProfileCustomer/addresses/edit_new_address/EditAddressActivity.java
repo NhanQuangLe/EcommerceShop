@@ -72,6 +72,7 @@ public class EditAddressActivity extends AppCompatActivity {
     String stringAddress;
     LinearLayout ll_MapOutLine;
     boolean check = false;
+    boolean isBlank = false;
     private ActivityResultLauncher<Intent> mActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -153,7 +154,18 @@ public class EditAddressActivity extends AppCompatActivity {
         }
         else{
             if(intent.getBooleanExtra("IsBlank", false)){
+                sw_DeFaultAddress.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(isBlank){
+                            sw_DeFaultAddress.setChecked(true);
+                            Toast.makeText(EditAddressActivity.this, "Địa chỉ đầu tiên là địa chỉ mặc định! Không được hủy chọn", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 sw_DeFaultAddress.setChecked(true);
+                //sw_DeFaultAddress.setClickable(false);
+                isBlank = true;
             }
         }
     }
@@ -233,7 +245,7 @@ public class EditAddressActivity extends AppCompatActivity {
         sw_DeFaultAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(address.isDefault()){
+                if(address.isDefault() || isBlank){
                     sw_DeFaultAddress.setChecked(true);
                     Toast.makeText(EditAddressActivity.this, "Địa chỉ này đang là địa chỉ mặc định! Không được hủy chọn", Toast.LENGTH_SHORT).show();
                 }
