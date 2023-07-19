@@ -1,5 +1,6 @@
 package com.example.ecommerceshop.nhan.ProfileCustomer.orders.rating_products_orders;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,7 +60,12 @@ public class UserReviewsActivity extends AppCompatActivity {
         ReviewViewPagerAdapter viewPagerAdapter = new ReviewViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(viewPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.getTabAt(0).select();
+        Intent i = getIntent();
+        if(i.getBooleanExtra("isNotRate", false)){
+            mTabLayout.getTabAt(1).select();
+        }else{
+            mTabLayout.getTabAt(0).select();
+        }
 
     }
 }

@@ -448,12 +448,13 @@ public class InputInfoActivity extends AppCompatActivity {
                 ref.setValue(user);
                 if (isWithGoogle){
 
-                    CustomToast.makeText(getApplicationContext(),"Login Successful!",CustomToast.SHORT,CustomToast.SUCCESS).show();
+                    CustomToast.makeText(getApplicationContext(),"Successful!",CustomToast.SHORT,CustomToast.SUCCESS).show();
 
                     Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i2);
                 }
                 else {
+                    CustomToast.makeText(getApplicationContext(),"Successful!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                     Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                     i2.putExtra("signUp",true);
                     startActivity(i2);
