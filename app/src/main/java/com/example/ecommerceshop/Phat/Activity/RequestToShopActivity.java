@@ -16,6 +16,7 @@ import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -136,19 +137,27 @@ public class RequestToShopActivity extends AppCompatActivity {
         shopphone=shopPhone.getText().toString().trim();
         shopaddress=shopAddress.getText().toString().trim();
         if(TextUtils.isEmpty(shopname)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Name is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Name is required...",CustomToast.SHORT,CustomToast.ERROR).show();
             return;
         }
         if(TextUtils.isEmpty(shopdes)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Description is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Description is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(shopemail)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Email is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Email is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
+            return;
+        }
+        if((!Patterns.EMAIL_ADDRESS.matcher(shopEmail.getText().toString()).matches())){
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Email is wrong...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(shopphone)){
-            Toast.makeText(RequestToShopActivity.this, "Shop PhoneNumber is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop PhoneNumber is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if (!checkPhone(shopphone)){
@@ -156,11 +165,13 @@ public class RequestToShopActivity extends AppCompatActivity {
             return;
         }
         if(TextUtils.isEmpty(shopaddress)){
-            Toast.makeText(RequestToShopActivity.this, "Shop Address is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Address is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         if(TextUtils.isEmpty(uriImage.toString())){
-            Toast.makeText(RequestToShopActivity.this, "Shop Avatar is required...", Toast.LENGTH_SHORT).show();
+            CustomToast.makeText(RequestToShopActivity.this,"Shop Avatar is required...",CustomToast.SHORT,CustomToast.ERROR).show();
+
             return;
         }
         uploadImage();
