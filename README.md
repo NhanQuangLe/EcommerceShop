@@ -1,45 +1,45 @@
-# Quản lí rạp chiếu phim
-<img src="./ImageApp/FatFilmFoo.png" width="800"/>
+# Ứng dụng bán điện thoại - laptop trực tuyến
+
 
 ## Mô tả 
 
-Đại dịch covid đã hoành hành suốt gần ba năm khiến cho cuộc sống con người trở nên vô cùng khó khăn. Giờ đây là giai đoạn phục hồi kinh tế, con người bước vào cuộc sống mới với sự bận rộn kèm theo đó áp lực công việc cũng ngày càng lớn. Chúng kéo theo nhu cầu giải trí của con người cũng ngày càng tăng lên, trong đó xem phim là hình thức được nhiều người lựa chọn. Điều này là một tiềm năng phát triển rất lớn và được nhiều công ty khai thác. Do vậy mà các rạp chiếu phim cũng hoạt động trở lại và năng suất hơn bao giờ hết.
-
-Một vấn đề lớn được đặt ra là việc quản lý các rạp phim sao cho hiệu quả, chính xác, tránh được rủi ro không nên có. Việc quản lý một rạp phim từ mặt hàng, nhân viên, cho tới lợi nhuận đã không thể thực hiện bằng tay. Quá nhiều sai số làm các chủ rạp phim gặp rất nhiều khó khăn. 
-Hiểu được điều này, nhóm 5 quyết định xây dựng một ứng dụng hỗ trợ các rạp chiếu phim trong việc quản lý, tận dụng những công nghệ tiên tiến để phát triển, mục tiêu hướng đến chính là nâng cao trải nghiệm người dùng về cả giao diện lẫn tốc độ xử lý, kèm theo đó là những tính năng mở rộng phù hợp với thực tiễn.
+Ngày nay nhu cầu sử dụng điện thoại, laptop ngày càng tăng cao. Thống kê cho thấy có 97% người dân ở Việt Nam sử dụng điện thoại, 72% có smartphone, 43% có laptop hoặc máy tính để bàn, 13% có máy tính bảng, điều đó cho thấy số lượng điện thoại, laptop được sử dụng và tiêu thụ hằng năm ở Việt Nam là rất lớn và các cửa hàng bán các sản phẩm điện thoại, laptop cũng ra đời ngày càng nhiều và bên cạnh đó việc mua bán hàng trực tuyến thông qua các nền tảng website, ứng dụng di động trong những năm gần đây ngày càng trở nên phổ biến nên ngoài buôn bán trực tiếp tại cửa hàng thì các chủ cửa hàng cũng buôn bán trên các nền tảng trực tuyến như trên website, ứng dụng di động. Điều này góp phần tối ưu các hoạt trong kinh doanh và quản lý được mọi hoạt động kinh doanh một các dễ dàng, dễ tiếp cận với khách hàng và phù hợp với xu hướng của xã hội hiện nay.
+Nhận thấy được nhu cầu đó và với những kiến thức được trang bị tại trường đại học Công Nghệ Thông Tin, ĐHQG thành phố Hồ Chí Minh trong môn học Nhập môn Ứng dụng di động với sự hướng dẫn của thầy Nguyễn Tấn Toàn, nhóm chúng em quyết định xây dựng “Ứng dụng quản lý bán điện thoại – laptop trực tuyến” nhằm đáp ứng những nhu cầu của người dùng và phục vụ cho đồ án môn học lần này tại trường. Thông qua đồ án lần này, nhóm chúng em mong rằng sẽ được học hỏi và trao dồi thêm được nhiều kinh nghiệm và kiến thức thực tế trong quá trình xây dựng một ứng dụng di động, biết được thêm nhiều kiến thức mới về ngôn ngữ lập trình, công nghệ, cơ sở dữ liệu, quy trình triển khai một dự án ứng dụng di động ... v.v. Qua đó làm hành trang phục vụ cho việc thực hiện các đồ án môn học khác và cho công việc trong tương lai sau này.
 
 
+## Mục đích ứng dụng
 
-### Mục đích ứng dụng
+Mục tiêu của đề tài là xây dựng và phát triển một sàn thương mại điện tử trên ứng dụng di động đáng tin cậy và hấp dẫn, nhằm đáp ứng nhu cầu mua sắm và giao dịch về điện thoại - laptop, thỏa mãn các yếu tố: 
+*	Xây dựng ứng dụng cung cấp một nền tảng mua sắm đa đạng, đầy đủ các chức năng thỏa mãn với các yêu cầu khách hàng đưa ra.
+*	Giao diện thân thiện, trực quan, dễ sử dụng tối ưu trải nghiệm người dùng.
+*	Độ tin cậy, bảo mật cao.
+*	Đưa ra báo cáo, thống kê, cập nhật dữ liệu nhanh chóng, chính xác.
 
-#### Hiện trạng và yêu cầu thực tế
-* Mặc dù trên thị trường phần mềm đã xuất hiện nhiều phần mềm quản lý, nhưng nhận thấy chúng đều phức tạp, cầu kì, không thân thiện với người dùng. 
 
-#### Mục đích 
+## Yêu cầu
+*	Giao diện ưa nhìn.
+*	Dễ dàng sử dụng.
+*	Đáp ứng được nhu cầu mua bán cơ bản của người dùng.
+*	Dễ dàng đăng nhập cũng như đăng ký.
+*	Có liên kết với Google.
+*	Vận dụng tương đối đầy đủ các kiến thức đã học.
+*	Ngoài ra, sau khi hoàn thiện đồ án này, nhóm đã nắm được quy trình mua, bán hàng ngoài thực tế. Nắm vững được các kiến thức đã học hơn từ đó giúp ích rất nhiều cho việc phát triển các công nghệ mới về sau này. Hơn nữa, kỹ năng làm việc nhóm và sắp xếp thời gian cũng được cải thiện tương đối. 
 
-*	Tìm hiểu được ngôn ngữ C#, các công nghệ để hoàn thành được đồ án.
-*	Tạo ra được ứng dụng có giao diện đẹp, thân thiện với người sử dụng.
-*	Ứng dụng chạy ổn định trong thời gian dài, các chức năng thực hiện nhanh chóng.
 
-#### Yêu cầu
-* Đáp ứng những tính năng tiêu chuẩn cần có trên những ứng dụng quản lý rạp chiếu phim hiện có trên thị trường. Mở rộng và phát triển những tính năng mới hỗ trợ tối đa cho người dùng, khắc phục những hạn chế và yếu kém của hệ thống quản lý hiện nay.
-* Báo cáo, thống kê, thêm, cập nhật dữ liệu, phải diễn ra nhanh chóng, chính xác.
-* Dễ dàng tra cứu, tìm kiếm các thông tin.
-* Dễ dàng cập nhật và lựa chọn lên lịch chiếu phim phải phù hợp, chính xác hạn chế thấp nhất sai sót để nâng cao chất lượng phục vụ của rạp.
-* Giao diện thân thiện, dễ sử dụng, bố cục hợp lý, hài hoà về màu sắc và mang tính đồng bộ cao, phân quyền cho người dùng thông qua tài khoản.
-* Ứng dụng phải tương thích với đa số các hệ điều hành phổ biến hiện nay như Window Vista SP1, Window 8.1, Window 10, ...Đặc biệt, ứng dụng trong quá trình sử dụng phải hoạt động ổn định, tránh những trường hợp xảy ra lỗi xung đột với hệ thống gây ra khó chịu cho người dùng trong quá trình sử dụng, tệ hơn là ảnh hưởng trực tiếp đến khách hàng của rạp phim. Việc mở rộng, nâng cấp ứng dụng về sau phải dễ dàng khi người dùng có nhu cầu.
+## Người dùng 
 
-#### Người dùng 
+* ADMIN
+* NGƯỜI BÁN
+* NGƯỜI MUA
+## Công nghệ 
 
-* Chủ rạp phim: vai trò quản lí
-* Nhân viên
-### Công nghệ 
-
-* Hệ thống API: WPF - Mô hình MVVM
-* IDE: Visual Studio 2022 (C#/.Net)
-* Database: SQL Server, Excel Sheet
-* Công cụ quản lý: Git, GitHub
-* Công cụ thiết kế: Figma
+*	Công cụ thiết kế UI: Figma
+*	Công cụ vẽ sơ đồ: draw.io
+*	Ngôn ngữ lập trình: Java
+*	IDE: Android Studio
+*	Cơ sở dữ liệu: Firebase realtime database, Firebase Firestore
+*	Công cụ quản lý source code: Git, Github
+*	Hệ thống API: xml
 
 
 
@@ -61,22 +61,12 @@ Hiểu được điều này, nhóm 5 quyết định xây dựng một ứng d�
 
 ## Hướng dẫn cài đặt và kết nối cơ sở dữ liệu
 
-* Cài đặt [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/).
+* Cài đặt [Android Studio](https://developer.android.com/studio).
 
-* Cài đặt [SQL Sever 2022](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+* Download phền mềm tại Github: [Link download](https://github.com/21522402/EcommerceShop.git)
 
-* Download [CinemaManagementDatabase.sql](https://drive.google.com/file/d/13NLEl_wsCyYTGFiyjYWBwTJ-r2a8jC7K/view?usp=sharing)
+* Mở phần mềm Android Studio và chọn mở Project với đường dẫn thư mục đúng Project đã lưu trên máy tính.
 
-* Download phền mềm tại Github: https://github.com/QuiChua333/G5_Project_IT008.git
+* Tạo máy ảo(nếu chưa có) hoặc kết nối với máy thật hệ điều hành Android để sử dụng app.
 
-* Cài đặt SQL Server và copy tên máy chủ
-<img src="./ImageApp/ConnectString.jpg" width="400"/>
 
-* Mở file CinemaManagementProjectg.sln và kết nối phần mềm với Database vừa tạo bằng cách sửa chuỗi Connection String (phần bôi đen) trong file App.config
-<img src="./ImageApp/ChangeString.jpg"/>
-
-* Khởi tạo Database bằng cách query script chứa trong file CinemaManagementDatabase.sql
-
-## Phản hồi 
-
-Tạo phản hồi ở mục Issues, mỗi phản hồi của bạn sẽ giúp chúng tôi cải thiện ứng dụng tốt hơn. Cảm ơn vì sự giúp đỡ! 
