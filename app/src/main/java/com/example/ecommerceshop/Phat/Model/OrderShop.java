@@ -4,20 +4,35 @@ import java.io.Serializable;
 import java.util.List;
 
 public class OrderShop implements Serializable {
-    String customerId, orderId, orderStatus, orderedDate, shopId;
+    String customerId;
+    String orderId;
+    String orderStatus;
+    String orderedDate;
+    String shopId;
+
+    public String getVoucherUsedId() {
+        return voucherUsedId;
+    }
+
+    public void setVoucherUsedId(String voucherUsedId) {
+        this.voucherUsedId = voucherUsedId;
+    }
+
+    String voucherUsedId;
     long shipPrice, discountPrice, totalPrice;
+
     receiveAddress receiveAddress;
     List<OrderItem> items;
     public OrderShop() {
     }
 
-    public OrderShop(String customerId, String orderId, String orderStatus, String orderedDate, String shopId, long shipPrice, long discountPrice,
-                     long totalPrice, com.example.ecommerceshop.Phat.Model.receiveAddress receiveAddress, List<OrderItem> items) {
+    public OrderShop(String customerId, String orderId, String orderStatus, String orderedDate, String shopId, String voucherUsedId, long shipPrice, long discountPrice, long totalPrice, com.example.ecommerceshop.Phat.Model.receiveAddress receiveAddress, List<OrderItem> items) {
         this.customerId = customerId;
         this.orderId = orderId;
         this.orderStatus = orderStatus;
         this.orderedDate = orderedDate;
         this.shopId = shopId;
+        this.voucherUsedId = voucherUsedId;
         this.shipPrice = shipPrice;
         this.discountPrice = discountPrice;
         this.totalPrice = totalPrice;

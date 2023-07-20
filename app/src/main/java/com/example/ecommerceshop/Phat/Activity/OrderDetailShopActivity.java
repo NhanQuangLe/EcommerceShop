@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,6 +54,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
         initUI();
          orderid = getIntent().getStringExtra("orderid");
          customerid = getIntent().getStringExtra("cusid");
+        voucherIdOrder = getIntent().getStringExtra("voucherUsedId");
         LoadOrderDetail();
         loadOrderItems();
         backbtn.setOnClickListener(new View.OnClickListener() {
@@ -94,23 +96,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
         hashMap.put("orderStatus", selectOpt);
         final String[] voucherId = new String[1];
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(customerid).child("Customer").child("Orders").child(orderid)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String vId = snapshot.child("voucherUserId").getValue(String.class);
-                if (vId!=null) {
-                    voucherId[0] = vId;
-                    voucherIdOrder = vId;
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                CustomToast.makeText(OrderDetailShopActivity.this,""+error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
-
-            }
-        });
         reference.child(customerid).child("Customer").child("Orders")
                 .child(orderid).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -225,6 +211,7 @@ public class OrderDetailShopActivity extends AppCompatActivity {
                                     hashMap1.clear();
 
                                     hashMap1.put("quantity", pQuantity-1);
+                                    Log.e("so luongg", pQuantity-1+"");
                                     DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users");
                                     reference1.child(firebaseAuth.getUid()).child("Shop").child("Vouchers")
                                             .child(voucherIdOrder).updateChildren(hashMap1, new DatabaseReference.CompletionListener() {

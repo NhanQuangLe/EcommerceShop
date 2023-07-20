@@ -72,6 +72,7 @@ public class AdapterOrderShop extends RecyclerView.Adapter<AdapterOrderShop.Orde
                 Intent intent = new Intent(context, OrderDetailShopActivity.class);
                 intent.putExtra("orderid", id);
                 intent.putExtra("cusid", orderShop.getCustomerId());
+                intent.putExtra("voucherUsedId",orderShop.getVoucherUsedId());
                 context.startActivity(intent);
             }
         });
