@@ -99,6 +99,7 @@ public class InputInfoActivity extends AppCompatActivity {
             Boolean checkDate = IsValidDate();
             Boolean checkCheckBox = IsValidGender();
             Boolean checkPhone = IsValidPhone();
+            loading(true);
             if (checkName && checkDate && checkCheckBox && checkImage && checkPhone) {
                 if (!isWithGoogle){
                     Started();
@@ -107,6 +108,8 @@ public class InputInfoActivity extends AppCompatActivity {
                     currentUserId = i.getStringExtra("userId");
                     Started2();
                 }
+
+
 
             }
         });
@@ -377,7 +380,6 @@ public class InputInfoActivity extends AppCompatActivity {
     }
 
     private void Started() {
-        loading(true);
         // đăng ký
         Intent i = getIntent();
         String email = i.getStringExtra("email");
@@ -388,14 +390,13 @@ public class InputInfoActivity extends AppCompatActivity {
                 CreateAccountChat(email);
 
             } else {
-                loading(false);
+
                 CustomToast.makeText(getApplicationContext(),Objects.requireNonNull(task.getException()).getMessage() + "Try signing up with a new email account or login with this one!",CustomToast.SHORT,CustomToast.ERROR).show();
             }
         });
-        loading(false);
     }
     private void Started2() {
-        loading(true);
+
         String email = getIntent().getStringExtra("email");
         SaveImgInFirebaseStorage(email);
 
@@ -418,7 +419,7 @@ public class InputInfoActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        loading(false);
+
                         CustomToast.makeText(getApplicationContext(),e.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
                     }
                 });
@@ -448,14 +449,15 @@ public class InputInfoActivity extends AppCompatActivity {
                 if (isWithGoogle){
 
                     CustomToast.makeText(getApplicationContext(),"Successful!",CustomToast.SHORT,CustomToast.SUCCESS).show();
-
+                    loading(false);
                     Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i2);
                 }
                 else {
-                    loading(false);
+
                     CustomToast.makeText(getApplicationContext(),"Successful!",CustomToast.SHORT,CustomToast.SUCCESS).show();
                     Intent i2 = new Intent(getApplicationContext(), LoginActivity.class);
+                    loading(false);
                     i2.putExtra("signUp",true);
                     startActivity(i2);
                 }
