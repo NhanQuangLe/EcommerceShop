@@ -4,6 +4,7 @@
 ## Mô tả 
 
 Ngày nay nhu cầu sử dụng điện thoại, laptop ngày càng tăng cao. Thống kê cho thấy có 97% người dân ở Việt Nam sử dụng điện thoại, 72% có smartphone, 43% có laptop hoặc máy tính để bàn, 13% có máy tính bảng, điều đó cho thấy số lượng điện thoại, laptop được sử dụng và tiêu thụ hằng năm ở Việt Nam là rất lớn và các cửa hàng bán các sản phẩm điện thoại, laptop cũng ra đời ngày càng nhiều và bên cạnh đó việc mua bán hàng trực tuyến thông qua các nền tảng website, ứng dụng di động trong những năm gần đây ngày càng trở nên phổ biến nên ngoài buôn bán trực tiếp tại cửa hàng thì các chủ cửa hàng cũng buôn bán trên các nền tảng trực tuyến như trên website, ứng dụng di động. Điều này góp phần tối ưu các hoạt trong kinh doanh và quản lý được mọi hoạt động kinh doanh một các dễ dàng, dễ tiếp cận với khách hàng và phù hợp với xu hướng của xã hội hiện nay.
+
 Nhận thấy được nhu cầu đó và với những kiến thức được trang bị tại trường đại học Công Nghệ Thông Tin, ĐHQG thành phố Hồ Chí Minh trong môn học Nhập môn Ứng dụng di động với sự hướng dẫn của thầy Nguyễn Tấn Toàn, nhóm chúng em quyết định xây dựng “Ứng dụng quản lý bán điện thoại – laptop trực tuyến” nhằm đáp ứng những nhu cầu của người dùng và phục vụ cho đồ án môn học lần này tại trường. Thông qua đồ án lần này, nhóm chúng em mong rằng sẽ được học hỏi và trao dồi thêm được nhiều kinh nghiệm và kiến thức thực tế trong quá trình xây dựng một ứng dụng di động, biết được thêm nhiều kiến thức mới về ngôn ngữ lập trình, công nghệ, cơ sở dữ liệu, quy trình triển khai một dự án ứng dụng di động ... v.v. Qua đó làm hành trang phục vụ cho việc thực hiện các đồ án môn học khác và cho công việc trong tương lai sau này.
 
 
@@ -59,7 +60,7 @@ Mục tiêu của đề tài là xây dựng và phát triển một 
 
 * Thầy Nguyễn Tấn Toàn, giảng viên Khoa Công Nghệ Phần Mềm, trường Đại học Công nghệ Thông tin, Đại học Quốc gia Thành phố Hồ Chí Minh 
 
-## Hướng dẫn cài đặt và kết nối cơ sở dữ liệu
+## Hướng dẫn cài đặt
 
 * Cài đặt [Android Studio](https://developer.android.com/studio).
 
@@ -67,6 +68,6 @@ Mục tiêu của đề tài là xây dựng và phát triển một 
 
 * Mở phần mềm Android Studio và chọn mở Project với đường dẫn thư mục đúng Project đã lưu trên máy tính.
 
-* Tạo máy ảo(nếu chưa có) hoặc kết nối với máy thật hệ điều hành Android để sử dụng app.
+* Tạo máy ảo (nếu chưa có) hoặc kết nối với máy thật hệ điều hành Android để sử dụng app.
 
 
