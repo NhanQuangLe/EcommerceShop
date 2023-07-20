@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
 import com.example.ecommerceshop.nhan.Model.Product;
@@ -49,7 +50,7 @@ public class HistoryProductsInOrderAdapter extends RecyclerView.Adapter<HistoryP
     @Override
     public void onBindViewHolder(@NonNull HistoryProductsInOrderAdapter.ProductsInOrderViewholder holder, int position) {
         Product product = listProductInOrder.get(position);
-        Picasso.get().load(Uri.parse(product.getProductAvatar())).into(holder.iv_ProductAvatar);
+        Glide.with(context).load(product.getProductAvatar()).into(holder.iv_ProductAvatar);
         holder.tv_ProductName.setText(product.getProductName());
         holder.tv_ProductBrand.setText(product.getProductBrand());
         holder.tv_ProductCategory.setText(product.getProductCategory());

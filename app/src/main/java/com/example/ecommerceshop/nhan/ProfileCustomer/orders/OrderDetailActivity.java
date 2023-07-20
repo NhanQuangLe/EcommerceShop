@@ -18,12 +18,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ecommerceshop.Phat.Utils.Constants;
 import com.example.ecommerceshop.R;
+import com.example.ecommerceshop.nhan.Model.Address;
+import com.example.ecommerceshop.nhan.Model.Product;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryOrdersFragment;
 import com.example.ecommerceshop.nhan.ProfileCustomer.orders.history_orders.HistoryProductsInOrderAdapter;
 import com.example.ecommerceshop.qui.cart.CartActivity;
 import com.example.ecommerceshop.qui.shop.ShopActivityCustomer;
+import com.example.ecommerceshop.toast.CustomToast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +35,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class OrderDetailActivity extends AppCompatActivity {
     TextView address_name, address_phone, address_detail, address_main;
@@ -64,9 +70,49 @@ public class OrderDetailActivity extends AppCompatActivity {
                     .child(orderId)
                     .addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Order order = snapshot.getValue(Order.class);
-                            LoadData(order);
+                        public void onDataChange(@NonNull DataSnapshot ds) {
+                            Order ho = new Order();
+                            ho.setOrderId(ds.child("orderId").getValue(String.class));
+                            ho.setCustomerId(ds.child("customerId").getValue(String.class));
+                            ref.child(ds.child("shopId").getValue(String.class))
+                                    .child("Shop")
+                                    .child("ShopInfos").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            ho.setShopAvt(snapshot.child("shopAvt").getValue(String.class));
+                                            ho.setShopName(snapshot.child("shopName").getValue(String.class));
+                                            ho.setShopId(ds.child("shopId").getValue(String.class));
+                                            ho.setShipPrice(ds.child("shipPrice").getValue(int.class));
+                                            ho.setDiscountPrice(ds.child("discountPrice").getValue(int.class));
+                                            ho.setOrderStatus(ds.child("orderStatus").getValue(String.class));
+                                            ho.setTotalPrice(ds.child("totalPrice").getValue(int.class));
+                                            ho.setOrderedDate(ds.child("orderDate").getValue(String.class));
+                                            ho.setReceiveAddress(ds.child("receiveAddress").getValue(Address.class));
+                                            ho.setShipPrice(ds.child("shipPrice").getValue(int.class));
+                                            ArrayList<Product> products = new ArrayList<>();
+                                            for(DataSnapshot product : ds.child("items").getChildren())
+                                            {
+                                                Product pd = new Product();
+                                                pd.setProductID(product.child("pid").getValue(String.class));
+                                                pd.setShopID(ds.child("shopId").getValue(String.class));
+                                                pd.setProductAvatar(product.child("pAvatar").getValue(String.class));
+                                                pd.setProductBrand(product.child("pBrand").getValue(String.class));
+                                                pd.setProductName(product.child("pName").getValue(String.class));
+                                                pd.setProductCategory(product.child("pCategory").getValue(String.class));
+                                                pd.setProductDiscountPrice(product.child("pPrice").getValue(int.class));
+                                                pd.setPurchaseQuantity(product.child("pQuantity").getValue(int.class));
+                                                products.add(pd);
+                                            }
+                                            ho.setItems(products);
+                                            LoadData(ho);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            CustomToast.makeText(getApplicationContext(),error.getMessage(),CustomToast.SHORT,CustomToast.ERROR).show();
+                                        }
+                                    });
+
                         }
 
                         @Override
@@ -164,7 +210,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         address_detail.setText(ho.getReceiveAddress().getDetail());
         address_main.setText(ho.getReceiveAddress().GetAddressString());
 
-        Picasso.get().load(Uri.parse(ho.getShopAvt())).into(iv_ShopAvatar);
+        Glide.with(getApplicationContext()).load(ho.getShopAvt()).into(iv_ShopAvatar);
         HistoryProductsInOrderAdapter historyOrdersAdapter = new HistoryProductsInOrderAdapter(this, ho.getItems());
         rv_ProductList.setAdapter(historyOrdersAdapter);
         tv_ShopName.setText(ho.getShopName());

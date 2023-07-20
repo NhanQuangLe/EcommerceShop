@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -58,6 +59,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class PaymentActivity extends AppCompatActivity {
+    Dialog dialog1;
 
     private ActivityPaymentBinding mActivityPaymentBinding;
     private ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -197,7 +199,7 @@ public class PaymentActivity extends AppCompatActivity {
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + productCart.getShopId() + "/Shop/Products/" + productCart.getProductId());
                         int finalIndex = index1;
                         int finalIndex1 = index2;
-                        ref.addValueEventListener(new ValueEventListener() {
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 Boolean isSold = snapshot.child("sold").getValue(Boolean.class);
@@ -209,7 +211,7 @@ public class PaymentActivity extends AppCompatActivity {
                                         noti("Xin lỗi, vì đơn hàng có sản phẩm đã ngừng kinh doanh");
                                     } else {
                                         // Nếu điều kiện thỏa
-                                        final Dialog dialog = new Dialog(PaymentActivity.this);
+                                         final Dialog dialog = new Dialog(PaymentActivity.this);
                                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                         dialog.setContentView(R.layout.layout_dialog_ok_cancel);
                                         Window window = dialog.getWindow();
@@ -245,7 +247,15 @@ public class PaymentActivity extends AppCompatActivity {
 
                                             }
                                         });
-                                        dialog.show();
+
+
+                                        if (!isFinishing()){
+                                            dialog.show();
+                                        }
+
+
+
+
 
                                     }
                                 }
@@ -438,6 +448,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/" + mCurrentUser.getUid() + "/Customer/Orders");
         if (numItemPayment == mListItemPayment.size()) {
+
             navigateToOrderSuccess();
             return;
         }

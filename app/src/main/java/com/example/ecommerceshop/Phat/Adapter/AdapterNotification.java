@@ -49,7 +49,7 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
         }
         if(notification.getOrderStatus().equals("Processing")){
             holder.titleNotification.setText("Bạn có đơn hàng đang trên đường giao!");
-            holder.contentNotification.setText("Đơn hàng " +notification.getOrderId()+" đang trong quá trình vận chuyển và dự kiến sẽ đến trong 1-2 ngày tới. Vui lòng bỏ qua nếu bạn đã nhận được hàng");
+            holder.contentNotification.setText("Đơn hàng " +notification.getOrderId()+" đang  vận chuyển và dự kiến sẽ đến trong 1-2 ngày tới. Vui lòng bỏ qua nếu bạn đã nhận được hàng");
         }
         if(notification.getOrderStatus().equals("Cancelled")){
             holder.titleNotification.setText("Bạn có đơn hàng đã bị hủy!");

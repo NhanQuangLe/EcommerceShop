@@ -123,6 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+
             android:gravity="center_vertical|center_horizontal">
 
             <TextView
@@ -150,7 +151,7 @@
                 android:id="@+id/rating"
                 android:textColor="#EA1C00"
                 android:textSize="14sp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="5dp"
                 />
             <TextView
@@ -169,7 +170,7 @@
                 android:textColor="#EA1C00"
                 android:textSize="14sp"
                 android:id="@+id/shopProductQuantity"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="5dp"
                 />
             <TextView
@@ -178,7 +179,7 @@
                 android:text="sản phẩm"
                 android:textColor="#000"
                 android:textSize="14sp"
-                android:layout_marginEnd="10dp"
+
                 />
         </LinearLayout>
 
